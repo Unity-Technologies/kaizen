@@ -1,0 +1,25 @@
+apply plugin: 'groovy'
+apply plugin: 'idea'
+
+group = 'kaizen'
+version = '1.0'
+
+task publish(dependsOn: [test, uploadArchives])
+
+dependencies {
+	compile gradleApi()
+	groovy localGroovy()
+	//compile 'com.google.inject:guice:2.0-no_aop'
+}
+
+uploadArchives {
+	repositories {
+		ivy {
+			url uri('../repository')
+		}
+	}
+}
+
+repositories {
+	mavenCentral()
+}
