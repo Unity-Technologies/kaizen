@@ -23,7 +23,9 @@ subprojects {
 
 	apply plugin: 'base'
 
-	task zip(type: Zip, dependsOn: init) {
+	task publish(dependsOn: uploadEditor)
+
+	task zip(type: Zip) {
 		from unityLibsDir
 		include "${project.name}.dll"
 	}
