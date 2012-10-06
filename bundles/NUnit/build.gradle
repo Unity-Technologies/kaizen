@@ -1,0 +1,66 @@
+apply plugin: 'base'
+apply from: '../common.gradle'
+
+assert hasProperty('nunitDir'), 'Path to the NUnit distro must be specified (-PnunitDir=/path/to/NUnit)'
+
+ext {
+	nunitBinDir = "$nunitDir/bin"
+}
+
+def captureNUnitVersionOf(executable) {
+	def process = "mono $executable".execute()
+	process.waitFor()
+
+	def output = process.inputStream.text
+
+	def logoPattern = ~/NUnit-Console\s+version\s+((\d|\.)+)/
+	def matches = logoPattern.matcher(output).collect { it[1] }
+	assert matches.size() > 0, "Failed to capture NUnit version"
+
+	matches.first()
+}
+
+group = 'NUnit'
+version = captureNUnitVersionOf("$nunitDir/bin/nunit-console.exe")
+
+dependencies {
+	subprojects.each { subProject ->
+		'default' project(subProject.path)
+	}
+}
+
+task zip(type: Zip) {
+	from file(nunitBinDir)
+	include 'nunit-console.exe'
+}
+
+subprojects {
+
+	apply plugin: 'base'
+
+	version = parent.version
+	group = parent.group
+
+	task zip(type: Zip) {
+		from file((project.name == 'nunit.framework') ? nunitBinDir : "$nunitBinDir/lib")
+		include "${project.name}.dll"
+		include "${project.name}.xml"
+	}
+
+}
+
+allprojects {
+
+	uploadDefault {
+		repositories {
+			ivy { url repositoryForPublishing }
+		}
+	}
+
+	task publish(dependsOn: uploadDefault)
+
+	artifacts {
+		'default' zip
+	}
+
+}

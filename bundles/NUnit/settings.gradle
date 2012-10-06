@@ -1,0 +1,4 @@
+include 'nunit-console-runner'
+include 'nunit.core'
+include 'nunit.framework'
+include 'nunit.util'
