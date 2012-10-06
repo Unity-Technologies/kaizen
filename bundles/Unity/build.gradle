@@ -1,21 +1,20 @@
 apply plugin: 'base'
 apply from: '../common.gradle'
 
-ext {
-	unityDir = '/Applications/Unity/Unity.app'
-	unityLibsDir = new File(unityDir, 'Contents/Frameworks/Managed')
-}
+if (!hasProperty('unityDir'))
+	ext { unityDir = '/Applications/Unity/Unity.app' }
 
-task init <<{
-	def bundleVersionPattern = ~/<key>CFBundleVersion<\/key>\s*\n\s*<string>(.+)<\/string>/
-	def version = bundleVersionPattern.matcher(new File(unityDir, 'Contents/Info.plist').text).collect { it[1] }.first()
-	subprojects.each { project ->
-		project.version = version
-		project.group = 'Unity'
-	}
-}
+if (!hasProperty('unityLibsDir'))
+	ext { unityLibsDir = new File(unityDir, 'Contents/Frameworks/Managed') }
+
+def bundleVersionPattern = ~/<key>CFBundleVersion<\/key>\s*\n\s*<string>(.+)<\/string>/
+
+version = bundleVersionPattern.matcher(new File(unityDir, 'Contents/Info.plist').text).collect { it[1] }.first()
 
 subprojects {
+
+	version = parent.version
+	group = 'Unity'
 
 	configurations {
 		editor
