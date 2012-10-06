@@ -24,10 +24,13 @@ class AssemblyPlugin implements Plugin<Project> {
 				assemblyPath = file("$buildDir/$assemblyFileName")
 			}
 
-			task('outputDir') {
-				doFirst {
-					assemblyPath.parentFile.mkdirs()
-				}
+			task('zip', type: Zip, dependsOn: 'compile') {
+				description "Packs the assembly for distribution."
+
+				baseName = assemblyName
+				from project.buildDir
+				include assemblyFileName
+				include "${assemblyName}.xml"
 			}
 
 			task('compile', type: Exec, dependsOn: 'outputDir') {
@@ -41,13 +44,10 @@ class AssemblyPlugin implements Plugin<Project> {
 				adjustCompilationDependenciesOf project
 			}
 
-			task('zip', type: Zip, dependsOn: 'compile') {
-				description "Packs the assembly for distribution."
-
-				baseName = assemblyName
-				from project.buildDir
-				include assemblyFileName
-				include "${assemblyName}.xml"
+			task('outputDir') {
+				doFirst {
+					assemblyPath.parentFile.mkdirs()
+				}
 			}
 
 			artifacts {
@@ -79,7 +79,7 @@ class AssemblyPlugin implements Plugin<Project> {
 			"-doc:${xmlDocFileFor(p.assemblyPath)}",
 			"-nowarn:1591"
 		]
-		compileTask.executable = rootProject.unity.tools.gmcs.executable
+		compileTask.executable = p.rootProject.unity.tools.gmcs.executable
 		compileTask.args = defaultCompilerArgs + assemblyReferences
 		compileTask.inputs.files(projectAssemblies)
 	}
