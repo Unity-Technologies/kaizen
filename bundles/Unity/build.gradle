@@ -1,9 +1,9 @@
 apply plugin: 'base'
+apply from: '../common.gradle'
 
 ext {
 	unityDir = '/Applications/Unity/Unity.app'
 	unityLibsDir = new File(unityDir, 'Contents/Frameworks/Managed')
-	repositoryForPublishing = file('../../../repository')
 }
 
 task init <<{
