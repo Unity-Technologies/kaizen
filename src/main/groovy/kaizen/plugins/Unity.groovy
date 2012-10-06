@@ -23,7 +23,11 @@ class Unity implements MonoFramework {
 	}
 
 	String platformSpecificExecutable(String executable) {
-		SystemInformation.isWindows() ? "${executable}.bat" : executable
+		isWindows() ? "${executable}.bat" : executable
+	}
+
+	private boolean isWindows() {
+		SystemInformation.isWindows()
 	}
 
 	String monoBinPath(String path) {
@@ -31,7 +35,8 @@ class Unity implements MonoFramework {
 	}
 
 	String monoPath(String relativePath) {
-		Paths.combine absoluteUnityDir(), "Data", "Mono", relativePath
+		def frameworksPath = isWindows() ? 'Data' : 'Contents/Frameworks'
+		Paths.combine absoluteUnityDir(), frameworksPath, 'Mono', relativePath
 	}
 
 	private absoluteUnityDir() {
