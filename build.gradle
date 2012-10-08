@@ -9,14 +9,12 @@ task publish(dependsOn: [test, uploadArchives])
 dependencies {
 	compile gradleApi()
 	groovy localGroovy()
-	//compile 'com.google.inject:guice:2.0-no_aop'
+	testCompile 'org.spockframework:spock-core:0.6-groovy-1.8'
 }
 
 uploadArchives {
 	repositories {
-		ivy {
-			url uri('../repository')
-		}
+		ivy { url uri('../repository') }
 	}
 }
 

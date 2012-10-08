@@ -22,6 +22,10 @@ class BundlePlugin implements Plugin<Project> {
 			description 'Configuration for editor extension artifacts.'
 		}
 
+		project.configurations.add('tests') {
+			description 'Configuration for test assemblies.'
+		}
+
 		// a bundle needs the deployment capabilities given by the base plugin
 		project.apply(plugin: 'base')
 
@@ -30,11 +34,13 @@ class BundlePlugin implements Plugin<Project> {
 
 		// a bundle depends on all of its sub projects
 		project.subprojects.each { subProject ->
+			def isTest = subProject.name.endsWith('.Tests')
+			def config = isTest ? 'tests' : 'editor'
 			project.dependencies.add(
-				'editor',
+				config,
 				project.dependencies.project(
 					path: subProject.path,
-					configuration: 'editor'))
+					configuration: config))
 		}
 
 		project.configure(project) {
