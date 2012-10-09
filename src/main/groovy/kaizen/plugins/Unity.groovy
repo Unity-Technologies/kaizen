@@ -44,7 +44,7 @@ class Unity implements MonoFramework {
 	}
 
 	private configuredUnityDir() {
-		project.hasProperty('unityDir') ? project.unityDir : unityDir
+		project.hasProperty('unityDir') ? project.property('unityDir') : unityDir
 	}
 }
 
