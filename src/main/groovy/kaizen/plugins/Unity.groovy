@@ -35,7 +35,7 @@ class Unity implements MonoFramework {
 	}
 
 	String monoPath(String relativePath) {
-		def frameworksPath = isWindows() ? 'Data' : 'Contents/Frameworks'
+		def frameworksPath = SystemInformation.isMac() ? 'Contents/Frameworks' : 'Data'
 		Paths.combine absoluteUnityDir(), frameworksPath, 'Mono', relativePath
 	}
 
