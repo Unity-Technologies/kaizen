@@ -26,7 +26,7 @@ class BundleWithTests extends PluginSpecification {
 	}
 
 	Object[] projectsDependedUponBy(String config) {
-		bundle.configurations[config].dependencies.collect { it.dependencyProject }.toArray()
+		bundle.configurations[config].dependencies.collect { it.dependencyProject }
 	}
 
 	Project subProjectWithName(String name) {
