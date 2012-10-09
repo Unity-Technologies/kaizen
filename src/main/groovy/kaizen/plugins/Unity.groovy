@@ -59,6 +59,10 @@ class UnityTools {
 	MonoTool getGmcs() {
 		new MonoTool(parent, "gmcs")
 	}
+
+	MonoTool getCli() {
+		new MonoTool(parent, "cli")
+	}
 }
 
 
