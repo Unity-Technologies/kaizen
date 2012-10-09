@@ -9,9 +9,14 @@ class AssemblyPluginSpec extends PluginSpecification {
 		project.apply plugin: AssemblyPlugin
 	}
 
+	def 'assembly file goes to build dir'() {
+		expect:
+		project.buildDir == project.assembly.file.parentFile
+	}
+
 	def 'assembly name is derived from project name'() {
 		expect:
-		project.assemblyFileName == "C.dll"
+		project.assembly.file.name == "C.dll"
 	}
 
 	def 'editor configuration is present'() {

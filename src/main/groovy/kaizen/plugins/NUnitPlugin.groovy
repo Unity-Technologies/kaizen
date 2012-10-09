@@ -28,7 +28,7 @@ class NUnitPlugin implements Plugin<Project> {
 
 				task('test', type: NUnitTask, dependsOn: 'compile') {
 					description 'Runs the nunit tests.'
-					inputs.file testProject.assemblyPath
+					inputs.file testProject.assembly.file
 					outputs.file file("${testProject.buildDir}/TestResult.xml")
 				}
 			}
@@ -58,7 +58,7 @@ class NUnitTask extends DefaultTask {
 			args nunitConsole
 			args '-nologo', '-nodots'
 			args "-work=${project.buildDir}"
-			args project.assemblyPath
+			args project.assembly.file
 		}
 	}
 

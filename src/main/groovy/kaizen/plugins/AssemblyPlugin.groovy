@@ -13,21 +13,17 @@ class AssemblyPlugin implements Plugin<Project> {
 	@Override
 	void apply(Project project) {
 
+		project.extensions.add('assembly', new AssemblyExtension(project))
+
 		configure(project) {
 
 			apply plugin: ConfigurationPlugin
 			apply plugin: 'base'
 
-			ext {
-				assemblyName = project.name
-				assemblyFileName = "${assemblyName}.dll"
-				assemblyPath = file("$buildDir/$assemblyFileName")
-			}
-
 			task('compile', type: Exec, dependsOn: 'outputDir') {
 				description "Compiles all sources in the project directory."
 
-				outputs.file assemblyPath
+				outputs.file assembly.file
 				inputs.source fileTree(dir: project.projectDir, include: '**/*.cs')
 			}
 
@@ -37,7 +33,7 @@ class AssemblyPlugin implements Plugin<Project> {
 
 			task('outputDir') {
 				doFirst {
-					assemblyPath.parentFile.mkdirs()
+					assembly.file.parentFile.mkdirs()
 				}
 			}
 		}
@@ -52,10 +48,10 @@ class AssemblyPlugin implements Plugin<Project> {
 			task('zip', type: Zip, dependsOn: 'compile') {
 				description "Packs the assembly for distribution."
 
-				baseName = assemblyName
+				baseName = assembly.name
 				from project.buildDir
-				include assemblyFileName
-				include "${assemblyName}.xml"
+				include assembly.file.name
+				include "${assembly.name}.xml"
 			}
 
 			artifacts {
@@ -77,7 +73,7 @@ class AssemblyPlugin implements Plugin<Project> {
 		def assemblyDeps = allDeps.findAll { it instanceof AssemblyDependency }
 		def externalDeps = allDeps.findAll { it instanceof ExternalModuleDependency }
 		
-		def projectAssemblies = projectDeps.collect { it.assemblyPath }
+		def projectAssemblies = projectDeps.collect { it.assembly.file }
 		def externalAssemblies = externalDeps.collect { p.rootProject.file("libs/$configName/${it.name}.dll")}
 		def localAssemblies = assemblyDeps.collect { it.name }
 
@@ -85,11 +81,12 @@ class AssemblyPlugin implements Plugin<Project> {
 		def assemblyReferences = (assemblyFiles + localAssemblies).collect { "-r:$it" }
 		
 		DefaultTask compileTask = p.tasks.compile
+		def assemblyFile = p.assembly.file
 		def defaultCompilerArgs = [
-			"-out:$p.assemblyPath",
+			"-out:$assemblyFile",
 			"-target:library",
 			"-recurse:*.cs",
-			"-doc:${xmlDocFileFor(p.assemblyPath)}",
+			"-doc:${xmlDocFileFor(assemblyFile)}",
 			"-nowarn:1591"
 		]
 		compileTask.executable = p.rootProject.unity.tools.gmcs.executable
@@ -107,7 +104,22 @@ class AssemblyPlugin implements Plugin<Project> {
 		}
 	}
 
-	String xmlDocFileFor(File assemblyPath) {
-		return new File(assemblyPath.parentFile, FileName.withoutExtension(assemblyPath) + ".xml")
+	String xmlDocFileFor(File assemblyFile) {
+		return new File(assemblyFile.parentFile, FileName.withoutExtension(assemblyFile) + ".xml")
+	}
+}
+
+class AssemblyExtension {
+
+	final Project project
+	String name
+
+	AssemblyExtension(Project project) {
+		this.project = project
+		this.name = project.name
+	}
+
+	File getFile() {
+		new File(project.buildDir, "${name}.dll")
 	}
 }
