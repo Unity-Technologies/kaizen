@@ -10,7 +10,7 @@ The strategy is to automate to the fullest extent possible the whole delivery pr
 including the building and deployment of versioned binary components with explicitly
 managed dependencies amongst them.
 
-### In The Abstract
+## In The Abstract
 
 User visible functionality is grouped and delivered as coarse grained units called *bundles*. 
 
@@ -26,7 +26,7 @@ The version number of a component is incremented every time a new version is pub
 
 Components can and should be published independently of each other.
 
-### In The Concrete
+## In The Concrete
 
 At the physical level there are only components distributed as zip
 files together with version and dependency metadata.
@@ -49,14 +49,14 @@ extensions to unity.
 
 We're using [gradle] (http://www.gradle.org/) as the underlying infrastructure.
 
-### The Publisher POV
+## The Publisher POV
 
   1. Declare dependencies.
   2. ./gradlew update (downloads and unpacks dependencies)
   3. Code something beautiful.
   4. ./gradlew publish (automatically increments version number)
 
-### Handling UnityEngine.dll and UnityEditor.dll
+## Handling UnityEngine.dll and UnityEditor.dll
 
 Since those assemblies are strongly tied to the runtime they are
 shipped with they are not subject to continous delivery and instead
@@ -64,7 +64,7 @@ have their versions pinned by the installation. They are still
 considered backwards compatible so bundles developed against older
 versions of them can still be installed.
 
-### The User POV
+## The User POV
 
 Users install bundles into their projects.
 
@@ -82,7 +82,7 @@ From the point of view of the user the current workflow goes like this:
     update' which causes all selected bundle dependencies to be
     resolved, downloaded and unpacked)
 
-### Repositories are like channels
+## Repositories are like channels
 
 Even though we're starting with a single remote repository for bundles and
 components the underlying infrastructure can handle any number of
@@ -92,3 +92,7 @@ migrate from unstable/experimental/beta channels into stable ones, etc.
 
 New releases of unity might ship with a private repository containing snapshots of
 bundles promoted to 'builtin' status.
+
+## Contributors
+
+See: https://github.com/Unity-Technologies/kaizen/graphs/contributors
