@@ -3,34 +3,24 @@ package kaizen.plugins
 import org.gradle.api.*;
 import org.gradle.api.artifacts.*
 import org.gradle.api.tasks.Exec
-import org.gradle.api.tasks.bundling.Zip;
+import org.gradle.api.tasks.bundling.Zip
+import org.gradle.util.ConfigureUtil
+import kaizen.foundation.FileName
+import org.apache.tools.ant.taskdefs.ExecTask;
 
 class AssemblyPlugin implements Plugin<Project> {
 
 	@Override
 	void apply(Project project) {
 
-		project.configure(project) {
+		configure(project) {
 
-			apply plugin: 'base'
-
-			configurations {
-				editor
-			}
+			apply plugin: ConfigurationPlugin
 
 			ext {
 				assemblyName = project.name
 				assemblyFileName = "${assemblyName}.dll"
 				assemblyPath = file("$buildDir/$assemblyFileName")
-			}
-
-			task('zip', type: Zip, dependsOn: 'compile') {
-				description "Packs the assembly for distribution."
-
-				baseName = assemblyName
-				from project.buildDir
-				include assemblyFileName
-				include "${assemblyName}.xml"
 			}
 
 			task('compile', type: Exec, dependsOn: 'outputDir') {
@@ -49,15 +39,38 @@ class AssemblyPlugin implements Plugin<Project> {
 					assemblyPath.parentFile.mkdirs()
 				}
 			}
+		}
+
+		// test projects are never published
+		if (ProjectClassifier.isTest(project))
+			return
+
+		configure(project) {
+			apply plugin: 'base'
+
+			task('publish', dependsOn: ['uploadEditor'])
+
+			task('zip', type: Zip, dependsOn: 'compile') {
+				description "Packs the assembly for distribution."
+
+				baseName = assemblyName
+				from project.buildDir
+				include assemblyFileName
+				include "${assemblyName}.xml"
+			}
 
 			artifacts {
 				editor zip
 			}
 		}
 	}
-	
+
+	def configure(Project project, Closure closure) {
+		ConfigureUtil.configure(closure, project)
+	}
+
 	void adjustCompilationDependenciesOf(Project p) {
-		def config = p.configurations['editor']
+		def config = ConfigurationPlugin.defaultConfigurationFor(p)
 		def configName = config.name.capitalize()
 
 		def allDeps = config.allDependencies
@@ -91,6 +104,8 @@ class AssemblyPlugin implements Plugin<Project> {
 					include file.name
 					into p.buildDir
 				}
+			}
+		}
 	}
 
 	String xmlDocFileFor(File assemblyPath) {

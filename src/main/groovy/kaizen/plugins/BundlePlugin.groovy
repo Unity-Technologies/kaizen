@@ -3,6 +3,7 @@ package kaizen.plugins
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 import org.gradle.api.tasks.bundling.Zip
+import org.gradle.util.ConfigureUtil
 
 class BundlePlugin implements Plugin<Project> {
 
@@ -12,18 +13,11 @@ class BundlePlugin implements Plugin<Project> {
 		project.ext.repositoryForPublishing = project.file('../repository').absoluteFile
 		project.group = project.name
 		project.apply(plugin: UnityPlugin)
+		ConfigurationPlugin.addBundleConfigurationsTo(project)
 
 		// all sub projects are assemblies by convention
 		project.subprojects.each { subProject ->
 			subProject.apply(plugin: AssemblyPlugin)
-		}
-
-		project.configurations.add('editor') {
-			description 'Configuration for editor extension artifacts.'
-		}
-
-		project.configurations.add('tests') {
-			description 'Configuration for test assemblies.'
 		}
 
 		// a bundle needs the deployment capabilities given by the base plugin
@@ -34,8 +28,7 @@ class BundlePlugin implements Plugin<Project> {
 
 		// a bundle depends on all of its sub projects
 		project.subprojects.each { subProject ->
-			def isTest = subProject.name.endsWith('.Tests')
-			def config = isTest ? 'tests' : 'editor'
+			def config = ConfigurationPlugin.defaultConfigurationFor(subProject).name
 			project.dependencies.add(
 				config,
 				project.dependencies.project(
@@ -43,7 +36,7 @@ class BundlePlugin implements Plugin<Project> {
 					configuration: config))
 		}
 
-		project.configure(project) {
+		configure(project) {
 
 			task('zip', type: Zip) {
 				description "Packs the bundle for distribution."
@@ -55,11 +48,7 @@ class BundlePlugin implements Plugin<Project> {
 			}
 
 			// just an alias for now
-			task('publish', depends: uploadEditor)
-
-			artifacts {
-				editor zip
-			}
+			task('publish', dependsOn: ['uploadEditor'])
 
 			// setup upload tasks after project evaluation
 			// so extension properties can be freely modified
@@ -81,14 +70,19 @@ class BundlePlugin implements Plugin<Project> {
 					repositories {
 						ivy { url repositoryForPublishing }
 					}
-					tasks.uploadEditor {
-						repositories {
-							ivy { url repositoryForPublishing }
+					if (tasks.findByName('uploadEditor')) {
+						tasks.uploadEditor {
+							repositories {
+								ivy { url repositoryForPublishing }
+							}
 						}
 					}
 				}
 			}
-
 		}
+	}
+
+	def configure(Project project, Closure closure) {
+		ConfigureUtil.configure(closure, project)
 	}
 }

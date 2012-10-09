@@ -15,16 +15,33 @@ class ConfigurationPlugin implements Plugin<Project> {
 
 	@Override
 	void apply(Project project) {
-		project.configurations.add(EDITOR) {
-			description 'Configuration for editor extension artifacts.'
+
+		if (ProjectClassifier.isTest(project)) {
+			addTestsConfigurationTo(project)
+			return
 		}
 
+		addEditorConfigurationTo(project)
+	}
+
+	static void addBundleConfigurationsTo(Project project) {
+		addEditorConfigurationTo(project)
+		addTestsConfigurationTo(project)
+	}
+
+	private static void addTestsConfigurationTo(Project project) {
 		project.configurations.add(TESTS) {
-			description 'Configuration for test assemblies.'
+			description 'Configuration for tests.'
+		}
+	}
+
+	private static void addEditorConfigurationTo(Project project) {
+		project.configurations.add(EDITOR) {
+			description 'Configuration for editor extension artifacts.'
 		}
 	}
 
 	private static String defaultConfigurationNameFor(Project project) {
-		ProjectClassifier.isTestProject(project) ? TESTS : EDITOR
+		ProjectClassifier.isTest(project) ? TESTS : EDITOR
 	}
 }

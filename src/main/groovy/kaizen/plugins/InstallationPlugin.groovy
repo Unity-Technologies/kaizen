@@ -2,6 +2,7 @@ package kaizen.plugins
 
 import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.util.ConfigureUtil
 
 class InstallationPlugin implements Plugin<Project> {
 
@@ -12,7 +13,7 @@ class InstallationPlugin implements Plugin<Project> {
 		// in unity project Temp dir
 		project.buildDir = project.file("../../Temp/kaizen")
 
-		project.configure(project) {
+		configure(project) {
 			configurations {
 				editor
 			}
@@ -27,5 +28,9 @@ class InstallationPlugin implements Plugin<Project> {
 		if (bundlesFile.exists()) project.apply(from: bundlesFile)
 
 		project.apply(plugin: LibsPlugin)
+	}
+
+	def configure(Project project, Closure closure) {
+		ConfigureUtil.configure(closure, project)
 	}
 }
