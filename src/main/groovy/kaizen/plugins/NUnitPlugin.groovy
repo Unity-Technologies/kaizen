@@ -17,13 +17,13 @@ class NUnitPlugin implements Plugin<Project> {
 		def nunitVersion = bundle.extensions.nunit.version
 		configure(bundle) {
 			dependencies {
-				tests "NUnit:NUnit:${nunitVersion}"
+				tests "nunit:nunit-console:${nunitVersion}"
 			}
 		}
 		bundle.subprojects.findAll { ProjectClassifier.isTest(it) }.each { testProject ->
 			configure(testProject) {
 				dependencies {
-					tests "NUnit:nunit.framework:${nunitVersion}"
+					tests "nunit:nunit.framework:${nunitVersion}"
 				}
 
 				task('test', type: NUnitTask, dependsOn: 'compile') {

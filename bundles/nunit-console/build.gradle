@@ -19,7 +19,7 @@ def captureNUnitVersionOf(executable) {
 	matches.first()
 }
 
-group = 'NUnit'
+group = 'nunit'
 version = captureNUnitVersionOf("$nunitDir/bin/nunit-console.exe")
 
 dependencies {
