@@ -1,6 +1,6 @@
 package kaizen.plugins
 
-class AssemblyPluginSpecification extends PluginSpecification {
+class AssemblyPluginSpec extends PluginSpecification {
 
 	def project = projectWithName('C')
 

@@ -4,7 +4,7 @@ import spock.lang.*
 import org.gradle.testfixtures.ProjectBuilder
 import kaizen.foundation.SystemInformation
 
-class UnityPluginSpecification extends Specification {
+class UnityPluginSpec extends Specification {
 
 	def 'mono path is resolved against unityDir property'() {
 

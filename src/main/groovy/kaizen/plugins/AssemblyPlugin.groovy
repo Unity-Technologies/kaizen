@@ -69,9 +69,10 @@ class AssemblyPlugin implements Plugin<Project> {
 		def externalAssemblies = externalDeps.collect { p.rootProject.file("libs/$configName/${it.name}.dll")}
 		def localAssemblies = assemblyDeps.collect { it.name }
 
-		def assemblyReferences = (projectAssemblies + externalAssemblies + localAssemblies).collect { "-r:$it" }
+		def assemblyFiles = projectAssemblies + externalAssemblies
+		def assemblyReferences = (assemblyFiles + localAssemblies).collect { "-r:$it" }
 		
-		def compileTask = p.tasks.compile
+		DefaultTask compileTask = p.tasks.compile
 		def defaultCompilerArgs = [
 			"-out:$p.assemblyPath",
 			"-target:library",
@@ -81,11 +82,18 @@ class AssemblyPlugin implements Plugin<Project> {
 		]
 		compileTask.executable = p.rootProject.unity.tools.gmcs.executable
 		compileTask.args = defaultCompilerArgs + assemblyReferences
-		compileTask.inputs.files(projectAssemblies)
+		compileTask.inputs.files(assemblyFiles)
+		compileTask.dependsOn(*projectDeps*.tasks.compile)
+		compileTask.doLast {
+			assemblyFiles.each { file ->
+				p.copy {
+					from file.parentFile
+					include file.name
+					into p.buildDir
+				}
 	}
 
 	String xmlDocFileFor(File assemblyPath) {
 		return new File(assemblyPath.parentFile, FileName.withoutExtension(assemblyPath) + ".xml")
 	}
 }
-
