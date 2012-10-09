@@ -10,13 +10,12 @@ ext {
 def captureNUnitVersionOf(executable) {
 	def process = "mono $executable".execute()
 	process.waitFor()
-
 	def output = process.inputStream.text
 
 	def logoPattern = ~/NUnit-Console\s+version\s+((\d|\.)+)/
+
 	def matches = logoPattern.matcher(output).collect { it[1] }
 	assert matches.size() > 0, "Failed to capture NUnit version"
-
 	matches.first()
 }
 
