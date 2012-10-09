@@ -13,14 +13,14 @@ class NUnitPlugin implements Plugin<Project> {
 		project.afterEvaluate { configureNUnitDependencies it }
 	}
 
-	void configureNUnitDependencies(Project project) {
-		def nunitVersion = project.extensions.nunit.version
-		configure(project) {
+	void configureNUnitDependencies(Project bundle) {
+		def nunitVersion = bundle.extensions.nunit.version
+		configure(bundle) {
 			dependencies {
 				tests "NUnit:NUnit:${nunitVersion}"
 			}
 		}
-		project.subprojects.findAll { ProjectClassifier.isTest(it) }.each { testProject ->
+		bundle.subprojects.findAll { ProjectClassifier.isTest(it) }.each { testProject ->
 			configure(testProject) {
 				dependencies {
 					tests "NUnit:nunit.framework:${nunitVersion}"
