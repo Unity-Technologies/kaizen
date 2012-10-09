@@ -16,6 +16,7 @@ class AssemblyPlugin implements Plugin<Project> {
 		configure(project) {
 
 			apply plugin: ConfigurationPlugin
+			apply plugin: 'base'
 
 			ext {
 				assemblyName = project.name
@@ -46,8 +47,6 @@ class AssemblyPlugin implements Plugin<Project> {
 			return
 
 		configure(project) {
-			apply plugin: 'base'
-
 			task('publish', dependsOn: ['uploadEditor'])
 
 			task('zip', type: Zip, dependsOn: 'compile') {
