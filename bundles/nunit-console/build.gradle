@@ -1,10 +1,42 @@
-apply plugin: 'base'
 apply from: '../common.gradle'
 
-assert hasProperty('nunitDir'), 'Path to the NUnit distro must be specified (-PnunitDir=/path/to/NUnit)'
+def nunitZip = file("$buildDir/nunit.zip")
+def nunitDir = project.hasProperty('nunitDir') ? project.property('nunitDir') : file("$buildDir/nunit")
+def nunitBinDir = file("$nunitDir/bin")
 
-ext {
-	nunitBinDir = "$nunitDir/bin"
+task downloadLatest <<{
+
+	nunitZip.parentFile.mkdirs()
+
+	def latestUrl = new URL('http://sourceforge.net/projects/nunit/files/latest/download')
+	nunitZip.bytes = latestUrl.bytes
+
+}
+downloadLatest.onlyIf {
+	!nunitZip.exists()
+}
+
+task extractLatest(dependsOn: downloadLatest) {
+	doFirst {
+		project.copy {
+			from(zipTree(nunitZip)) {
+				eachFile {
+					// remove first segment (NUnit-2.6.1, for instance)
+					// so all files end up directly in $nunitDir
+					it.path = it.relativePath.segments[1..-1].join('/')
+				}
+			}
+			into nunitDir
+			include "NUnit-*/bin/**"
+		}
+	}
+}
+
+task captureVersion <<{
+	project.version = captureNUnitVersionOf("$nunitBinDir/nunit-console.exe")
+	subprojects { subProject ->
+		subProject.version = parent.version
+	}
 }
 
 def captureNUnitVersionOf(executable) {
@@ -19,36 +51,18 @@ def captureNUnitVersionOf(executable) {
 	matches.first()
 }
 
-group = 'nunit'
-version = captureNUnitVersionOf("$nunitDir/bin/nunit-console.exe")
-
-dependencies {
-	subprojects.each { subProject ->
-		'default' project(subProject.path)
-	}
-}
-
-task zip(type: Zip) {
-	from file(nunitBinDir)
-	include 'nunit-console.exe'
-}
-
-subprojects {
+allprojects {
 
 	apply plugin: 'base'
 
-	version = parent.version
-	group = parent.group
+	group = 'nunit'
 
 	task zip(type: Zip) {
-		from file((project.name == 'nunit.framework') ? nunitBinDir : "$nunitBinDir/lib")
+		from file((project.name in ['nunit.framework', 'nunit-console']) ? nunitBinDir : "$nunitBinDir/lib")
+		include "${project.name}.exe"
 		include "${project.name}.dll"
 		include "${project.name}.xml"
 	}
-
-}
-
-allprojects {
 
 	uploadDefault {
 		repositories {
@@ -56,10 +70,18 @@ allprojects {
 		}
 	}
 
-	task publish(dependsOn: uploadDefault)
+	task publish(dependsOn: [captureVersion, uploadDefault])
+
+	task publishLatest(dependsOn: [extractLatest, publish])
 
 	artifacts {
 		'default' zip
 	}
-
 }
+
+dependencies {
+	subprojects.each { subProject ->
+		'default' project(subProject.path)
+	}
+}
+
