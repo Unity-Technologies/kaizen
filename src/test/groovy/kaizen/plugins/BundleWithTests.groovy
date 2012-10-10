@@ -25,8 +25,18 @@ class BundleWithTests extends PluginSpecification {
 		projectsDependedUponBy('tests') == [p1Tests, p2Tests]
 	}
 
-	Object[] projectsDependedUponBy(String config) {
-		bundle.configurations[config].dependencies.collect { it.dependencyProject }
+	def 'test projects automatically depend on tested projects'() {
+		expect:
+		projectsDependedUponBy(p1Tests, 'tests') == [p1]
+		projectsDependedUponBy(p2Tests, 'tests') == [p2]
+	}
+
+	def projectsDependedUponBy(String config) {
+		projectsDependedUponBy(bundle, config)
+	}
+
+	def projectsDependedUponBy(Project project, String config) {
+		project.configurations[config].dependencies.collect { it.dependencyProject }
 	}
 
 	Project subProjectWithName(String name) {

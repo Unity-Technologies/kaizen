@@ -6,7 +6,6 @@ import org.gradle.api.tasks.Exec
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.util.ConfigureUtil
 import kaizen.foundation.FileName
-import org.apache.tools.ant.taskdefs.ExecTask;
 
 class AssemblyPlugin implements Plugin<Project> {
 
@@ -39,8 +38,10 @@ class AssemblyPlugin implements Plugin<Project> {
 		}
 
 		// test projects are never published
-		if (ProjectClassifier.isTest(project))
+		if (ProjectClassifier.isTest(project)) {
+			makeTestProjectDependOnTestee(project)
 			return
+		}
 
 		configure(project) {
 			task('publish', dependsOn: ['uploadEditor'])
@@ -60,12 +61,28 @@ class AssemblyPlugin implements Plugin<Project> {
 		}
 	}
 
+	private void makeTestProjectDependOnTestee(Project testProject) {
+		def testeeName = testProject.name[0..(testProject.name.lastIndexOf('.') - 1)]
+		def testee = testProject.rootProject.findProject(testeeName)
+		if (testee) {
+			testProject.dependencies.add(
+				defaultConfigurationNameFor(testProject),
+				testProject.dependencies.project(
+					path: testee.path,
+					configuration: defaultConfigurationNameFor(testee)))
+		}
+	}
+
+	def defaultConfigurationNameFor(Project project) {
+		defaultConfigurationFor(project).name
+	}
+
 	def configure(Project project, Closure closure) {
 		ConfigureUtil.configure(closure, project)
 	}
 
 	void adjustCompilationDependenciesOf(Project p) {
-		def config = ConfigurationPlugin.defaultConfigurationFor(p)
+		def config = defaultConfigurationFor(p)
 		def configName = config.name.capitalize()
 
 		def allDeps = config.allDependencies
@@ -102,6 +119,10 @@ class AssemblyPlugin implements Plugin<Project> {
 				}
 			}
 		}
+	}
+
+	private Configuration defaultConfigurationFor(Project p) {
+		ConfigurationPlugin.defaultConfigurationFor(p)
 	}
 
 	String xmlDocFileFor(File assemblyFile) {
