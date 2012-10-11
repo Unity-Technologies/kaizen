@@ -1,0 +1,48 @@
+apply from: '../common.gradle'
+
+version = '4.0.10827'
+def moqUrl = new URL("https://moq.googlecode.com/files/Moq.${version}.Final.zip")
+def moqZip = file("$buildDir/moq.zip")
+def moqDir = file("$buildDir/moq")
+
+task downloadLatest <<{
+	moqZip.parentFile.mkdirs()
+	moqZip.bytes = moqUrl.bytes
+}
+downloadLatest.onlyIf {
+	!moqZip.exists()
+}
+
+task extractLatest(type: Copy, dependsOn: downloadLatest) {
+	from(zipTree(moqZip)) {
+		eachFile {
+			// remove first two segment (Moq.${version}/NET35/)
+			// so all files end up directly in $moqDir
+			it.path = it.relativePath.segments[2..-1].join('/')
+		}
+	}
+	into moqDir
+	include '*/NET35/**'
+}
+
+apply plugin: 'base'
+
+group = project.name 
+
+task zip(type: Zip) {
+	from moqDir
+	include 'Moq.dll'
+	include 'Moq.xml'
+}
+
+uploadDefault {
+	repositories {
+		ivy { url repositoryForPublishing }
+	}
+}
+
+task publish(dependsOn: [extractLatest, uploadDefault])
+
+artifacts {
+	'default' zip
+}
