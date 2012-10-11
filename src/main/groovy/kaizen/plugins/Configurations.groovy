@@ -4,7 +4,7 @@ import org.gradle.api.artifacts.Configuration
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 
-class ConfigurationPlugin implements Plugin<Project> {
+class Configurations {
 
 	static final String EDITOR = 'editor'
 	static final String TESTS = 'tests'
@@ -13,9 +13,7 @@ class ConfigurationPlugin implements Plugin<Project> {
 		project.configurations[defaultConfigurationNameFor(project)]
 	}
 
-	@Override
-	void apply(Project project) {
-
+	static void addAssemblyConfigurationTo(Project project) {
 		if (ProjectClassifier.isTest(project)) {
 			addTestsConfigurationTo(project)
 			return

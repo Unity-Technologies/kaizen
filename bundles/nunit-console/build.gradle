@@ -16,20 +16,16 @@ downloadLatest.onlyIf {
 	!nunitZip.exists()
 }
 
-task extractLatest(dependsOn: downloadLatest) {
-	doFirst {
-		project.copy {
-			from(zipTree(nunitZip)) {
-				eachFile {
-					// remove first segment (NUnit-2.6.1, for instance)
-					// so all files end up directly in $nunitDir
-					it.path = it.relativePath.segments[1..-1].join('/')
-				}
-			}
-			into nunitDir
-			include "NUnit-*/bin/**"
+task extractLatest(type: Copy, dependsOn: downloadLatest) {
+	from(zipTree(nunitZip)) {
+		eachFile {
+			// remove first segment (NUnit-2.6.1, for instance)
+			// so all files end up directly in $nunitDir
+			it.path = it.relativePath.segments[1..-1].join('/')
 		}
 	}
+	into nunitDir
+	include "NUnit-*/bin/**"
 }
 
 task captureVersion <<{
