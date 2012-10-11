@@ -30,15 +30,16 @@ class ConfigurationPlugin implements Plugin<Project> {
 	}
 
 	private static void addTestsConfigurationTo(Project project) {
-		project.configurations.add(TESTS) {
-			description 'Configuration for tests.'
-		}
+		addConfigurationTo(project, TESTS, 'Configuration for tests.')
 	}
 
 	private static void addEditorConfigurationTo(Project project) {
-		project.configurations.add(EDITOR) {
-			description 'Configuration for editor extension artifacts.'
-		}
+		addConfigurationTo(project, EDITOR, 'Configuration for editor extension artifacts.')
+	}
+
+	private static void addConfigurationTo(Project project, String name, String description) {
+		def config = project.configurations.add(name)
+		config.description = description
 	}
 
 	private static String defaultConfigurationNameFor(Project project) {
