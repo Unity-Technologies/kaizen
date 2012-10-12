@@ -14,9 +14,29 @@ class AssemblyPlugin implements Plugin<Project> {
 
 		project.extensions.add('assembly', new AssemblyExtension(project))
 
+		if (project.configurations.isEmpty()) {
+			addDefaultAssemblyConfigurationTo(project)
+		}
+
+		configureCompilation(project)
+
+		if (ProjectClassifier.isTest(project)) {
+			configureTest(project)
+			return
+		}
+
+		if (ProjectClassifier.isEditorExtension(project)) {
+			configureEditorExtension(project)
+		}
+	}
+
+	private void addDefaultAssemblyConfigurationTo(Project project) {
+		Configurations.addDefaultAssemblyConfigurationTo(project)
+	}
+
+	private void configureCompilation(Project project) {
 		configure(project) {
 
-			apply plugin: ConfigurationPlugin
 			apply plugin: 'base'
 
 			task('compile', type: Exec, dependsOn: 'outputDir') {
@@ -30,19 +50,18 @@ class AssemblyPlugin implements Plugin<Project> {
 				adjustCompilationDependenciesOf project
 			}
 
-			task('outputDir') {
-				doFirst {
-					assembly.file.parentFile.mkdirs()
-				}
+			task('outputDir') << {
+				assembly.file.parentFile.mkdirs()
 			}
 		}
+	}
 
-		// test projects are never published
-		if (ProjectClassifier.isTest(project)) {
+	private void configureTest(Project project) {
+		if (AssemblyConventions.isTest(project))
 			makeTestProjectDependOnTestee(project)
-			return
-		}
+	}
 
+	private void configureEditorExtension(Project project) {
 		configure(project) {
 			task('publish', dependsOn: ['uploadEditor'])
 
@@ -66,15 +85,15 @@ class AssemblyPlugin implements Plugin<Project> {
 		def testee = testProject.rootProject.findProject(testeeName)
 		if (testee) {
 			testProject.dependencies.add(
-				defaultConfigurationNameFor(testProject),
+				compileConfigurationNameFor(testProject),
 				testProject.dependencies.project(
 					path: testee.path,
-					configuration: defaultConfigurationNameFor(testee)))
+					configuration: compileConfigurationNameFor(testee)))
 		}
 	}
 
-	def defaultConfigurationNameFor(Project project) {
-		defaultConfigurationFor(project).name
+	def compileConfigurationNameFor(Project project) {
+		compileConfigurationFor(project).name
 	}
 
 	def configure(Project project, Closure closure) {
@@ -82,14 +101,14 @@ class AssemblyPlugin implements Plugin<Project> {
 	}
 
 	void adjustCompilationDependenciesOf(Project p) {
-		def config = defaultConfigurationFor(p)
+		def config = compileConfigurationFor(p)
 		def configName = config.name.capitalize()
 
 		def allDeps = config.allDependencies
-		def projectDeps = allDeps.findAll { it instanceof ProjectDependency }.collect { it.dependencyProject }
 		def assemblyDeps = allDeps.findAll { it instanceof AssemblyDependency }
 		def externalDeps = allDeps.findAll { it instanceof ExternalModuleDependency }
-		
+
+		def projectDeps = ProjectDependencies.projectsDependedUponBy(config)
 		def projectAssemblies = projectDeps.collect { it.assembly.file }
 		def externalAssemblies = externalDeps.collect { p.rootProject.file("libs/$configName/${it.name}.dll")}
 		def localAssemblies = assemblyDeps.collect { it.name }
@@ -121,8 +140,8 @@ class AssemblyPlugin implements Plugin<Project> {
 		}
 	}
 
-	private Configuration defaultConfigurationFor(Project p) {
-		ConfigurationPlugin.defaultConfigurationFor(p)
+	private Configuration compileConfigurationFor(Project p) {
+		Configurations.defaultConfigurationFor(p)
 	}
 
 	String xmlDocFileFor(File assemblyFile) {

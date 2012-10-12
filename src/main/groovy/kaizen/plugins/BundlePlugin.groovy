@@ -13,7 +13,7 @@ class BundlePlugin implements Plugin<Project> {
 		project.ext.repositoryForPublishing = project.file('../repository').absoluteFile
 		project.group = project.name
 		project.apply(plugin: UnityPlugin)
-		ConfigurationPlugin.addBundleConfigurationsTo(project)
+		Configurations.addBundleConfigurationsTo(project)
 
 		// all sub projects are assemblies by convention
 		project.subprojects.each { subProject ->
@@ -28,12 +28,14 @@ class BundlePlugin implements Plugin<Project> {
 
 		// a bundle depends on all of its sub projects
 		project.subprojects.each { subProject ->
-			def config = ConfigurationPlugin.defaultConfigurationFor(subProject).name
-			project.dependencies.add(
-				config,
-				project.dependencies.project(
-					path: subProject.path,
-					configuration: config))
+			subProject.afterEvaluate {
+				def config = Configurations.defaultConfigurationNameFor(subProject)
+				project.dependencies.add(
+					config,
+					project.dependencies.project(
+						path: subProject.path,
+						configuration: config))
+			}
 		}
 
 		configure(project) {

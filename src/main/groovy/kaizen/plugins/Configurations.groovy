@@ -2,22 +2,29 @@ package kaizen.plugins
 
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.Project
-import org.gradle.api.Plugin
+
 
 class Configurations {
 
 	static final String EDITOR = 'editor'
-	static final String TESTS = 'tests'
+	static final String TEST = 'tests'
 
 	static Configuration defaultConfigurationFor(Project project) {
 		project.configurations[defaultConfigurationNameFor(project)]
 	}
 
-	static void addAssemblyConfigurationTo(Project project) {
-		if (ProjectClassifier.isTest(project)) {
+	static String defaultConfigurationNameFor(Project project) {
+		ProjectClassifier.isTest(project) ? TEST : EDITOR
+	}
+
+	static void addDefaultAssemblyConfigurationTo(Project project) {
+		if (AssemblyConventions.isTest(project)) {
 			addTestsConfigurationTo(project)
 			return
 		}
+
+		if (ProjectClassifier.isTest(project))
+			return
 
 		addEditorConfigurationTo(project)
 	}
@@ -28,7 +35,7 @@ class Configurations {
 	}
 
 	private static void addTestsConfigurationTo(Project project) {
-		addConfigurationTo(project, TESTS, 'Configuration for tests.')
+		addConfigurationTo(project, TEST, 'Configuration for tests.')
 	}
 
 	private static void addEditorConfigurationTo(Project project) {
@@ -38,9 +45,5 @@ class Configurations {
 	private static void addConfigurationTo(Project project, String name, String description) {
 		def config = project.configurations.add(name)
 		config.description = description
-	}
-
-	private static String defaultConfigurationNameFor(Project project) {
-		ProjectClassifier.isTest(project) ? TESTS : EDITOR
 	}
 }

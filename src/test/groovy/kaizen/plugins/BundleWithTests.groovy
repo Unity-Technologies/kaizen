@@ -1,10 +1,7 @@
 package kaizen.plugins
 
-import org.gradle.api.Project
+class BundleWithTests extends BundleSpecification {
 
-class BundleWithTests extends PluginSpecification {
-
-	def bundle = projectWithName('bundle')
 	def p1 = subProjectWithName('p1')
 	def p1Tests = subProjectWithName('p1.Tests')
 	def p2 = subProjectWithName('p2')
@@ -13,6 +10,7 @@ class BundleWithTests extends PluginSpecification {
 	@Override
 	void setup() {
 		bundle.apply plugin: BundlePlugin
+		triggerBundleEvaluation()
 	}
 
 	def 'editor configuration depends on every sub project except tests'() {
@@ -29,17 +27,5 @@ class BundleWithTests extends PluginSpecification {
 		expect:
 		projectsDependedUponBy(p1Tests, 'tests') == [p1]
 		projectsDependedUponBy(p2Tests, 'tests') == [p2]
-	}
-
-	def projectsDependedUponBy(String config) {
-		projectsDependedUponBy(bundle, config)
-	}
-
-	def projectsDependedUponBy(Project project, String config) {
-		project.configurations[config].dependencies.collect { it.dependencyProject }
-	}
-
-	Project subProjectWithName(String name) {
-		projectBuilderWithName(name).withParent(bundle).build()
 	}
 }

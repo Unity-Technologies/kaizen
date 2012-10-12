@@ -16,6 +16,11 @@ class Unity implements MonoFramework {
 	Unity(Project project) {
 		this.project = project
 		this.tools = new UnityTools(this)
+		this.unityDir = defaultUnityLocation()
+	}
+
+	def defaultUnityLocation() {
+		'/Applications/Unity/Unity.app'
 	}
 
 	String monoExecutable(String name) {

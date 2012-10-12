@@ -21,6 +21,6 @@ class AssemblyPluginSpec extends PluginSpecification {
 
 	def 'editor configuration is present'() {
 		expect:
-		project.configurations.editor != null
+		project.configurations.getByName(Configurations.EDITOR)
 	}
 }
