@@ -18,15 +18,11 @@ class AssemblyPlugin implements Plugin<Project> {
 			addDefaultAssemblyConfigurationTo(project)
 		}
 
-		configureCompilation(project)
+		configureCompilationOf(project)
 
 		if (ProjectClassifier.isTest(project)) {
 			configureTest(project)
 			return
-		}
-
-		if (ProjectClassifier.isEditorExtension(project)) {
-			configureEditorExtension(project)
 		}
 	}
 
@@ -34,16 +30,26 @@ class AssemblyPlugin implements Plugin<Project> {
 		Configurations.addDefaultAssemblyConfigurationTo(project)
 	}
 
-	private void configureCompilation(Project project) {
+	private void configureCompilationOf(Project project) {
 		configure(project) {
 
 			apply plugin: 'base'
 
-			task('compile', type: Exec, dependsOn: 'outputDir') {
+			task('compile', type: Exec, dependsOn: 'copyDependencies') {
 				description "Compiles all sources in the project directory."
+			}
 
-				outputs.file assembly.file
-				inputs.source fileTree(dir: project.projectDir, include: '**/*.cs')
+			task('copyDependencies', dependsOn: 'outputDir') {
+				description "Copies all incoming dependencies into the build directory."
+			}
+
+			task('zip', type: Zip, dependsOn: 'compile') {
+				description "Packs the assembly for distribution."
+
+				baseName = assembly.name
+				from project.buildDir
+				include assembly.file.name
+				include "${assembly.name}.xml"
 			}
 
 			afterEvaluate {
@@ -59,25 +65,6 @@ class AssemblyPlugin implements Plugin<Project> {
 	private void configureTest(Project project) {
 		if (AssemblyConventions.isTest(project))
 			makeTestProjectDependOnTestee(project)
-	}
-
-	private void configureEditorExtension(Project project) {
-		configure(project) {
-			task('publish', dependsOn: ['uploadEditor'])
-
-			task('zip', type: Zip, dependsOn: 'compile') {
-				description "Packs the assembly for distribution."
-
-				baseName = assembly.name
-				from project.buildDir
-				include assembly.file.name
-				include "${assembly.name}.xml"
-			}
-
-			artifacts {
-				editor zip
-			}
-		}
 	}
 
 	private void makeTestProjectDependOnTestee(Project testProject) {
@@ -96,48 +83,47 @@ class AssemblyPlugin implements Plugin<Project> {
 		compileConfigurationFor(project).name
 	}
 
-	def configure(Project project, Closure closure) {
-		ConfigureUtil.configure(closure, project)
+	def configure(Object object, Closure closure) {
+		ConfigureUtil.configure(closure, object)
 	}
 
-	void adjustCompilationDependenciesOf(Project p) {
-		def config = compileConfigurationFor(p)
-		def configName = config.name.capitalize()
+	void adjustCompilationDependenciesOf(Project project) {
 
-		def allDeps = config.allDependencies
-		def assemblyDeps = allDeps.findAll { it instanceof AssemblyDependency }
-		def externalDeps = allDeps.findAll { it instanceof ExternalModuleDependency }
+		def buildDir = project.buildDir
+		def assemblyInBuildDir = { name -> new File(buildDir, "${name}.dll") }
+		def config = compileConfigurationFor(project)
+		def assemblyReferences = config.allDependencies.collect { assemblyInBuildDir(it.name) }
 
-		def projectDeps = ProjectDependencies.projectsDependedUponBy(config)
-		def projectAssemblies = projectDeps.collect { it.assembly.file }
-		def externalAssemblies = externalDeps.collect { p.rootProject.file("libs/$configName/${it.name}.dll")}
-		def localAssemblies = assemblyDeps.collect { it.name }
-
-		def assemblyFiles = projectAssemblies + externalAssemblies
-		def assemblyReferences = (assemblyFiles + localAssemblies).collect { "-r:$it" }
-		
-		DefaultTask compileTask = p.tasks.compile
-		def assemblyFile = p.assembly.file
-		def defaultCompilerArgs = [
-			"-out:$assemblyFile",
-			"-target:library",
-			"-recurse:*.cs",
-			"-doc:${xmlDocFileFor(assemblyFile)}",
-			"-nowarn:1591"
-		]
-		compileTask.executable = p.rootProject.unity.tools.gmcs.executable
-		compileTask.args = defaultCompilerArgs + assemblyReferences
-		compileTask.inputs.files(assemblyFiles)
-		compileTask.dependsOn(*projectDeps*.tasks.compile)
-		compileTask.doLast {
-			assemblyFiles.each { file ->
-				p.copy {
-					from file.parentFile
-					include file.name
-					into p.buildDir
+		configure(project.tasks.copyDependencies) {
+			inputs.source config.incoming.files
+			outputs.files config.incoming.collect { assemblyInBuildDir(it.name) }
+			doFirst {
+				config.incoming.files.each { file ->
+					project.copy {
+						from project.zipTree(file)
+						into buildDir
+						include '*.dll'
+					}
 				}
 			}
 		}
+
+		def assemblyFile = project.assembly.file
+		configure(project.tasks.compile) {
+			//dependsOn 'copyDependencies'
+			outputs.file project.assembly.file
+			inputs.source assemblyReferences
+			inputs.source project.fileTree(dir: project.projectDir, include: '**/*.cs')
+			executable = project.rootProject.unity.tools.gmcs.executable
+			args "-out:$assemblyFile"
+			args "-target:library"
+			args "-recurse:*.cs"
+			args "-doc:${xmlDocFileFor(assemblyFile)}"
+			args "-nowarn:1591"
+			args assemblyReferences.collect { "-r:$it" }
+		}
+
+		project.artifacts.add(config.name, project.tasks.zip)
 	}
 
 	private Configuration compileConfigurationFor(Project p) {
