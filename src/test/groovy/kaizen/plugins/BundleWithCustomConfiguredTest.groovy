@@ -9,7 +9,7 @@ class BundleWithCustomConfiguredTest extends BundleSpecification {
 
 	void setup() {
 		bundle.apply plugin: BundlePlugin
-		triggerBundleEvaluation()
+		evaluateBundle()
 	}
 
 	def 'custom test assembly is included in the test configuration'() {

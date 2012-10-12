@@ -10,7 +10,7 @@ class BundleWithTests extends BundleSpecification {
 	@Override
 	void setup() {
 		bundle.apply plugin: BundlePlugin
-		triggerBundleEvaluation()
+		evaluateBundle()
 	}
 
 	def 'editor configuration depends on every sub project except tests'() {

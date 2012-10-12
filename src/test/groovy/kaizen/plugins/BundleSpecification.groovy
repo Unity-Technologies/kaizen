@@ -19,7 +19,7 @@ abstract class BundleSpecification extends PluginSpecification {
 		project.configurations[config].dependencies.collect { it.dependencyProject }
 	}
 
-	void triggerBundleEvaluation() {
+	void evaluateBundle() {
 		bundle.allprojects.each {
 			(it as ProjectInternal).evaluate()
 		}
