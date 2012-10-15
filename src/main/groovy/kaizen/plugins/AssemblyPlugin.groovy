@@ -108,22 +108,35 @@ class AssemblyPlugin implements Plugin<Project> {
 			}
 		}
 
+		def mono = project.rootProject.unity.mono
 		def assemblyFile = project.assembly.file
 		configure(project.tasks.compile) {
-			//dependsOn 'copyDependencies'
-			outputs.file project.assembly.file
+			outputs.file assemblyFile
 			inputs.source assemblyReferences
-			inputs.source project.fileTree(dir: project.projectDir, include: '**/*.cs')
-			executable = project.rootProject.unity.tools.gmcs.executable
+			executable mono.cli
+
+			if (isBooProject(project)) {
+				inputs.source project.fileTree(dir: project.projectDir, include: "**/*.boo")
+				args mono.booc.executable
+				args "-srcdir:${project.projectDir}"
+			} else {
+				inputs.source project.fileTree(dir: project.projectDir, include: "**/*.cs")
+				args mono.gmcs.executable
+				args "-recurse:*.cs"
+				args "-doc:${xmlDocFileFor(assemblyFile)}"
+				args "-nowarn:1591"
+			}
+
+			args assemblyReferences.collect { "-r:$it" }
 			args "-out:$assemblyFile"
 			args "-target:library"
-			args "-recurse:*.cs"
-			args "-doc:${xmlDocFileFor(assemblyFile)}"
-			args "-nowarn:1591"
-			args assemblyReferences.collect { "-r:$it" }
 		}
 
 		project.artifacts.add(config.name, project.tasks.zip)
+	}
+
+	boolean isBooProject(Project project) {
+		project.projectDir.listFiles({ dir, name -> name.endsWith('.boo') } as FilenameFilter).any()
 	}
 
 	private Configuration compileConfigurationFor(Project p) {

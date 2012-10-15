@@ -54,7 +54,7 @@ class NUnitTask extends DefaultTask {
 	def runTests() {
 		def nunitConsole = project.rootProject.file('libs/Tests/nunit-console.exe')
 		def result = project.exec {
-			commandLine project.unity.tools.cli.executable
+			commandLine project.unity.mono.cli
 			args nunitConsole
 			args '-nologo', '-nodots'
 			args "-work=${project.buildDir}"

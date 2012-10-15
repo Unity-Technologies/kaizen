@@ -5,43 +5,28 @@ import org.gradle.api.Project
 import kaizen.foundation.SystemInformation
 import kaizen.foundation.Paths
 
-class Unity implements MonoFramework {
+class Unity implements MonoPathProvider {
 
 	def unityDir
 
-	final UnityTools tools
+	final MonoFramework mono
 
 	final Project project
 
 	Unity(Project project) {
 		this.project = project
-		this.tools = new UnityTools(this)
 		this.unityDir = defaultUnityLocation()
+		this.mono = new MonoFramework(this)
+	}
+
+	@Override
+	String getMonoPath() {
+		def frameworksPath = SystemInformation.isMac() ? 'Contents/Frameworks' : 'Data'
+		Paths.combine absoluteUnityDir(), frameworksPath, 'Mono'
 	}
 
 	def defaultUnityLocation() {
 		'/Applications/Unity/Unity.app'
-	}
-
-	String monoExecutable(String name) {
-		platformSpecificExecutable monoBinPath(name)
-	}
-
-	String platformSpecificExecutable(String executable) {
-		isWindows() ? "${executable}.bat" : executable
-	}
-
-	private boolean isWindows() {
-		SystemInformation.isWindows()
-	}
-
-	String monoBinPath(String path) {
-		Paths.combine monoPath("bin"), path
-	}
-
-	String monoPath(String relativePath) {
-		def frameworksPath = SystemInformation.isMac() ? 'Contents/Frameworks' : 'Data'
-		Paths.combine absoluteUnityDir(), frameworksPath, 'Mono', relativePath
 	}
 
 	private absoluteUnityDir() {
@@ -52,41 +37,3 @@ class Unity implements MonoFramework {
 		project.hasProperty('unityDir') ? project.property('unityDir') : unityDir
 	}
 }
-
-
-class UnityTools {
-	Unity parent
-
-	UnityTools(Unity parent) {
-		this.parent = parent
-	}
-
-	MonoTool getGmcs() {
-		new MonoTool(parent, "gmcs")
-	}
-
-	MonoTool getCli() {
-		new MonoTool(parent, "cli")
-	}
-}
-
-
-interface MonoFramework {
-	String monoExecutable(String name)
-}
-
-
-class MonoTool {
-	final MonoFramework framework
-	final String name
-
-	MonoTool(MonoFramework framework, String name) {
-		this.framework = framework
-		this.name = name
-	}
-
-	String getExecutable() {
-		framework.monoExecutable(name)
-	}
-}
-
