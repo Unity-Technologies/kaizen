@@ -96,7 +96,8 @@ class AssemblyPlugin implements Plugin<Project> {
 
 		configure(project.tasks.copyDependencies) {
 			inputs.source config.incoming.files
-			outputs.files config.incoming.collect { assemblyInBuildDir(it.name) }
+			//for some reason, declaring the outputs doesn't work
+			//outputs.files config.incoming.collect { assemblyInBuildDir(it.name) }
 			doFirst {
 				config.incoming.files.each { file ->
 					project.copy {
