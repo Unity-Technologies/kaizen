@@ -40,6 +40,16 @@ subprojects {
 	}
 }
 
+configurations {
+	editor
+}
+
+dependencies {
+	subprojects.each {
+		editor project(path: it.path, configuration: 'editor')
+	}
+}
+
 project(':UnityEditor') {
 	dependencies {
 		[':UnityEngine', ':ICSharpCode.NRefactory'].each {
