@@ -119,6 +119,8 @@ class AssemblyPlugin implements Plugin<Project> {
 				inputs.source project.fileTree(dir: project.projectDir, include: "**/*.boo")
 				args mono.booc.executable
 				args "-srcdir:${project.projectDir}"
+				args '-r:Boo.Lang.PatternMatching.dll'
+				args '-r:Boo.Lang.Useful.dll'
 			} else {
 				inputs.source project.fileTree(dir: project.projectDir, include: "**/*.cs")
 				args mono.gmcs.executable
