@@ -1,2 +1,3 @@
 include 'UnityEngine'
 include 'UnityEditor'
+include 'ICSharpCode.NRefactory' // unfortunately depended upon by UnityEditor

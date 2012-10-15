@@ -40,10 +40,10 @@ subprojects {
 	}
 }
 
-def UnityEngine = project(':UnityEngine')
-def UnityEditor = project(':UnityEditor')
-UnityEditor.dependencies.add(
-	'editor',
-	UnityEditor.dependencies.project(
-			path: UnityEngine.path,
-			configuration: 'editor'))
+project(':UnityEditor') {
+	dependencies {
+		[':UnityEngine', ':ICSharpCode.NRefactory'].each {
+			editor project(path: it, configuration: 'editor')
+		}
+	}
+}
