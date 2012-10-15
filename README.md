@@ -1,6 +1,8 @@
 # kaizen
 
-A continuous delivery framework for Unity extensions.
+A dependency management and continuous delivery framework for Unity extensions.
+
+## Rationale
 
 The underlying assumption is that by breaking system functionality into smaller units
 that can be evolved and deployed independently of each other integration becomes simpler
