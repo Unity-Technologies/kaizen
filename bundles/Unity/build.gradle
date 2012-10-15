@@ -1,19 +1,56 @@
 apply plugin: 'base'
 apply from: '../common.gradle'
 
-if (!hasProperty('unityDir'))
-	ext { unityDir = '/Applications/Unity/Unity.app' }
+if (!hasProperty('unityExecutable'))
+	ext { unityExecutable = '/Applications/Unity/Unity.app/Contents/MacOS/Unity' }
 
-if (!hasProperty('unityLibsDir'))
-	ext { unityLibsDir = new File(unityDir, 'Contents/Frameworks/Managed') }
+def unityProject = file("$buildDir/project")
 
-def bundleVersionPattern = ~/<key>CFBundleVersion<\/key>\s*\n\s*<string>(.+)<\/string>/
+def scriptFile = new File(unityProject, 'Assets/Editor/Logger.js')
+scriptFile.parentFile.mkdirs()
+scriptFile.text = '''
+import System.Linq;
+import System.IO;
 
-version = bundleVersionPattern.matcher(new File(unityDir, 'Contents/Info.plist').text).collect { it[1] }.first()
+static function LogAll() {
+  Log(Path.GetDirectoryName(typeof(UnityEngine.Object).Assembly.Location));
+
+  Log(Application.unityVersion);
+
+  //var editorReferences = typeof(UnityEditor.EditorApplication).Assembly.GetReferencedAssemblies();
+  //for (var editorRef in editorReferences) Log(editorRef);
+  //Log(editorReferences.Single(function(assemblyName) { return assemblyName.Name == 'ICSharpCode.NRefactory'; }).Version);
+}
+
+static function Log(o) {
+	Debug.Log("(" + o + ")");
+}
+'''
+
+def logFile = file("$buildDir/unityLog.txt")
+
+project.exec {
+	commandLine unityExecutable
+	args '-batchMode'
+	args '-quit'
+	args '-projectPath'
+	args unityProject
+	args '-executeMethod'
+	args 'Logger.LogAll'
+	args '-cleanedLogFile'
+	args logFile
+}
+
+def pattern = ~/\((.+?)\)/
+def log = logFile.text
+def matches = pattern.matcher(log).collect { it[1] }
+
+def unityLibsDir = matches[0]
+def unityVersion = matches[1]
 
 subprojects {
 
-	version = parent.version
+	version = unityVersion
 	group = 'Unity'
 
 	configurations {
