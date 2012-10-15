@@ -109,21 +109,23 @@ class AssemblyPlugin implements Plugin<Project> {
 			}
 		}
 
-		def mono = project.rootProject.unity.mono
+		def unity = project.rootProject.unity
+		def mono = unity.mono
 		def assemblyFile = project.assembly.file
 		configure(project.tasks.compile) {
 			outputs.file assemblyFile
-			inputs.source assemblyReferences
-			executable mono.cli
+			inputs.files assemblyReferences
 
 			if (isBooProject(project)) {
 				inputs.source project.fileTree(dir: project.projectDir, include: "**/*.boo")
+				executable unity.monoBleedingEdge.cli
 				args mono.booc.executable
 				args "-srcdir:${project.projectDir}"
 				args '-r:Boo.Lang.PatternMatching.dll'
 				args '-r:Boo.Lang.Useful.dll'
 			} else {
 				inputs.source project.fileTree(dir: project.projectDir, include: "**/*.cs")
+				executable unity.mono.cli
 				args mono.gmcs.executable
 				args "-recurse:*.cs"
 				args "-doc:${xmlDocFileFor(assemblyFile)}"

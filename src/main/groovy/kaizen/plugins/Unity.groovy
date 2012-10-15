@@ -5,24 +5,27 @@ import org.gradle.api.Project
 import kaizen.foundation.SystemInformation
 import kaizen.foundation.Paths
 
-class Unity implements MonoPathProvider {
+class Unity implements FrameworkLocator {
 
 	def unityDir
 
 	final MonoFramework mono
+
+	final MonoFramework monoBleedingEdge
 
 	final Project project
 
 	Unity(Project project) {
 		this.project = project
 		this.unityDir = defaultUnityLocation()
-		this.mono = new MonoFramework(this)
+		this.mono = new MonoFramework(this, 'Mono')
+		this.monoBleedingEdge = new MonoFramework(this, 'MonoBleedingEdge')
 	}
 
 	@Override
-	String getMonoPath() {
+	String getFrameworkPath(String frameworkName) {
 		def frameworksPath = SystemInformation.isMac() ? 'Contents/Frameworks' : 'Data'
-		Paths.combine absoluteUnityDir(), frameworksPath, 'Mono'
+		Paths.combine absoluteUnityDir(), frameworksPath, frameworkName
 	}
 
 	def defaultUnityLocation() {

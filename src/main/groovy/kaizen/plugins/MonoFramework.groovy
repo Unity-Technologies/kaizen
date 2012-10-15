@@ -3,15 +3,17 @@ package kaizen.plugins
 import kaizen.foundation.Paths
 import kaizen.foundation.SystemInformation
 
-interface MonoPathProvider {
-	String getMonoPath()
+interface FrameworkLocator {
+	String getFrameworkPath(String frameworkName)
 }
 
 class MonoFramework {
-	final MonoPathProvider pathProvider
+	final FrameworkLocator locator
+	String frameworkName
 
-	MonoFramework(MonoPathProvider pathProvider) {
-		this.pathProvider = pathProvider
+	MonoFramework(FrameworkLocator locator, String frameworkName) {
+		this.locator = locator
+		this.frameworkName = frameworkName
 	}
 
 	MonoTool getGmcs() {
@@ -47,7 +49,7 @@ class MonoFramework {
 	}
 
 	String getMonoPath() {
-		pathProvider.monoPath
+		locator.getFrameworkPath(frameworkName)
 	}
 }
 
