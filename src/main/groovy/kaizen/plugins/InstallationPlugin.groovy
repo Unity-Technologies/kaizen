@@ -12,25 +12,26 @@ class InstallationPlugin implements Plugin<Project> {
 		// ensures temporary files are generated
 		// in unity project Temp dir
 		project.buildDir = project.file("../../Temp/kaizen")
+		project.configurations.add('editor')
 
-		configure(project) {
-			configurations {
-				editor
-			}
-			repositories {
-				ivy { url '../../../repository' }
-				ivy { url 'http://bamboo.github.com/kaizen/repository/' }
-			}
-		}
-
-		// load dependencies from bundles file
-		def bundlesFile = project.file('bundles.gradle')
-		if (bundlesFile.exists()) project.apply(from: bundlesFile)
+		applyStartupFiles(project)
 
 		project.apply(plugin: LibsPlugin)
 	}
 
-	def configure(Project project, Closure closure) {
-		ConfigureUtil.configure(closure, project)
+	// loads all files from kaizen.d
+	private void applyStartupFiles(Project project) {
+		def startupDir = project.file('kaizen.d')
+		if (!startupDir.isDirectory()) {
+			project.logger.warn('kaizen.d is not a directory. No startup scripts will be loaded.')
+			return
+		}
+		gradleFilesIn(startupDir).each {
+			project.apply from: it
+		}
+	}
+
+	private File[] gradleFilesIn(File startupDir) {
+		startupDir.listFiles({ dir, name -> name.endsWith('.gradle') } as FilenameFilter)
 	}
 }
