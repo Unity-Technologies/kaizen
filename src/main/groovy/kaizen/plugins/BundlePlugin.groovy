@@ -72,12 +72,16 @@ class BundlePlugin implements Plugin<Project> {
 					repositories {
 						ivy { url repositoryForPublishing }
 					}
+
 					if (tasks.findByName('uploadEditor')) {
+
 						tasks.uploadEditor {
 							repositories {
 								ivy { url repositoryForPublishing }
 							}
 						}
+
+						task('publish', dependsOn: ['uploadEditor'])
 					}
 				}
 			}
