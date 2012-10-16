@@ -17,9 +17,10 @@ static function Probe() {
 
   LogParenthesizedValue(Application.unityVersion);
 
-  //var editorReferences = typeof(UnityEditor.EditorApplication).Assembly.GetReferencedAssemblies();
+  var editorReferences = typeof(UnityEditor.EditorApplication).Assembly.GetReferencedAssemblies();
   //for (var editorRef in editorReferences) Log(editorRef);
-  //Log(editorReferences.Single(function(assemblyName) { return assemblyName.Name == 'ICSharpCode.NRefactory'; }).Version);
+  var nrefactory = editorReferences.Single(function(assemblyName) { return assemblyName.Name == 'ICSharpCode.NRefactory'; });
+  LogParenthesizedValue(nrefactory.Version);
 }
 
 static function LogParenthesizedValue(o) {
@@ -47,10 +48,10 @@ def parenthesizedValues = parenthesizedValuePattern.matcher(log).collect { it[1]
 
 def unityLibsDir = parenthesizedValues[0]
 def unityVersion = parenthesizedValues[1]
+def nrefactoryVersion = parenthesizedValues[2];
 
 subprojects {
 
-	version = unityVersion
 	group = 'Unity'
 
 	configurations {
@@ -87,10 +88,19 @@ dependencies {
 	}
 }
 
+project(':UnityEngine') {
+	version = unityVersion
+}
+
 project(':UnityEditor') {
+	version = unityVersion
 	dependencies {
 		[':UnityEngine', ':ICSharpCode.NRefactory'].each {
 			editor project(path: it, configuration: 'editor')
 		}
 	}
+}
+
+project(':ICSharpCode.NRefactory') {
+	version = nrefactoryVersion
 }
