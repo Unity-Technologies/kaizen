@@ -6,23 +6,23 @@ if (!hasProperty('unityExecutable'))
 
 def unityProject = file("$buildDir/project")
 
-def scriptFile = new File(unityProject, 'Assets/Editor/Logger.js')
+def scriptFile = new File(unityProject, 'Assets/Editor/UnityVersionAndAssemblyInformationProbe.js')
 scriptFile.parentFile.mkdirs()
 scriptFile.text = '''
 import System.Linq;
 import System.IO;
 
-static function LogAll() {
-  Log(Path.GetDirectoryName(typeof(UnityEngine.Object).Assembly.Location));
+static function Probe() {
+  LogParenthesizedValue(Path.GetDirectoryName(typeof(UnityEngine.Object).Assembly.Location));
 
-  Log(Application.unityVersion);
+  LogParenthesizedValue(Application.unityVersion);
 
   //var editorReferences = typeof(UnityEditor.EditorApplication).Assembly.GetReferencedAssemblies();
   //for (var editorRef in editorReferences) Log(editorRef);
   //Log(editorReferences.Single(function(assemblyName) { return assemblyName.Name == 'ICSharpCode.NRefactory'; }).Version);
 }
 
-static function Log(o) {
+static function LogParenthesizedValue(o) {
 	Debug.Log("(" + o + ")");
 }
 '''
@@ -36,17 +36,17 @@ project.exec {
 	args '-projectPath'
 	args unityProject
 	args '-executeMethod'
-	args 'Logger.LogAll'
+	args 'UnityVersionAndAssemblyInformationProbe.Probe'
 	args '-cleanedLogFile'
 	args logFile
 }
 
-def pattern = ~/\((.+?)\)/
+def parenthesizedValuePattern = ~/\((.+?)\)/
 def log = logFile.text
-def matches = pattern.matcher(log).collect { it[1] }
+def parenthesizedValues = parenthesizedValuePattern.matcher(log).collect { it[1] }
 
-def unityLibsDir = matches[0]
-def unityVersion = matches[1]
+def unityLibsDir = parenthesizedValues[0]
+def unityVersion = parenthesizedValues[1]
 
 subprojects {
 
