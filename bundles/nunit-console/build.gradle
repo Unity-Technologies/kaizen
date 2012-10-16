@@ -66,9 +66,7 @@ allprojects {
 		}
 	}
 
-	task publish(dependsOn: [captureVersion, uploadDefault])
-
-	task publishLatest(dependsOn: [extractLatest, publish])
+	task publish(dependsOn: [extractLatest, captureVersion, uploadDefault])
 
 	artifacts {
 		'default' zip
