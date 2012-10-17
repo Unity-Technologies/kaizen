@@ -14,7 +14,7 @@ dependencies {
 
 uploadArchives {
 	repositories {
-		ivy { url uri('../repository') }
+		ivy { url '../repository' }
 	}
 }
 
