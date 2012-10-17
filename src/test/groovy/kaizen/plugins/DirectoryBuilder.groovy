@@ -1,29 +1,45 @@
 package kaizen.plugins
 
-class DirectoryBuilder extends BuilderSupport {
+import org.gradle.util.ConfigureUtil
 
-	@Override
-	protected void setParent(Object o, Object o1) {
-		//To change body of implemented methods use File | Settings | File Templates.
+class DirectoryBuilder {
+
+	static File tempDirWith(Closure closure) {
+		configure(createTempDir(), closure)
 	}
 
-	@Override
-	protected Object createNode(Object o) {
-		return null  //To change body of implemented methods use File | Settings | File Templates.
+	private static File configure(File root, Closure closure) {
+		def builder = new DirectoryBuilder(root)
+		ConfigureUtil.configure(closure, builder)
+		builder.root
 	}
 
-	@Override
-	protected Object createNode(Object o, Object o1) {
-		return null  //To change body of implemented methods use File | Settings | File Templates.
+	private static File createTempDir() {
+		File.createTempFile("kaizen", ".tmp").with { file ->
+			file.delete()
+			file.mkdir()
+			file
+		}
 	}
 
-	@Override
-	protected Object createNode(Object o, Map map) {
-		return null  //To change body of implemented methods use File | Settings | File Templates.
+	final File root
+
+	DirectoryBuilder(File root) {
+		this.root = root
 	}
 
-	@Override
-	protected Object createNode(Object o, Map map, Object o1) {
-		return null  //To change body of implemented methods use File | Settings | File Templates.
+	File dir(String name, Closure children = null) {
+		new File(root, name).with { dir ->
+			dir.mkdirs()
+			if (children)
+				configure(dir, children)
+		}
+	}
+
+	File file(String name, String content = '') {
+		new File(root, name).with { file ->
+			file.text = content
+			file
+		}
 	}
 }

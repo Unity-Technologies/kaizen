@@ -10,6 +10,14 @@ class DirectoryIndexerSpec extends Specification {
 			}
 		}
 		file('f1')
+
+		dir('.gradle')
+		dir('gradle')
+		file('gradlew')
+		file('gradlew.bat')
+		file('build.gradle')
+
+		file('.DS_Store')
 	}
 
 	void setup() {
@@ -23,7 +31,7 @@ class DirectoryIndexerSpec extends Specification {
 		file(repositoryDir, 'd1/d2/index.html').exists()
 	}
 
-	def 'index.html contains links to each file and directory'() {
+	def 'index.html contains links to each file and directory except index.html and *.gradle'() {
 		def expected = '''
 <html>
 	<body>
