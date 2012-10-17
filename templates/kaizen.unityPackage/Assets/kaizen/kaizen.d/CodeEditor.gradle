@@ -1,0 +1,3 @@
+dependencies {
+	editor 'CodeEditor:CodeEditor:latest.integration'
+}
