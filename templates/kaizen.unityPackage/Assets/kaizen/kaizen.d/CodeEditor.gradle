@@ -1,3 +1,3 @@
 dependencies {
-	editor 'CodeEditor:CodeEditor:latest.integration'
+	editor group: 'CodeEditor', name: 'CodeEditor', version: 'latest.integration', configuration: 'editor'
 }

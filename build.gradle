@@ -6,6 +6,30 @@ version = '0.1'
 
 task publish(dependsOn: [test, uploadArchives])
 
+task unityPackage <<{
+
+	def unityExecutable = project.hasProperty('unityExecutable') ?
+		project.property('unityExecutable') :
+		'/Applications/Unity/Unity.app/Contents/MacOS/Unity'
+
+	def logFile = file("$buildDir/unityPackage.log")
+	logFile.parentFile.mkdirs()
+
+	project.exec {
+		commandLine unityExecutable
+		args '-batchMode'
+		args '-quit'
+		args '-projectPath'
+		args file('templates/kaizen.unityPackage')
+		args '-exportPackage'
+		args 'Assets/kaizen'
+		args file("$buildDir/kaizen.unityPackage")
+		args '-cleanedLogFile'
+		args logFile
+	}
+	println logFile.text
+}
+
 dependencies {
 	compile gradleApi()
 	groovy localGroovy()
