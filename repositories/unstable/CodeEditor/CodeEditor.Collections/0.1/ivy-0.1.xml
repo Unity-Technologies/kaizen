@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="CodeEditor"
+		module="CodeEditor.Collections"
+		revision="0.1"
+		status="integration"
+		publication="20121017155424"
+	/>
+	<configurations>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+		<conf name="editor" visibility="public" description="Configuration for editor extension artifacts."/>
+	</configurations>
+	<publications>
+		<artifact name="CodeEditor.Collections" type="zip" ext="zip" conf="archives,editor"/>
+	</publications>
+</ivy-module>

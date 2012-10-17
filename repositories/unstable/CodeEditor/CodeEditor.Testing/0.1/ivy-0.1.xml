@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="CodeEditor"
+		module="CodeEditor.Testing"
+		revision="0.1"
+		status="integration"
+		publication="20121017155430"
+	/>
+	<configurations>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+		<conf name="editor" visibility="public" description="Configuration for editor extension artifacts."/>
+		<conf name="tests" visibility="public"/>
+	</configurations>
+	<publications>
+		<artifact name="CodeEditor.Testing" type="zip" ext="zip" conf="archives,tests"/>
+	</publications>
+	<dependencies>
+		<dependency org="CodeEditor" name="CodeEditor.Composition" rev="0.1" conf="tests->editor"/>
+		<dependency org="nunit" name="nunit.framework" rev="2.6+" conf="tests->default"/>
+		<dependency org="Moq" name="Moq" rev="4.0+" conf="tests->default"/>
+	</dependencies>
+</ivy-module>
