@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="nunit"
+		module="nunit-console"
+		revision="2.6.1.12217"
+		status="integration"
+		publication="20121016143857"
+	/>
+	<configurations>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+	</configurations>
+	<publications>
+		<artifact name="nunit-console" type="zip" ext="zip" conf="archives,default"/>
+	</publications>
+	<dependencies>
+		<dependency org="nunit" name="nunit-console-runner" rev="2.6.1.12217" conf="default->default"/>
+		<dependency org="nunit" name="nunit.core" rev="2.6.1.12217" conf="default->default"/>
+		<dependency org="nunit" name="nunit.core.interfaces" rev="2.6.1.12217" conf="default->default"/>
+		<dependency org="nunit" name="nunit.framework" rev="2.6.1.12217" conf="default->default"/>
+		<dependency org="nunit" name="nunit.util" rev="2.6.1.12217" conf="default->default"/>
+	</dependencies>
+</ivy-module>

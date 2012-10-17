@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="Moq"
+		module="Moq"
+		revision="4.0.10827"
+		status="integration"
+		publication="20121016143756"
+	/>
+	<configurations>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+	</configurations>
+	<publications>
+		<artifact name="Moq" type="zip" ext="zip" conf="archives,default"/>
+	</publications>
+</ivy-module>
