@@ -8,3 +8,5 @@ libs
 *.ipr
 *.iws
 *~
+
+.DS_Store
