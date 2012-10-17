@@ -2,9 +2,9 @@
 <ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
 	<info organisation="kaizen"
 		module="kaizen"
-		revision="1.0"
+		revision="0.1"
 		status="integration"
-		publication="20121017101502"
+		publication="20121017160313"
 	/>
 	<configurations>
 		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
