@@ -75,7 +75,7 @@ automatically resolved, downloaded and unpacked.
 
 From the point of view of the user the current workflow goes like this:
 
- 1. user imports [kaizen.unityPackage](http://unity-technologies.github.com/kaizen/kaizen.unityPackage) into the project
+ 1. user imports [kaizen.unityPackage](https://github.com/downloads/Unity-Technologies/kaizen/kaizen.unityPackage) into the project
  2. user selects which bundles are to be installed (at the current stage by
     editing kaizen/kaizen.d/bundles.gradle and uncommenting
     the relevant lines)
