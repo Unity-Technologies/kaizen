@@ -24,7 +24,7 @@ Repositories are directories of components, local or remote.
 
 Components might declare dependencies on (versions of) other components.
 
-The version number of a component is incremented every time a new version is published. Newer versions must be backwards compatible.
+The version number of a component is incremented every time a new version is published in accordance with [semantic versioning rules](http://semver.org/).
 
 Components can and should be published independently of each other.
 
