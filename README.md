@@ -56,7 +56,9 @@ We're using [gradle] (http://www.gradle.org/) as the underlying infrastructure.
   1. Declare dependencies.
   2. ./gradlew update (downloads and unpacks dependencies)
   3. Code something beautiful.
-  4. ./gradlew publish (automatically increments version number)
+  4. ./gradlew test
+  5. Increment version numbers [properly](http://semver.org/).
+  6. ./gradlew publish
 
 ## Handling UnityEngine.dll and UnityEditor.dll
 
