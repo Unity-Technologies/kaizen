@@ -111,7 +111,9 @@ class AssemblyPlugin implements Plugin<Project> {
 
 		def unity = project.rootProject.unity
 		def mono = unity.mono
-		def assemblyFile = project.assembly.file
+		def assembly = project.assembly
+		def assemblyFile = assembly.file
+		def keyFile = assembly.keyFile
 		configure(project.tasks.compile) {
 			outputs.file assemblyFile
 			inputs.files assemblyReferences
@@ -135,6 +137,9 @@ class AssemblyPlugin implements Plugin<Project> {
 			args assemblyReferences.collect { "-r:$it" }
 			args "-out:$assemblyFile"
 			args "-target:library"
+			if (keyFile) {
+				args "-keyfile:${project.file(keyFile)}"
+			}
 		}
 
 		project.artifacts.add(config.name, project.tasks.zip)
@@ -157,6 +162,7 @@ class AssemblyExtension {
 
 	final Project project
 	String name
+	def keyFile
 
 	AssemblyExtension(Project project) {
 		this.project = project
