@@ -45,15 +45,18 @@ class AssemblyPlugin implements Plugin<Project> {
 
 			task('zip', type: Zip, dependsOn: 'compile') {
 				description "Packs the assembly for distribution."
-
-				baseName = assembly.name
-				from project.buildDir
-				include assembly.file.name
-				include "${assembly.name}.xml"
 			}
 
 			afterEvaluate {
 				adjustCompilationDependenciesOf project
+
+				def assembly = project.assembly
+				tasks.zip {
+					baseName = assembly.name
+					from project.buildDir
+					include assembly.file.name
+					include "${assembly.name}.xml"
+				}
 			}
 
 			task('outputDir') << {
@@ -136,7 +139,7 @@ class AssemblyPlugin implements Plugin<Project> {
 
 			args assemblyReferences.collect { "-r:$it" }
 			args "-out:$assemblyFile"
-			args "-target:library"
+			args "-target:$assembly.target"
 			if (keyFile) {
 				args "-keyfile:${project.file(keyFile)}"
 			}
@@ -162,6 +165,7 @@ class AssemblyExtension {
 
 	final Project project
 	String name
+	String target = 'library'
 	def keyFile
 
 	AssemblyExtension(Project project) {
@@ -170,6 +174,10 @@ class AssemblyExtension {
 	}
 
 	File getFile() {
-		new File(project.buildDir, "${name}.dll")
+		new File(project.buildDir, "${name}.${extension}")
+	}
+
+	String getExtension() {
+		target.endsWith('exe') ? 'exe' : 'dll'
 	}
 }
