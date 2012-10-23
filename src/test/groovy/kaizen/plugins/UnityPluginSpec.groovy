@@ -24,4 +24,18 @@ class UnityPluginSpec extends Specification {
 		expectedCliExecutable == bundle.unity.mono.cli
 
 	}
+
+	def 'tool executable can be changed'() {
+		given:
+		def bundle = new ProjectBuilder().build()
+		bundle.apply plugin: UnityPlugin
+
+		def mono = bundle.unity.mono
+
+		when:
+		mono.booc.executable = 'src/booc.exe'
+
+		then:
+		mono.booc.executable == 'src/booc.exe'
+	}
 }

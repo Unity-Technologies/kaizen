@@ -8,20 +8,14 @@ interface FrameworkLocator {
 }
 
 class MonoFramework {
-	final FrameworkLocator locator
+	FrameworkLocator locator
 	String frameworkName
+	MonoTool gmcs = new MonoTool(this, 'gmcs')
+	MonoTool booc = new MonoTool(this, 'booc')
 
 	MonoFramework(FrameworkLocator locator, String frameworkName) {
 		this.locator = locator
 		this.frameworkName = frameworkName
-	}
-
-	MonoTool getGmcs() {
-		new MonoTool(this, "gmcs")
-	}
-
-	MonoTool getBooc() {
-		new MonoTool(this, "booc")
 	}
 
 	String getCli() {
@@ -56,6 +50,7 @@ class MonoFramework {
 class MonoTool {
 	final MonoFramework framework
 	final String name
+	def executable
 
 	MonoTool(MonoFramework framework, String name) {
 		this.framework = framework
@@ -63,6 +58,6 @@ class MonoTool {
 	}
 
 	String getExecutable() {
-		framework.monoLib("${name}.exe")
+		executable ?: framework.monoLib("${name}.exe")
 	}
 }
