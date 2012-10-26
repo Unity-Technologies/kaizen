@@ -55,6 +55,7 @@ class AssemblyPlugin implements Plugin<Project> {
 								from project.zipTree(file)
 								into compileTask.resolvedOutputDir
 								include '*.dll'
+								include '*.exe'
 							}
 						}
 					}
