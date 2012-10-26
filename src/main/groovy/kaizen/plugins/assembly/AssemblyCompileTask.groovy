@@ -3,6 +3,8 @@ package kaizen.plugins.assembly
 import org.gradle.api.DefaultTask
 import org.gradle.api.artifacts.Configuration
 import kaizen.plugins.core.Configurations
+import org.gradle.api.artifacts.Dependency
+import org.gradle.api.artifacts.ProjectDependency
 
 class AssemblyCompileTask extends DefaultTask {
 
@@ -42,7 +44,9 @@ class AssemblyCompileTask extends DefaultTask {
 	}
 
 	void setUp() {
-		def assemblyReferences = configuration.allDependencies.collect { new File(resolvedOutputDir, "${it.name}.dll") }
+		def assemblyReferences = configuration.allDependencies.collect {
+			new File(resolvedOutputDir, assemblyFileNameFor(it))
+		}
 
 		def unity = project.rootProject.unity
 		def mono = unity.mono
@@ -62,33 +66,35 @@ class AssemblyCompileTask extends DefaultTask {
 			doFirst {
 				def args = []
 				if (isBoo) {
-					inputs.source project.fileTree(dir: project.projectDir, include: "**/*.boo")
 					args << unity.monoBleedingEdge.cli
 					args << mono.booc.executable
 					args << "-srcdir:${project.projectDir}"
-					args << '-r:Boo.Lang.PatternMatching.dll'
-					args << '-r:Boo.Lang.Useful.dll'
 				} else {
-					inputs.source project.fileTree(dir: project.projectDir, include: "**/*.cs")
 					args << unity.mono.cli
 					args << mono.gmcs.executable
 					args << "-recurse:*.cs"
 					args << "-doc:${xmlDocFile}"
 					args << "-nowarn:1591"
 				}
-				args.addAll(assemblyReferences.collect { "-r:$it" })
 				args << "-out:$assemblyFile"
 				args << "-target:$assembly.target"
 				if (keyFile) {
 					args << "-keyfile:${project.file(keyFile)}"
 				}
-				args.addAll(defines.collect { "-define:$it" })
+				assemblyReferences.each { args << "-r:$it" }
+				defines.each { args << "-define:$it" }
 				args.addAll(customArgs)
 				project.exec {
 					commandLine(args)
 				}
 			}
 		}
+	}
+
+	def assemblyFileNameFor(Dependency dependency) {
+		dependency instanceof ProjectDependency ?
+			dependency.dependencyProject.assembly.fileName :
+			"${dependency.name}.dll"
 	}
 
 	boolean isBooProject() {
