@@ -2,8 +2,8 @@ package kaizen.plugins
 
 import org.gradle.api.Project
 import org.gradle.api.Plugin
-import org.gradle.api.tasks.bundling.Zip
-import org.gradle.util.ConfigureUtil
+
+import kaizen.plugins.assembly.AssemblyPlugin
 
 class BundlePlugin implements Plugin<Project> {
 
