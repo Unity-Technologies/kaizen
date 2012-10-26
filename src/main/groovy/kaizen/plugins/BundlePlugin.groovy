@@ -52,43 +52,12 @@ class BundlePlugin implements Plugin<Project> {
 			// just an alias for now
 			task('publish', dependsOn: ['uploadEditor'])
 
-			// setup upload tasks after project evaluation
-			// so extension properties can be freely modified
-			// by custom build scripts
-			afterEvaluate {
-
-				// download dependencies from the repository for publishing as well
-				repositories {
-					ivy { url repositoryForPublishing }
-				}
-
-				tasks.uploadEditor {
-					repositories {
-						ivy { url repositoryForPublishing }
-					}
-				}
-
-				subprojects {
-					repositories {
-						ivy { url repositoryForPublishing }
-					}
-
-					if (tasks.findByName('uploadEditor')) {
-
-						tasks.uploadEditor {
-							repositories {
-								ivy { url repositoryForPublishing }
-							}
-						}
-
-						task('publish', dependsOn: ['uploadEditor'])
-					}
-				}
-			}
 		}
 	}
 
 	def configure(Project project, Closure closure) {
 		ConfigureUtil.configure(closure, project)
+		// a bundle needs a local repository to be published to
+		project.apply(plugin: LocalRepositoryPlugin)
 	}
 }

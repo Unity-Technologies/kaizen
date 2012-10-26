@@ -7,7 +7,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 
-class LibPlugin implements Plugin<Project> {
+class LibClientPlugin implements Plugin<Project> {
 
 	@Override
 	void apply(Project project) {
