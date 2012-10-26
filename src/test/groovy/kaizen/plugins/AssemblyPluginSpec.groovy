@@ -1,5 +1,8 @@
 package kaizen.plugins
 
+import kaizen.plugins.core.Configurations
+import kaizen.plugins.assembly.AssemblyPlugin
+
 class AssemblyPluginSpec extends PluginSpecification {
 
 	def project = projectWithName('C')
@@ -9,18 +12,8 @@ class AssemblyPluginSpec extends PluginSpecification {
 		project.apply plugin: AssemblyPlugin
 	}
 
-	def 'assembly file goes to build dir'() {
-		expect:
-		project.buildDir == project.assembly.file.parentFile
-	}
-
 	def 'assembly name is derived from project name'() {
 		expect:
-		project.assembly.file.name == "C.dll"
-	}
-
-	def 'editor configuration is present'() {
-		expect:
-		project.configurations.getByName(Configurations.EDITOR)
+		project.assembly.fileName == "C.dll"
 	}
 }

@@ -10,12 +10,9 @@ class BundlePlugin implements Plugin<Project> {
 	@Override
 	void apply(Project project) {
 
-		project.ext.repositoryForPublishing = project.file('../repository').absoluteFile
 		project.group = project.name
 		project.apply(plugin: UnityPlugin)
-		Configurations.addBundleConfigurationsTo(project)
 
-		// all sub projects are assemblies by convention
 		project.subprojects.each { subProject ->
 			subProject.apply(plugin: AssemblyPlugin)
 		}
@@ -25,38 +22,8 @@ class BundlePlugin implements Plugin<Project> {
 
 		// a bundle needs the ability to depend on external libs
 		project.apply(plugin: LibsPlugin)
-
-		// a bundle depends on all of its sub projects
-		project.subprojects.each { subProject ->
-			subProject.afterEvaluate {
-				def config = Configurations.defaultConfigurationNameFor(subProject)
-				project.dependencies.add(
-					config,
-					project.dependencies.project(
-						path: subProject.path,
-						configuration: config))
-			}
-		}
-
-		configure(project) {
-
-			task('zip', type: Zip) {
-				description "Packs the bundle for distribution."
-
-				baseName = project.name
-				from project.projectDir
-				include "README.md"
-				include "readme.txt"
-			}
-
 			// just an alias for now
-			task('publish', dependsOn: ['uploadEditor'])
 
-		}
-	}
-
-	def configure(Project project, Closure closure) {
-		ConfigureUtil.configure(closure, project)
 		// a bundle needs a local repository to be published to
 		project.apply(plugin: LocalRepositoryPlugin)
 	}

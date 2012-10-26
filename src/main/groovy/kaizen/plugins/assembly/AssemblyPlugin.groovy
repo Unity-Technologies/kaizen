@@ -9,24 +9,22 @@ import kaizen.plugins.core.Configurations
 
 class AssemblyPlugin implements Plugin<Project> {
 
-	static final Set<String> nonCompilableConfigurations = ['default', 'archives'].toSet()
-
 	@Override
 	void apply(Project project) {
 
 		project.apply plugin: 'base'
 		project.extensions.add('assembly', new AssemblyExtension(project))
 
-		compilableConfigurationsOf(project).each {
-			configureCompilationOf(it, project)
-		}
-	}
-
-	private Set<Configuration> compilableConfigurationsOf(Project project) {
-		project.configurations.findAll { !(it.name in nonCompilableConfigurations) }
+		def configurations = project.configurations
+		configurations.each { configureCompilationOf(it, project) }
+		configurations.whenObjectAdded { configureCompilationOf(it, project) }
 	}
 
 	private void configureCompilationOf(Configuration config, Project project) {
+
+		if (config.name == 'archives')
+			return
+
 		def configLabel = Configurations.labelFor(config)
 
 		def copyDependenciesTaskName = "copy${configLabel}Dependencies"

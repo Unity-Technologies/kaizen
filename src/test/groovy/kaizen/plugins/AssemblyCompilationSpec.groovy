@@ -6,21 +6,25 @@ class AssemblyCompilationSpec extends BundleSpecification {
 	def dependee = subProjectWithName('dependee')
 
 	def setup() {
-		bundle.apply plugin: BundlePlugin
 		configure(depender) {
+			configurations {
+				editor
+				windowsPhone8
+			}
 			dependencies {
-				editor project(path: dependee.path, configuration: 'editor')
+				editor project(dependee.path)
 			}
 		}
+		bundle.apply plugin: BundlePlugin
 		evaluateBundle()
 	}
 
-	def 'depender.compileEditor depends on dependee.assembleEditor'() {
-		given:
-		def dependerCompileEditor = dependee.tasks.getByName('compileEditor')
-		def dependeeAssembleEditor = depender.tasks.getByName('assembleEditor')
-
+	def 'one compile task per configuration except archives'() {
 		expect:
-		dependerCompileEditor.dependsOn.contains(dependeeAssembleEditor)
+		setOf(depender.tasks*.name.findAll { it.startsWith('compile') }) == setOf(['compileDefault', 'compileEditor', 'compileWindowsPhone8'])
+	}
+
+	Set<String> setOf(Collection<String> strings) {
+		strings.toSet()
 	}
 }

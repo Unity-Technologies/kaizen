@@ -1,5 +1,7 @@
 package kaizen.plugins
 
+import kaizen.plugins.assembly.AssemblyPlugin
+
 class AssemblyWithCustomConfiguration extends PluginSpecification {
 
 	def 'has no additional configurations contributed'() {
