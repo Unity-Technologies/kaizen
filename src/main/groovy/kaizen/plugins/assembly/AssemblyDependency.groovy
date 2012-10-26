@@ -1,4 +1,4 @@
-package kaizen.plugins
+package kaizen.plugins.assembly
 
 import org.gradle.api.artifacts.Dependency
 
