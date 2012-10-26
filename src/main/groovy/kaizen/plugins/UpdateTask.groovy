@@ -3,6 +3,7 @@ package kaizen.plugins
 import org.gradle.api.DefaultTask
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.tasks.TaskAction
+import kaizen.plugins.core.Configurations
 
 class UpdateTask extends DefaultTask {
 
@@ -11,6 +12,7 @@ class UpdateTask extends DefaultTask {
 
 	def setConfiguration(Configuration c) {
 		configuration = c
+		outputDir = "lib/${Configurations.labelFor(configuration)}"
 	}
 
 	def getConfiguration() {
