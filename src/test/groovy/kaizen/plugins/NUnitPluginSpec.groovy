@@ -1,6 +1,8 @@
 package kaizen.plugins
 
 import org.gradle.api.Project
+import kaizen.plugins.nunit.NUnitPlugin
+import org.gradle.api.internal.project.ProjectInternal
 
 class NUnitPluginSpec extends PluginSpecification {
 
@@ -10,7 +12,6 @@ class NUnitPluginSpec extends PluginSpecification {
 
 	@Override
 	def setup() {
-		bundle.configurations.add('tests')
 		bundle.apply plugin: NUnitPlugin
 	}
 
@@ -19,9 +20,11 @@ class NUnitPluginSpec extends PluginSpecification {
 		bundle.nunit.version == '2.6+'
 	}
 
-	def 'bundle depends upon nunit-console'() {
-		expect:
-		bundle.configurations['tests']
+	def 'NUnit configuration depends upon nunit-console'() {
+		when:
+		(bundle as ProjectInternal).evaluate()
+		then:
+		bundle.configurations['NUnit'].dependencies.collect { "$it.group:$it.name:$it.version" } == ['nunit:nunit-console:2.6+']
 	}
 
 	Project subProjectWithName(String name) {
