@@ -70,9 +70,11 @@ class AssemblyPlugin implements Plugin<Project> {
 				def assembly = compileTask.assembly
 				configure(assembleTask) {
 					baseName = assembly.name
+					appendix = config.name
 					from compileTask.resolvedOutputDir
 					include assembly.fileName
 					include assembly.xmlDocFileName
+					destinationDir new File(compileTask.resolvedOutputDir, 'distributions')
 				}
 
 				project.artifacts.add(config.name, assembleTask)
