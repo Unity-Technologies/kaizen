@@ -7,6 +7,7 @@ import kaizen.plugins.core.Configurations
 class AssemblyCompileTask extends DefaultTask {
 
 	Collection<String> defines = []
+	Collection<String> customArgs = []
 	def outputDir
 
 	private Configuration configuration
@@ -82,6 +83,7 @@ class AssemblyCompileTask extends DefaultTask {
 					args << "-keyfile:${project.file(keyFile)}"
 				}
 				args.addAll(defines.collect { "-define:$it" })
+				args.addAll(customArgs)
 				project.exec {
 					commandLine(args)
 				}
