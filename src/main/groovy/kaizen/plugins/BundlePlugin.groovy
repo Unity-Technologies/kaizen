@@ -13,6 +13,8 @@ class BundlePlugin implements Plugin<Project> {
 		project.group = project.name
 		project.apply(plugin: UnityPlugin)
 
+		// all projects in a bundle are considered assemblies by default
+		// TODO: remove from here (or create a ManagedBundlePlugin)
 		project.subprojects.each { subProject ->
 			subProject.apply(plugin: AssemblyPlugin)
 		}
