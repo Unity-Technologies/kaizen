@@ -21,8 +21,7 @@ class BundlePlugin implements Plugin<Project> {
 		project.apply(plugin: 'base')
 
 		// a bundle needs the ability to depend on external libs
-		project.apply(plugin: LibsPlugin)
-			// just an alias for now
+		project.apply(plugin: LibClientPlugin)
 
 		// a bundle needs a local repository to be published to
 		project.apply(plugin: LocalRepositoryPlugin)

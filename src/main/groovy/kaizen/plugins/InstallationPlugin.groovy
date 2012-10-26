@@ -2,7 +2,6 @@ package kaizen.plugins
 
 import org.gradle.api.Project
 import org.gradle.api.Plugin
-import org.gradle.util.ConfigureUtil
 
 class InstallationPlugin implements Plugin<Project> {
 
@@ -16,7 +15,7 @@ class InstallationPlugin implements Plugin<Project> {
 
 		applyStartupFiles(project)
 
-		project.apply(plugin: LibsPlugin)
+		project.apply(plugin: LibClientPlugin)
 	}
 
 	// loads all files from kaizen.d
