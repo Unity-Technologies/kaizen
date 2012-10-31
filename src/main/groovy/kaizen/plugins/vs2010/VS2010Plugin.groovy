@@ -57,7 +57,7 @@ class VS2010Project {
 
 	Iterable<String> getSourceFiles() {
 		project.fileTree(dir: project.projectDir, include: '**/*.cs').files.collect {
-			project.relativePath(it)
+			project.relativePath(it).replace('/', '\\') // always use \ on vs project files
 		}
 	}
 
@@ -110,7 +110,7 @@ class VSProjectReference {
 	}
 
 	String getRelativePath() {
-		return project.relativePath(referencedProject.extensions.vs2010.projectFile)
+		return project.relativePath(referencedProject.extensions.vs2010.projectFile).replace('/', '\\')
 	}
 
 	private getReferencedProject() {
