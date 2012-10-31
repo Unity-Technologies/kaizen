@@ -8,10 +8,20 @@ class AssemblyExtension {
 	String name
 	String target = 'library'
 	def keyFile
+	String language
 
 	AssemblyExtension(Project project) {
 		this.project = project
 		this.name = project.name
+		this.language = detectLanguageOf(project)
+	}
+
+	private detectLanguageOf(Project project) {
+		project.projectDir.listFiles({ dir, name -> name.endsWith('.boo') } as FilenameFilter).any() ? 'boo' : 'cs'
+	}
+
+	Iterable<File> getSourceFiles() {
+		project.fileTree(dir: project.projectDir, include: "**/*.$language")
 	}
 
 	String getFileName() {

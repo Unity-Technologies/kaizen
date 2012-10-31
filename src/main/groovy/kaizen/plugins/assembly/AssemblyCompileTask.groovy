@@ -52,17 +52,11 @@ class AssemblyCompileTask extends DefaultTask {
 		def mono = unity.mono
 		def assembly = project.assembly
 		def keyFile = assembly.keyFile
-		def isBoo = isBooProject()
+		def isBoo = assembly.language == 'boo'
 		configure {
 			outputs.file assemblyFile
 			inputs.files assemblyReferences
-
-			if (isBoo) {
-				inputs.source project.fileTree(dir: project.projectDir, include: "**/*.boo")
-			} else {
-				inputs.source project.fileTree(dir: project.projectDir, include: "**/*.cs")
-			}
-
+			inputs.source assembly.sourceFiles
 			doFirst {
 				def args = []
 				if (isBoo) {
@@ -95,9 +89,5 @@ class AssemblyCompileTask extends DefaultTask {
 		dependency instanceof ProjectDependency ?
 			dependency.dependencyProject.assembly.fileName :
 			"${dependency.name}.dll"
-	}
-
-	boolean isBooProject() {
-		project.projectDir.listFiles({ dir, name -> name.endsWith('.boo') } as FilenameFilter).any()
 	}
 }
