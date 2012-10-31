@@ -14,6 +14,10 @@ class VS2010Plugin implements Plugin<Project> {
 		project.extensions.add('vs2010', vs2010Project)
 		project.task('vs2010Project') {
 			doFirst {
+				if (!vs2010Project.isSupportedLanguage) {
+					logger.info("vs project file for $project.name won't be generated.")
+					return
+				}
 				def resource = VS2010Plugin.class.getResource('/templates/vs2010/csproj.template')
 				def template = new SimpleTemplateEngine().createTemplate(resource)
 				def templateResult = template.make(project: vs2010Project)
@@ -65,13 +69,17 @@ class VS2010Project {
 		return dependencies().findAll { !isProjectDependency(it) }
 	}
 
+	boolean getIsSupportedLanguage() {
+		project.extensions?.assembly?.language == 'cs'
+	}
+
 	private getProjectDependencies() {
 		dependencies().findAll { isProjectDependency(it) }
 	}
 
 	private isProjectDependency(Dependency d) {
 		if (d instanceof ProjectDependency)
-			return d.dependencyProject.extensions?.assembly?.language == 'cs'
+			return d.dependencyProject.extensions.vs2010.isSupportedLanguage
 		return false
 	}
 
