@@ -62,11 +62,17 @@ class VS2010Project {
 	}
 
 	Iterable<Dependency> getExternalDependencies() {
-		return dependencies().findAll { !(it instanceof ProjectDependency) }
+		return dependencies().findAll { !isProjectDependency(it) }
 	}
 
 	private getProjectDependencies() {
-		dependencies().findAll { it instanceof ProjectDependency }
+		dependencies().findAll { isProjectDependency(it) }
+	}
+
+	private isProjectDependency(Dependency d) {
+		if (d instanceof ProjectDependency)
+			return d.dependencyProject.extensions?.assembly?.language == 'cs'
+		return false
 	}
 
 	private dependencies() {

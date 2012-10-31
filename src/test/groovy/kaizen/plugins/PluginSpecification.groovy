@@ -15,6 +15,14 @@ abstract class PluginSpecification extends Specification {
 		ProjectBuilder.builder().withName(name)
 	}
 
+	ProjectBuilder projectBuilderWithDir(File dir) {
+		ProjectBuilder.builder().withProjectDir(dir)
+	}
+
+	Project subProjectWithDir(Project parent, File dir) {
+		projectBuilderWithDir(dir).withName(dir.name).withParent(parent).build()
+	}
+
 	def configure(Object object, Closure closure) {
 		ConfigureUtil.configure(closure, object)
 	}

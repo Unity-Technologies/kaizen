@@ -3,7 +3,7 @@ package kaizen.plugins
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.api.Project
 
-class VS2010ProjectReferencesSpec extends PluginSpecification {
+class VS2010ProjectReferencesSpec extends VSProjectSpecification {
 
 	def bundleDir = DirectoryBuilder.tempDirWith {
 		dir('src') {
@@ -62,10 +62,6 @@ class VS2010ProjectReferencesSpec extends PluginSpecification {
 				[a.extensions.vs2010.guid, '..\\a\\a.csproj'],
 				[b.extensions.vs2010.guid, '..\\b\\b.csproj'],
 		]
-	}
-
-	private parseProjectFileOf(Project project) {
-		new XmlParser().parse(new File(project.projectDir, project.name + '.csproj'))
 	}
 
 	private subProjectWithName(String name) {

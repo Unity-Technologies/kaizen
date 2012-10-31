@@ -2,7 +2,7 @@ package kaizen.plugins
 
 import org.gradle.api.internal.TaskInternal
 
-class VS2010CSharpProjectSpec extends PluginSpecification {
+class VS2010CSharpProjectSpec extends VSProjectSpecification {
 
 	def 'csproj is generated for c# project'() {
 		given:
@@ -20,8 +20,7 @@ class VS2010CSharpProjectSpec extends PluginSpecification {
 		(project.tasks.vs2010Project as TaskInternal).execute()
 
 		then:
-		def projectFile = new File(projectDir, 'Bundle.Core.csproj')
-		def projectXml = new XmlParser().parse(projectFile)
+		def projectXml = parseProjectFileOf(project)
 		projectXml.PropertyGroup[0].RootNamespace.text() == project.name
 		projectXml.PropertyGroup[0].AssemblyName.text() == project.name
 		projectXml.ItemGroup.Compile.@Include == ['Core.cs', 'Properties\\AssemblyInfo.cs']
