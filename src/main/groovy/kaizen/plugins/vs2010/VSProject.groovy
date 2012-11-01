@@ -39,7 +39,7 @@ class VSProject {
 	}
 
 	boolean getIsSupportedLanguage() {
-		project.extensions?.assembly?.language == 'cs'
+		project.extensions.findByName('assembly')?.language == 'cs'
 	}
 
 	private getProjectDependencies() {

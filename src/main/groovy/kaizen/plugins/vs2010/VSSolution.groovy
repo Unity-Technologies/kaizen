@@ -1,9 +1,15 @@
 package kaizen.plugins.vs2010
 
+import org.gradle.api.Project
+
 class VSSolution extends VSSolutionItem {
 	def destinationFile
 
-	VSSolution(String name) {
-		super(name)
+	VSSolution(String name, Project gradleProject) {
+		super(name, gradleProject)
+	}
+
+	String relativePathOf(Project p) {
+		gradleProject.relativeProjectPath(p.extensions.vs.project.file.canonicalPath)
 	}
 }

@@ -43,7 +43,7 @@ class VS2010ProjectReferencesSpec extends VSProjectSpecification {
 			it.evaluate()
 		}
 		bundle.subprojects.each {
-			it.tasks.vs2010Project.execute()
+			it.tasks.vsProject.execute()
 		}
 	}
 
@@ -54,13 +54,13 @@ class VS2010ProjectReferencesSpec extends VSProjectSpecification {
 
 		def bProjectXml = parseProjectFileOf(b)
 		bProjectXml.ItemGroup.ProjectReference.collect { [it.Project.text(), it.@Include] } == [
-				[a.extensions.vs2010.guid, '..\\a\\a.csproj']
+				[a.extensions.vs.project.guid, '..\\a\\a.csproj']
 		]
 
 		def cProjectXml = parseProjectFileOf(c)
 		cProjectXml.ItemGroup.ProjectReference.collect { [it.Project.text(), it.@Include] } == [
-				[a.extensions.vs2010.guid, '..\\a\\a.csproj'],
-				[b.extensions.vs2010.guid, '..\\b\\b.csproj'],
+				[a.extensions.vs.project.guid, '..\\a\\a.csproj'],
+				[b.extensions.vs.project.guid, '..\\b\\b.csproj'],
 		]
 	}
 

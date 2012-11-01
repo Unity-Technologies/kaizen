@@ -17,11 +17,15 @@ class VSProjectReference {
 	}
 
 	String getGuid() {
-		referencedProject.extensions.vs2010.guid
+		referencedVsProject.guid
+	}
+
+	private getReferencedVsProject() {
+		referencedProject.extensions.vs.project
 	}
 
 	String getRelativePath() {
-		return project.relativePath(referencedProject.extensions.vs2010.projectFile).replace('/', '\\')
+		return project.relativePath(referencedVsProject.file).replace('/', '\\')
 	}
 
 	private getReferencedProject() {

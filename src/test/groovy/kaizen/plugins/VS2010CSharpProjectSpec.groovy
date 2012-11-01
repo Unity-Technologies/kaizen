@@ -17,7 +17,7 @@ class VS2010CSharpProjectSpec extends VSProjectSpecification {
 		when:
 		project.apply plugin: 'assembly'
 		project.apply plugin: 'vs2010'
-		(project.tasks.vs2010Project as TaskInternal).execute()
+		(project.tasks.vsProject as TaskInternal).execute()
 
 		then:
 		def projectXml = parseProjectFileOf(project)

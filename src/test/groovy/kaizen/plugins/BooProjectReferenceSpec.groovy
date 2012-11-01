@@ -33,7 +33,7 @@ class BooProjectReferenceSpec extends VSProjectSpecification {
 
 	def 'boo project reference is omitted and an assembly reference is used instead'() {
 		when:
-		csProject.tasks.vs2010Project.execute()
+		csProject.tasks.vsProject.execute()
 
 		then:
 		def projectXml = parseProjectFileOf(csProject)
