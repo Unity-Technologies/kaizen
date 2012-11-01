@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="CodeEditor"
+		module="CodeEditor"
+		revision="0.1.1"
+		status="integration"
+		publication="20121101120010"
+	/>
+	<configurations>
+		<conf name="NUnit" visibility="public"/>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+		<conf name="editor" visibility="public" description="Configuration for editor extension artifacts."/>
+		<conf name="tests" visibility="public" description="Configuration for testing artifacts."/>
+	</configurations>
+	<publications>
+	</publications>
+	<dependencies>
+		<dependency org="nunit" name="nunit-console" rev="2.6+" conf="NUnit->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Collections" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Composition" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Grammars" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.IO" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Languages.Boo" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Languages.CSharp" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Languages.Common" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Languages.UnityScript" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Text.Data" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Text.Logic" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Text.UI" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Text.UI.Unity.Editor" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Text.UI.Unity.Engine" rev="0.1.1" conf="editor->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Collections.Tests" rev="unspecified" conf="tests->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Composition.Tests" rev="unspecified" conf="tests->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Languages.Common.Tests" rev="unspecified" conf="tests->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Languages.UnityScript.Tests" rev="unspecified" conf="tests->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Text.Data.Tests" rev="unspecified" conf="tests->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Text.Logic.Tests" rev="unspecified" conf="tests->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Text.UI.Tests" rev="unspecified" conf="tests->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Text.UI.Unity.Editor.Tests" rev="unspecified" conf="tests->default"/>
+		<dependency org="CodeEditor" name="CodeEditor.Text.UI.Unity.Engine.Tests" rev="unspecified" conf="tests->default"/>
+	</dependencies>
+</ivy-module>
