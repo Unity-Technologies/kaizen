@@ -11,7 +11,9 @@ class NUnitAssemblyPlugin implements Plugin<Project> {
 
 	@Override
 	void apply(Project project) {
-		def masterTestTask = project.task('test')
+		def masterTestTask = project.task('test') {
+			description 'Runs all nunit tests.'
+		}
 		def bundle = project.rootProject
 		bundle.afterEvaluate {
 			configureNUnitTasksOn project, masterTestTask
@@ -30,7 +32,6 @@ class NUnitAssemblyPlugin implements Plugin<Project> {
 				project.dependencies.add(config.name, "nunit:nunit.framework:${nunitVersion}")
 				configure(project) {
 					def testConfigTask = task("test$configLabel", type: NUnitTask, dependsOn: compileTask) {
-						description 'Runs the nunit tests.'
 						inputs.file compileTask.assemblyFile
 						outputs.file new File(compileTask.resolvedOutputDir, 'TestResult.xml')
 					}

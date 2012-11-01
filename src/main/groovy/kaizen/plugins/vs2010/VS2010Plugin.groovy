@@ -28,7 +28,9 @@ class VS2010Plugin implements Plugin<Project> {
 				}
 			}
 		}
-		project.task('vs', dependsOn: [vsProjectTask, vsSolutionTask])
+		project.task('vs', dependsOn: [vsProjectTask, vsSolutionTask], group: 'IDE') {
+			description 'Generates Visual Studio files (csproj, sln)'
+		}
 	}
 
 	def applyTemplate(Map properties, String templateName, File destinationFile) {
