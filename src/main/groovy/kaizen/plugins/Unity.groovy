@@ -29,7 +29,9 @@ class Unity implements FrameworkLocator {
 	}
 
 	def defaultUnityLocation() {
-		'/Applications/Unity/Unity.app'
+		SystemInformation.isWindows() ?
+			'C:\\Program Files (x86)\\Unity\\Editor' :
+			'/Applications/Unity/Unity.app'
 	}
 
 	private absoluteUnityDir() {
