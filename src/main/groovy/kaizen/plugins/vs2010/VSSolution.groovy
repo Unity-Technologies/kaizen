@@ -10,6 +10,6 @@ class VSSolution extends VSSolutionItem {
 	}
 
 	String relativePathOf(Project p) {
-		gradleProject.relativeProjectPath(p.extensions.vs.project.file.canonicalPath)
+		gradleProject.relativePath(p.extensions.vs.project.file)
 	}
 }
