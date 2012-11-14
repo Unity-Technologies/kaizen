@@ -1,0 +1,90 @@
+
+// we encourage the use of semantic versioning (http://semver.org) 
+// with a Major.Minor.Patch numbering system
+version = '0.1.0'
+
+// we need the kaizen plugins
+buildscript {
+	repositories {
+		ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'kaizen:kaizen:0.2.2'
+	}
+}
+
+// we want Visual Studio project and solution
+// generation support for all projects
+allprojects {
+	apply plugin: 'vs2010'
+}
+
+// we want a single Visual Studio solution
+// named after the bundle containing
+// all projects
+def solutionName = rootProject.name
+vs {
+	solutions {
+		"$solutionName" {
+			subprojects.each {
+				project(it.path)
+			}
+		}
+	}
+}
+
+// we need all projects to download dependencies
+// from the following repositories.
+allprojects {
+	repositories {
+		ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
+	}
+}
+
+configurations {
+	editor {
+		description "Configuration for editor extension artifacts."
+	}
+	tests {
+		description "Configuration for testing artifacts."
+	}
+}
+
+apply plugin: 'kaizen-bundle'
+apply plugin: 'nunit'
+
+def bundleDependencies = project.dependencies
+subprojects { subProject ->
+	switch (subProject.name) {
+	case ~/.+\.Tests$/:
+		apply plugin: 'nunit-assembly'
+		dependencies {
+			// Foo.Bar.Tests depends on Foo.Bar
+			'default' project(subProject.path[0..-('.Tests'.length() + 1)])
+		}
+		bundleDependencies.add('tests', bundleDependencies.project(path: subProject.path))
+		break
+	default:
+		bundleDependencies.add('editor', bundleDependencies.project(path: subProject.path))
+	}
+}
+
+task publish {
+	dependsOn uploadEditor
+	project.configurations.editor.dependencies.each {
+		dependsOn ":$it.name:uploadDefault" 
+	}
+}
+
+nunit {
+	version = '2.6+'
+}
+
+ext {
+    references = [
+			'nunitFramework': "nunit:nunit.framework:${nunit.version}",
+			'moq': 'Moq:Moq:4.0+',
+    ]
+}
+
