@@ -46,9 +46,8 @@ class AssemblyPlugin implements Plugin<Project> {
 
 			afterEvaluate {
 				configure(copyDependenciesTask) {
-					inputs.source config.incoming.files
-					//for some reason, declaring the outputs doesn't work
-					//outputs.files config.incoming.collect { assemblyInBuildDir(it.name) }
+					inputs.source config
+					outputs.dir compileTask.resolvedOutputDir
 					doFirst {
 						config.incoming.files.each { file ->
 							project.copy {
