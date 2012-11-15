@@ -13,6 +13,9 @@ class UpdateTask extends DefaultTask {
 	def setConfiguration(Configuration c) {
 		configuration = c
 		outputDir = "lib/${Configurations.labelFor(configuration)}"
+
+		inputs.source(configuration)
+		outputs.dir(outputDir)
 	}
 
 	def getConfiguration() {
