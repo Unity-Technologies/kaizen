@@ -79,8 +79,13 @@ class AssemblyPlugin implements Plugin<Project> {
 				project.artifacts.add(config.name, assembleTask)
 			}
 
-			task(outputDirTaskName) <<{
-				compileTask.resolvedOutputDir.mkdirs()
+			def outputDirTask = task(outputDirTaskName) {
+				doFirst {
+					compileTask.resolvedOutputDir.mkdirs()
+				}
+			}
+			outputDirTask.outputs.upToDateWhen {
+				compileTask.resolvedOutputDir.exists()
 			}
 		}
 	}
