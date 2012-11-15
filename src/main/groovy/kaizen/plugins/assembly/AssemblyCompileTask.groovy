@@ -86,8 +86,11 @@ class AssemblyCompileTask extends DefaultTask {
 	}
 
 	def assemblyFileNameFor(Dependency dependency) {
-		dependency instanceof ProjectDependency ?
-			dependency.dependencyProject.assembly.fileName :
-			"${dependency.name}.dll"
+		if (dependency instanceof ProjectDependency) {
+			def assembly = dependency.dependencyProject.extensions.findByName('assembly')
+			if (assembly)
+				return assembly.fileName
+		}
+		return "${dependency.name}.dll"
 	}
 }
