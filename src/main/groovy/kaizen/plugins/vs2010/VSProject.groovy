@@ -3,6 +3,7 @@ package kaizen.plugins.vs2010
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ProjectDependency
+import kaizen.plugins.assembly.AssemblyExtension
 
 class VSProject {
 	final Project project
@@ -17,7 +18,8 @@ class VSProject {
 	}
 
 	String getOutputType() {
-		'Library'
+		def target = assembly.target
+		target == 'winexe' ? 'WinExe' : target.capitalize()
 	}
 
 	String getAssemblyName() {
@@ -39,7 +41,11 @@ class VSProject {
 	}
 
 	boolean getIsSupportedLanguage() {
-		project.extensions.findByName('assembly')?.language == 'cs'
+		assembly?.language == 'cs'
+	}
+
+	AssemblyExtension getAssembly() {
+		project.extensions.findByName('assembly')
 	}
 
 	private getProjectDependencies() {
