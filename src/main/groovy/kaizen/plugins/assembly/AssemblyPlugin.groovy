@@ -1,11 +1,11 @@
 package kaizen.plugins.assembly
 
+import kaizen.plugins.core.Configurations
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.util.ConfigureUtil
-import kaizen.plugins.core.Configurations
 
 class AssemblyPlugin implements Plugin<Project> {
 
