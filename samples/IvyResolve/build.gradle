@@ -13,7 +13,6 @@ apply plugin: 'vs2010'
 allprojects {
   repositories {
     ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
-    mavenCentral()
   }
 
   def ikvmVersion = '7.1.4532.2'

@@ -16,6 +16,10 @@ dependencies {
   }
 }
 
+repositories {
+  mavenCentral()
+}
+
 task downloadJars(type: Copy) {
   from configurations.ivy
   into project.buildDir
