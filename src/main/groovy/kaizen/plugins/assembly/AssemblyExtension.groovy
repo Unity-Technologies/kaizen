@@ -34,6 +34,10 @@ class AssemblyExtension {
 
 	String getExtension() {
 		assert target in ['library', 'exe', 'winexe']
-		target.endsWith('exe') ? 'exe' : 'dll'
+		isExecutable() ? 'exe' : 'dll'
+	}
+
+	boolean isExecutable() {
+		target.endsWith('exe')
 	}
 }
