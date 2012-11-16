@@ -1,11 +1,4 @@
 
-project(':ikvmc') {
-	dependencies {
-		'default' project(':IKVM.Reflection')
-		'default' project(':ICSharpCode.SharpZipLib')
-	}
-}
-
 project(':IKVM.AWT.WinForms') {
 	dependencies {
 		'default' project(':IKVM.OpenJDK.SwingAWT')
@@ -303,5 +296,12 @@ project(':ikvm') {
 		'default' project(':IKVM.OpenJDK.Core')
 		'default' project(':IKVM.Runtime')
 		'default' project(':IKVM.OpenJDK.Util')
+	}
+}
+
+project(':ikvmstub') {
+	dependencies {
+		'default' project(':IKVM.Reflection')
+		'default' project(':ICSharpCode.SharpZipLib')
 	}
 }

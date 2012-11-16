@@ -89,6 +89,7 @@ task updateAssemblyDependencies {
   inputs.source fileTree(dir: ikvmDir, include: 'IKVM*.dll')
   inputs.source "$ikvmDir/ikvmc.exe"
   inputs.source "$ikvmDir/ikvm.exe"
+  inputs.source "$ikvmDir/ikvmstub.exe"
   outputs.file assemblyDependenciesFile
 
   doFirst {
