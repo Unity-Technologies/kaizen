@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="IKVM.NET"
+		module="IKVM.OpenJDK.Tools"
+		revision="7.1.4532.2"
+		status="integration"
+		publication="20121116120256"
+	/>
+	<configurations>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+	</configurations>
+	<publications>
+		<artifact name="IKVM.OpenJDK.Tools" type="zip" ext="zip" conf="archives,default"/>
+	</publications>
+	<dependencies>
+		<dependency org="IKVM.NET" name="IKVM.Runtime" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.Core" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.Text" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.Util" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.XML.Bind" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.XML.API" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.XML.WebServices" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.Misc" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.Remoting" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.Security" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.XML.Parse" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.Beans" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.SwingAWT" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.Corba" rev="7.1.4532.2" conf="default->default"/>
+	</dependencies>
+</ivy-module>

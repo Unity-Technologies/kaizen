@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="IKVM.NET"
+		module="IKVM.OpenJDK.Charsets"
+		revision="7.1.4532.2"
+		status="integration"
+		publication="20121116120255"
+	/>
+	<configurations>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+	</configurations>
+	<publications>
+		<artifact name="IKVM.OpenJDK.Charsets" type="zip" ext="zip" conf="archives,default"/>
+	</publications>
+	<dependencies>
+		<dependency org="IKVM.NET" name="IKVM.Runtime" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.Core" rev="7.1.4532.2" conf="default->default"/>
+	</dependencies>
+</ivy-module>
