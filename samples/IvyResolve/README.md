@@ -4,4 +4,4 @@ A demonstration on how to use gradle and kaizen to put the great [IKVM](http://i
 
 ## Running
 
-  ./gradlew runDefault
+    ./gradlew runDefault
