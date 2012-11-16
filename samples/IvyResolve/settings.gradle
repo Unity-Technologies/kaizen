@@ -1,0 +1,10 @@
+
+// automatically include all directories under src/ as projects 
+def srcDir = file('src')
+srcDir.eachDir { include it.name }
+
+rootProject.children.each {
+  it.projectDir = new File(srcDir, it.name)
+  it.buildFileName = "${it.name}.gradle"
+}
+

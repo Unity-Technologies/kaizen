@@ -1,0 +1,45 @@
+apply plugin: 'base'
+apply plugin: 'kaizen-lib-client'
+
+version = '2.2.0'
+
+configurations {
+  ivy
+  IKVM
+}
+
+dependencies {
+  ivy "org.apache.ivy:ivy:$version"
+  IKVM "${ikvm('ikvmc')}"
+  ['IKVM.Runtime', 'IKVM.OpenJDK.XML.Parse'].each {
+    'default' "${ikvm(it)}"
+  }
+}
+
+task downloadJars(type: Copy) {
+  from configurations.ivy
+  into project.buildDir
+}
+
+def outputFileName = "${project.name}.dll"
+def outputFile = "${project.buildDir}/${outputFileName}"
+
+task convert(type: Exec, dependsOn: [update, downloadJars]) {
+  inputs.source configurations.ivy
+  outputs.file outputFile
+  executable rootProject.unity.mono.cli
+  args "lib/IKVM/ikvmc.exe"
+  args "-out:$outputFile"
+  args "-assembly:${project.name}"
+  args "-version:$version"
+  args inputs.files
+}
+
+task zip(type: Zip, dependsOn: convert) {
+  from project.buildDir
+  include outputFileName
+}
+
+artifacts {
+  'default' zip
+}
