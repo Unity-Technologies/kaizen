@@ -9,5 +9,5 @@ version = '0.1.0'
 
 dependencies {
   'default' project(':org.apache.ivy')
-  'default' ikvm('IKVM.OpenJDK.Core')
+  'default' ikvm('IKVM.OpenJDK.Core'), ikvm('IKVM.OpenJDK.XML.Parse')
 }

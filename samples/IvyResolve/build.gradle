@@ -1,6 +1,6 @@
 buildscript {
   dependencies {
-    classpath 'kaizen:kaizen:0.2.3'
+    classpath 'kaizen:kaizen:0.2.4'
   }
   repositories {
     ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
