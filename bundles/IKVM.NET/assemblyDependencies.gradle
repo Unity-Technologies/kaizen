@@ -1,0 +1,307 @@
+
+project(':ikvmc') {
+	dependencies {
+		'default' project(':IKVM.Reflection')
+		'default' project(':ICSharpCode.SharpZipLib')
+	}
+}
+
+project(':IKVM.AWT.WinForms') {
+	dependencies {
+		'default' project(':IKVM.OpenJDK.SwingAWT')
+		'default' project(':IKVM.OpenJDK.Media')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.OpenJDK.Core')
+	}
+}
+
+project(':IKVM.OpenJDK.Beans') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.SwingAWT')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.XML.API')
+	}
+}
+
+project(':IKVM.OpenJDK.Charsets') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+	}
+}
+
+project(':IKVM.OpenJDK.Corba') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Remoting')
+		'default' project(':IKVM.OpenJDK.Misc')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.SwingAWT')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.OpenJDK.Naming')
+	}
+}
+
+project(':IKVM.OpenJDK.Core') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.Security')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.OpenJDK.XML.API')
+	}
+}
+
+project(':IKVM.OpenJDK.Jdbc') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.OpenJDK.Naming')
+		'default' project(':IKVM.OpenJDK.XML.API')
+		'default' project(':IKVM.OpenJDK.Misc')
+	}
+}
+
+project(':IKVM.OpenJDK.Management') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.Security')
+		'default' project(':IKVM.OpenJDK.Remoting')
+		'default' project(':IKVM.OpenJDK.Corba')
+		'default' project(':IKVM.OpenJDK.Beans')
+		'default' project(':IKVM.OpenJDK.Naming')
+		'default' project(':IKVM.OpenJDK.Text')
+	}
+}
+
+project(':IKVM.OpenJDK.Media') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.SwingAWT')
+		'default' project(':IKVM.OpenJDK.XML.API')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.Text')
+	}
+}
+
+project(':IKVM.OpenJDK.Misc') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Remoting')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.Security')
+		'default' project(':IKVM.OpenJDK.XML.API')
+		'default' project(':IKVM.OpenJDK.Text')
+	}
+}
+
+project(':IKVM.OpenJDK.Naming') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Security')
+	}
+}
+
+project(':IKVM.OpenJDK.Remoting') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.OpenJDK.Naming')
+		'default' project(':IKVM.OpenJDK.Security')
+		'default' project(':IKVM.OpenJDK.Util')
+	}
+}
+
+project(':IKVM.OpenJDK.Security') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Naming')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.OpenJDK.SwingAWT')
+		'default' project(':IKVM.OpenJDK.Util')
+	}
+}
+
+project(':IKVM.OpenJDK.SwingAWT') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Beans')
+		'default' project(':IKVM.OpenJDK.Media')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.AWT.WinForms')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.XML.API')
+		'default' project(':IKVM.OpenJDK.Charsets')
+	}
+}
+
+project(':IKVM.OpenJDK.Text') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Util')
+	}
+}
+
+project(':IKVM.OpenJDK.Tools') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.XML.Bind')
+		'default' project(':IKVM.OpenJDK.XML.API')
+		'default' project(':IKVM.OpenJDK.XML.WebServices')
+		'default' project(':IKVM.OpenJDK.Misc')
+		'default' project(':IKVM.OpenJDK.Remoting')
+		'default' project(':IKVM.OpenJDK.Security')
+		'default' project(':IKVM.OpenJDK.XML.Parse')
+		'default' project(':IKVM.OpenJDK.Beans')
+		'default' project(':IKVM.OpenJDK.SwingAWT')
+		'default' project(':IKVM.OpenJDK.Corba')
+	}
+}
+
+project(':IKVM.OpenJDK.Util') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.OpenJDK.Security')
+		'default' project(':IKVM.OpenJDK.XML.API')
+	}
+}
+
+project(':IKVM.OpenJDK.XML.API') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+	}
+}
+
+project(':IKVM.OpenJDK.XML.Bind') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Beans')
+		'default' project(':IKVM.OpenJDK.XML.API')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.SwingAWT')
+		'default' project(':IKVM.OpenJDK.Media')
+		'default' project(':IKVM.OpenJDK.XML.Parse')
+	}
+}
+
+project(':IKVM.OpenJDK.XML.Crypto') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.XML.API')
+		'default' project(':IKVM.OpenJDK.Security')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.OpenJDK.XML.Parse')
+		'default' project(':IKVM.OpenJDK.XML.XPath')
+	}
+}
+
+project(':IKVM.OpenJDK.XML.Parse') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.OpenJDK.XML.API')
+		'default' project(':IKVM.OpenJDK.Beans')
+	}
+}
+
+project(':IKVM.OpenJDK.XML.Transform') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.XML.XPath')
+		'default' project(':IKVM.OpenJDK.XML.API')
+		'default' project(':IKVM.OpenJDK.Text')
+		'default' project(':IKVM.OpenJDK.XML.Parse')
+	}
+}
+
+project(':IKVM.OpenJDK.XML.WebServices') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Management')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.OpenJDK.Beans')
+		'default' project(':IKVM.OpenJDK.XML.API')
+		'default' project(':IKVM.OpenJDK.SwingAWT')
+		'default' project(':IKVM.OpenJDK.Media')
+		'default' project(':IKVM.OpenJDK.XML.Parse')
+		'default' project(':IKVM.OpenJDK.XML.Bind')
+		'default' project(':IKVM.OpenJDK.Misc')
+		'default' project(':IKVM.OpenJDK.Remoting')
+		'default' project(':IKVM.OpenJDK.Security')
+		'default' project(':IKVM.OpenJDK.Text')
+	}
+}
+
+project(':IKVM.OpenJDK.XML.XPath') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.XML.API')
+		'default' project(':IKVM.OpenJDK.XML.Parse')
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Text')
+	}
+}
+
+project(':IKVM.Reflection') {
+	dependencies {
+	}
+}
+
+project(':IKVM.Runtime') {
+	dependencies {
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.OpenJDK.Util')
+		'default' project(':IKVM.Runtime.JNI')
+		'default' project(':IKVM.OpenJDK.Management')
+	}
+}
+
+project(':IKVM.Runtime.JNI') {
+	dependencies {
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Core')
+	}
+}
+
+project(':ikvmc') {
+	dependencies {
+		'default' project(':IKVM.Reflection')
+		'default' project(':ICSharpCode.SharpZipLib')
+	}
+}
+
+project(':ikvm') {
+	dependencies {
+		'default' project(':IKVM.OpenJDK.Core')
+		'default' project(':IKVM.Runtime')
+		'default' project(':IKVM.OpenJDK.Util')
+	}
+}

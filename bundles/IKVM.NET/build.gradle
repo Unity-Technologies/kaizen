@@ -1,0 +1,118 @@
+apply from: '../common.gradle'
+
+buildscript {
+	repositories {
+		ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'kaizen:kaizen:0.2.2'
+	}
+}
+
+repositories {
+  ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
+}
+
+version = '7.1.4532.2'
+
+def ikvmUrl = new URL("http://downloads.sourceforge.net/project/ikvm/ikvm/${version}/ikvmbin-${version}.zip")
+def ikvmZip = file("$buildDir/ikvm.zip")
+def ikvmDir = file("$buildDir/ikvm")
+
+task downloadLatest <<{
+	ikvmZip.parentFile.mkdirs()
+	ikvmZip.bytes = ikvmUrl.bytes
+}
+downloadLatest.onlyIf {
+	!ikvmZip.exists()
+}
+
+task extractLatest(type: Copy, dependsOn: downloadLatest) {
+	from(zipTree(ikvmZip)) {
+		eachFile {
+			// remove first two segment (ikvm.${version}/NET35/)
+			// so all files end up directly in $ikvmDir
+			it.path = it.relativePath.segments[2..-1].join('/')
+		}
+	}
+	into ikvmDir
+	include '*/bin/**'
+}
+
+allprojects {
+  apply plugin: 'base'
+  group = rootProject.name
+}
+
+subprojects {
+  version = rootProject.version
+
+  task zip(type: Zip) {
+    from ikvmDir
+    include "${project.name}.dll"
+    include "${project.name}.exe"
+  }
+
+  uploadDefault {
+    repositories {
+      ivy { url repositoryForPublishing }
+    }
+  }
+
+  artifacts {
+    'default' zip
+  }
+}
+
+task publish {
+  dependsOn extractLatest
+  dependsOn allprojects*.tasks.uploadDefault
+}
+
+configurations {
+  boo {
+    visible = false
+  }
+}
+
+dependencies {
+  boo 'boo:boo:0.9.5.6'
+}
+
+apply plugin: 'kaizen-lib-client' // provides update$config tasks
+
+def assemblyDependenciesFile = file('assemblyDependencies.gradle')
+task updateAssemblyDependencies {
+  dependsOn extractLatest
+  dependsOn updateBoo
+  inputs.source fileTree(dir: ikvmDir, include: 'IKVM*.dll')
+  inputs.source "$ikvmDir/ikvmc.exe"
+  inputs.source "$ikvmDir/ikvm.exe"
+  outputs.file assemblyDependenciesFile
+
+  doFirst {
+    assemblyDependenciesFile.withOutputStream { stdout ->
+      exec {
+        executable 'mono'
+        args '--debug'
+        args 'lib/Boo/booi.exe' 
+        args 'printAssemblyDependencies.boo'
+        args inputs.files
+
+        standardOutput = stdout
+      }
+    }
+  }
+}
+
+apply from: assemblyDependenciesFile
+
+// additional runtime dependencies not captured
+// as assembly references
+project(':ikvmc') {
+  dependencies {
+    'default' project(':IKVM.Runtime')
+  }
+}
+
