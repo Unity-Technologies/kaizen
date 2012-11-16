@@ -2,7 +2,7 @@ apply plugin: 'groovy'
 apply plugin: 'idea'
 
 group = 'kaizen'
-version = '0.2.2'
+version = '0.2.3'
 
 task publish(dependsOn: [test, uploadArchives])
 
