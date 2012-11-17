@@ -28,7 +28,7 @@ task downloadJars(type: Copy) {
 def outputFileName = "${project.name}.dll"
 def outputFile = "${project.buildDir}/${outputFileName}"
 
-task convert(type: Exec, dependsOn: [update, downloadJars]) {
+task convert(type: Exec, dependsOn: [updateIKVM, downloadJars]) {
   inputs.source configurations.ivy
   outputs.file outputFile
   executable rootProject.unity.mono.cli
