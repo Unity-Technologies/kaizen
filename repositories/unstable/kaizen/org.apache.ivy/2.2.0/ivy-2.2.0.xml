@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="kaizen"
+		module="org.apache.ivy"
+		revision="2.2.0"
+		status="integration"
+		publication="20121120080741"
+	/>
+	<configurations>
+		<conf name="IKVM" visibility="public"/>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+		<conf name="ivy" visibility="public"/>
+	</configurations>
+	<publications>
+		<artifact name="org.apache.ivy" type="zip" ext="zip" conf="archives,default"/>
+	</publications>
+	<dependencies>
+		<dependency org="IKVM.NET" name="ikvmc" rev="7.1.4532.2" conf="IKVM->default"/>
+		<dependency org="IKVM.NET" name="IKVM.Runtime" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="IKVM.NET" name="IKVM.OpenJDK.XML.Parse" rev="7.1.4532.2" conf="default->default"/>
+		<dependency org="org.apache.ivy" name="ivy" rev="2.2.0" conf="ivy->default"/>
+	</dependencies>
+</ivy-module>
