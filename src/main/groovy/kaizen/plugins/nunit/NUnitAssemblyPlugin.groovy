@@ -22,7 +22,8 @@ class NUnitAssemblyPlugin implements Plugin<Project> {
 
 	void configureNUnitTasksOn(Project project, Task masterTestTask) {
 
-		NUnitExtension nunit = project.rootProject.extensions.nunit
+		def rootProject = project.rootProject
+		NUnitExtension nunit = rootProject.extensions.nunit
 		def nunitVersion = nunit.version
 
 		project.configurations.each { config ->
@@ -32,6 +33,7 @@ class NUnitAssemblyPlugin implements Plugin<Project> {
 				project.dependencies.add(config.name, "nunit:nunit.framework:${nunitVersion}")
 				configure(project) {
 					def testConfigTask = task("test$configLabel", type: NUnitTask, dependsOn: compileTask) {
+						dependsOn rootProject.tasks.updateNUnit
 						inputs.file compileTask.assemblyFile
 						outputs.file new File(compileTask.resolvedOutputDir, 'TestResult.xml')
 					}
