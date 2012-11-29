@@ -4,7 +4,7 @@
 		module="booi"
 		revision="0.9.5.7"
 		status="integration"
-		publication="20121128105620"
+		publication="20121129105829"
 	/>
 	<configurations>
 		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
@@ -15,6 +15,7 @@
 	</publications>
 	<dependencies>
 		<dependency org="boo" name="Boo.Lang" rev="0.9.5.7" conf="default->default"/>
+		<dependency org="boo" name="Boo.Lang.Extensions" rev="0.9.5.7" conf="default->default"/>
 		<dependency org="boo" name="Boo.Lang.Useful" rev="0.9.5.7" conf="default->default"/>
 		<dependency org="boo" name="Boo.Lang.Compiler" rev="0.9.5.7" conf="default->default"/>
 		<dependency org="boo" name="Boo.Lang.Parser" rev="0.9.5.7" conf="default->default"/>
