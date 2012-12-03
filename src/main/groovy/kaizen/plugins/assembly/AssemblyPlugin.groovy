@@ -49,8 +49,7 @@ class AssemblyPlugin implements Plugin<Project> {
 
 			afterEvaluate {
 				configure(copyDependenciesTask) {
-					inputs.source config
-					outputs.dir compileTask.resolvedOutputDir
+					dependsOn compileTask.configuration
 					doFirst {
 						config.incoming.files.each { file ->
 							project.copy {
