@@ -35,10 +35,10 @@ class Unity implements FrameworkLocator {
 	}
 
 	private absoluteUnityDir() {
-		project.file(configuredUnityDir()).absolutePath
+		project.file(configuredUnityDir).absolutePath
 	}
 
-	private configuredUnityDir() {
+	def getConfiguredUnityDir() {
 		project.hasProperty('unityDir') ? project.property('unityDir') : unityDir
 	}
 }
