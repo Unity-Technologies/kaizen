@@ -24,12 +24,10 @@ class UpdateTask extends DefaultTask {
 
 	@TaskAction
 	void update() {
-		def localArtifacts = project.subprojects.collectMany {
-			it.configurations.collectMany { it.artifacts.files.collect() }
-		}
+		def localArtifacts = project.subprojects.collectMany { it.configurations }.collectMany { it.artifacts.files.collect() }
 		def remoteArtifacts = configuration.incoming.files.findAll { !localArtifacts.contains(it) }
 		remoteArtifacts.each { file ->
-			println file.name
+			logger.info "Unpacking ${file.name} into $outputDir"
 			project.copy {
 				from project.zipTree(file)
 				into project.file(outputDir)

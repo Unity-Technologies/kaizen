@@ -52,6 +52,7 @@ class AssemblyPlugin implements Plugin<Project> {
 					dependsOn compileTask.configuration
 					doFirst {
 						config.incoming.files.each { file ->
+							logger.info "Unpacking ${file.name} to ${compileTask.resolvedOutputDir}"
 							project.copy {
 								from project.zipTree(file)
 								into compileTask.resolvedOutputDir
