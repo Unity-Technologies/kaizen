@@ -54,6 +54,7 @@ class AssemblyCompileTask extends DefaultTask {
 		def keyFile = assembly.keyFile
 		def isBoo = assembly.language == 'boo'
 		configure {
+			dependsOn configuration
 			outputs.file assemblyFile
 			inputs.files assemblyReferences
 			inputs.source assembly.sourceFiles
