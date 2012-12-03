@@ -33,9 +33,7 @@ class UpdateTask extends DefaultTask {
 			project.copy {
 				from project.zipTree(file)
 				into project.file(outputDir)
-				include "*.exe"
-				include "*.dll"
-				include "*.xml"
+				include '**/*'
 			}
 		}
 	}
