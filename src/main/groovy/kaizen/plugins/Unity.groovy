@@ -22,6 +22,21 @@ class Unity implements FrameworkLocator {
 		this.monoBleedingEdge = new MonoFramework(this, 'MonoBleedingEdge')
 	}
 
+	def getExecutable() {
+		Paths.combine absoluteUnityDir(), relativeExecutablePath()
+	}
+
+	String relativeExecutablePath() {
+		switch (SystemInformation.systemFamily) {
+			case SystemInformation.WINDOWS:
+				return 'Unity.exe'
+			case SystemInformation.MAC:
+				return 'Contents/MacOS/Unity'
+			default:
+				return 'Unity'
+		}
+	}
+
 	@Override
 	String getFrameworkPath(String frameworkName) {
 		def frameworksPath = SystemInformation.isMac() ? 'Contents/Frameworks' : 'Data'
