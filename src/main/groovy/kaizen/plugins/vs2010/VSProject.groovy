@@ -8,6 +8,7 @@ import kaizen.plugins.assembly.AssemblyExtension
 class VSProject {
 	final Project project
 	@Lazy String guid = GuidString.from(project.name)
+	String targetFrameworkVersion = 'v3.5'
 
 	VSProject(Project project) {
 		this.project = project
