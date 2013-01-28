@@ -5,7 +5,7 @@ dependency after the nuget plugin has been applied:
 apply plugin: 'nuget'
 
 dependencies {
-  net35 'Rx-Core-old:1.0.2856.0:System.Observable'
+  net35 'Rx-Core-old:System.Observable:1.0.2856.0'
 }
 ```
 
