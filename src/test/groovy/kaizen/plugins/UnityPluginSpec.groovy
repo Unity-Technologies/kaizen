@@ -3,25 +3,28 @@ package kaizen.plugins
 import spock.lang.*
 import org.gradle.testfixtures.ProjectBuilder
 import kaizen.foundation.SystemInformation
+import kaizen.foundation.Paths
 
 class UnityPluginSpec extends Specification {
 
 	def 'mono path is resolved against unityDir property'() {
 
-		setup:
-		def (projectDir, expectedCliExecutable) = (
-			SystemInformation.isWindows() ? ['C:\\root\\project', 'C:\\root\\unity\\Data\\Mono\\bin\\cli.bat']
-			: SystemInformation.isMac() ? ['/root/project', '/root/unity/Contents/Frameworks/Mono/bin/cli']
-			: /* linux */ ['/root/project', '/root/unity/Data/Mono/bin/cli'])
+		given:
+		def projectDir = DirectoryBuilder.createTempDir()
+		def expectedCliExecutable = (
+			SystemInformation.isWindows() ? 'Data\\Mono\\bin\\cli.bat'
+		: SystemInformation.isMac() ? 'Contents/Frameworks/Mono/bin/cli'
+		: /* linux */ 'Data/Mono/bin/cli')
 
-		def bundle = new ProjectBuilder().withProjectDir(new File(projectDir)).build()
+		def bundle = new ProjectBuilder().withProjectDir(projectDir).build()
 		bundle.apply plugin: UnityPlugin
 
 		when:
 		bundle.unity.unityDir = '../unity'
 
 		then:
-		expectedCliExecutable == bundle.unity.mono.cli
+		def expectedPath = Paths.combine(projectDir.absolutePath, '../unity', expectedCliExecutable)
+		expectedPath == bundle.unity.mono.cli
 
 	}
 
