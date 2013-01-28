@@ -15,6 +15,6 @@ class AssemblyDependency implements Dependency {
 	String getVersion() { "latest.integration" }
 	Dependency copy() { new AssemblyDependency(name) }
 	boolean contentEquals(Dependency other) {
-		other instanceof AssemblyDependency && name == ((AssemblyDependency)other).name
+		(other instanceof AssemblyDependency && name == ((AssemblyDependency)other).name)
 	}
 }

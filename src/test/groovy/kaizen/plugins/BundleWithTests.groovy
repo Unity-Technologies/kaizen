@@ -1,6 +1,6 @@
 package kaizen.plugins
 
-class BundleWithTests extends BundleSpecification {
+abstract class BundleWithTests extends BundleSpecification {
 
 	def p1 = subProjectWithName('p1')
 	def p1Tests = subProjectWithName('p1.Tests')

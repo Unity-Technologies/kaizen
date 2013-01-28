@@ -20,9 +20,6 @@ abstract class BundleSpecification extends PluginSpecification {
 	}
 
 	void evaluateBundle() {
-		bundle.allprojects.each {
-			(it as ProjectInternal).evaluate()
-		}
+		bundle.allprojects.each { evaluateProject it }
 	}
-
 }

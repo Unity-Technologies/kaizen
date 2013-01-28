@@ -14,11 +14,11 @@ class DirectoryBuilder {
 		builder.root
 	}
 
-	private static File createTempDir() {
-		File.createTempFile("kaizen", ".tmp").with { file ->
-			file.delete()
-			file.mkdir()
-			file
+	public static File createTempDir() {
+		File.createTempFile("kaizen", ".tmp").with {
+			it.delete()
+			it.mkdir()
+			it
 		}
 	}
 
@@ -29,17 +29,17 @@ class DirectoryBuilder {
 	}
 
 	File dir(String name, Closure children = null) {
-		new File(root, name).with { dir ->
-			dir.mkdirs()
-			if (children)
-				configure(dir, children)
-		}
+		def dir = new File(root, name)
+		dir.mkdirs()
+		if (children)
+			configure(dir, children)
+		dir
 	}
 
 	File file(String name, String content = '') {
-		new File(root, name).with { file ->
-			file.text = content
-			file
+		new File(root, name).with {
+			text = content
+			it
 		}
 	}
 }

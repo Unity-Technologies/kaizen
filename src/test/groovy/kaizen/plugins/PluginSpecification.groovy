@@ -4,6 +4,7 @@ import spock.lang.Specification
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.util.ConfigureUtil
+import org.gradle.api.internal.project.ProjectInternal
 
 abstract class PluginSpecification extends Specification {
 
@@ -27,4 +28,7 @@ abstract class PluginSpecification extends Specification {
 		ConfigureUtil.configure(closure, object)
 	}
 
+	def evaluateProject(Project p) {
+		(p as ProjectInternal).evaluate()
+	}
 }
