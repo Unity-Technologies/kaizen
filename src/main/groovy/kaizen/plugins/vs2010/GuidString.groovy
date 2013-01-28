@@ -8,6 +8,6 @@ class GuidString {
 	}
 
 	static def uuidFrom(String s) {
-		new UUID(MessageDigest.getInstance("MD5").digest(s.bytes))
+		UUID.nameUUIDFromBytes(MessageDigest.getInstance("MD5").digest(s.bytes))
 	}
 }
