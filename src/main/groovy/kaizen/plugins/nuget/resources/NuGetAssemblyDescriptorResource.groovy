@@ -42,7 +42,6 @@ class NuGetAssemblyDescriptorResource extends LazyNuGetAssemblyResource {
 				markup.dependencies {
 				}
 			}
-			it.close()
 		}
 		ivyFile
 	}
