@@ -1,6 +1,7 @@
-package kaizen.plugins
+package kaizen.plugins.nuget
 
-import kaizen.plugins.nuget.NuGetDependencyResolverFactory
+import kaizen.plugins.DirectoryBuilder
+import kaizen.plugins.PluginSpecification
 import kaizen.plugins.nuget.cache.CachedNuGetPackage
 import kaizen.plugins.nuget.cache.NuGetPackage
 import kaizen.plugins.nuget.cache.NuGetPackageCache
