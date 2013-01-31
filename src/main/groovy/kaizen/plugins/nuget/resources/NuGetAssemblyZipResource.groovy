@@ -18,7 +18,7 @@ class NuGetAssemblyZipResource extends LazyNuGetAssemblyResource {
 
 	@Override
 	File initFile() {
-		def tmpZipFile = File.createTempFile("$containingPackage.name-$name", "-$revision-${configuration}.zip")
+		def tmpZipFile = File.createTempFile("$containingPackage.name-$assembly.name", "-$revision-${configuration}.zip")
 		writeZipFile(tmpZipFile, assembly.filesForConfiguration(configuration))
 		tmpZipFile
 	}
