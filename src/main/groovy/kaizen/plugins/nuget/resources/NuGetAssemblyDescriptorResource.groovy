@@ -6,41 +6,65 @@ import kaizen.plugins.nuget.cache.NuGetAssembly
 
 class NuGetAssemblyDescriptorResource extends LazyNuGetAssemblyResource {
 
+	static final String DefaultConfiguration = "Net35"
+
 	NuGetAssemblyDescriptorResource(String name, NuGetAssembly assembly) {
 		super(name, assembly)
 	}
 
 	@Override
 	File initFile() {
-		def nuGetPackage = assembly.containingPackage
-		ivyDescriptorFor(nuGetPackage.name, assembly.name, nuGetPackage.revision)
-	}
-
-	def ivyDescriptorFor(group, module, revision) {
-		File ivyFile = File.createTempFile("$group-$module-$revision", "-ivy.xml")
+		File ivyFile = File.createTempFile("$packageName-$assemblyName-$revision", "-ivy.xml")
 		ivyFile.withWriter {
-			def build = new MarkupBuilder(it)
-			build.doubleQuotes = true
-			build.'ivy-module'(version: '2.0') {
-				info(
-					organisation: group,
-					module: module,
+			def markup = new MarkupBuilder(it)
+			markup.'ivy-module'(version: '2.0') {
+				markup.info(
+					organisation: packageName,
+					module: assemblyName,
 					revision: revision,
 					status: 'release',
 					'default': 'true',
 				)
-				build.configurations() {
-					conf(name: "default", visibility: "public")
+				markup.configurations {
+					if (DefaultConfiguration in configurations) {
+						markup.conf(name: 'default', visibility: 'public')
+					}
+					configurations.each {
+						markup.conf(name: it, visibility: 'public')
+					}
 				}
-				build.publications() {
-					artifact(name: "$module-$NuGetAssembly.DefaultConfiguration", type: "zip", ext: "zip", conf: "default")
+				markup.publications {
+					configurations.each {
+						def conf = it == DefaultConfiguration ? "$it,default" : it
+						artifact(name: ArtifactNamer.nameForArtifact(assemblyName, it), type: "zip", ext: "zip", conf: conf)
+					}
 				}
-				build.dependencies {
+				markup.dependencies {
 				}
 			}
 			it.close()
 		}
 		ivyFile
+	}
+
+	def getPackageName() {
+		containingPackage.name
+	}
+
+	def getAssemblyName() {
+		assembly.name
+	}
+
+	def getRevision() {
+		containingPackage.revision
+	}
+
+	def getConfigurations() {
+		assembly.configurations
+	}
+
+	def getContainingPackage() {
+		assembly.containingPackage
 	}
 
 	@Override

@@ -23,8 +23,19 @@ class CachedNuGetPackage implements NuGetPackage {
 	}
 
 	@Override
-	NuGetAssembly queryAssembly(String assemblyName, String configuration) {
-		def assemblyFile = new File(packageDir, "lib/$configuration/${assemblyName}.dll")
-		assemblyFile.exists() ? new CachedNuGetAssembly(this, assemblyName, assemblyFile) : null
+	NuGetAssembly queryAssembly(String assemblyName) {
+		def configurations = availableConfigurationsFor(assemblyName)
+		configurations.empty ? null : new CachedNuGetAssembly(this, assemblyName, configurations)
+	}
+
+	@Override
+	File queryFile(String relativePath) {
+		def file = new File(packageDir, relativePath)
+		file.exists() ? file : null
+	}
+
+	Set<String> availableConfigurationsFor(String assemblyName) {
+		def configurations = queryFile('lib').listFiles({ File f -> f.directory } as FileFilter)
+		configurations.findAll { new File(it, "${assemblyName}.dll").exists() }.collect { it.name }.toSet()
 	}
 }

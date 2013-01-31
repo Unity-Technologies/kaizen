@@ -9,14 +9,17 @@ import java.util.zip.ZipOutputStream
 
 class NuGetAssemblyZipResource extends LazyNuGetAssemblyResource {
 
+	private String configuration
+
 	NuGetAssemblyZipResource(String name, NuGetAssembly assembly) {
 		super(name, assembly)
+		this.configuration = ArtifactNamer.configurationFromArtifactName(name.split(/:/)[4])
 	}
 
 	@Override
 	File initFile() {
-		def tmpZipFile = File.createTempFile("$containingPackage.name-$name", "-$revision-${NuGetAssembly.DefaultConfiguration}.zip")
-		writeZipFile(tmpZipFile, assembly.files)
+		def tmpZipFile = File.createTempFile("$containingPackage.name-$name", "-$revision-${configuration}.zip")
+		writeZipFile(tmpZipFile, assembly.filesForConfiguration(configuration))
 		tmpZipFile
 	}
 

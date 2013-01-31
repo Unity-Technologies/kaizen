@@ -39,7 +39,7 @@ class NuGetRepository extends AbstractRepository {
 	def createResourceFor(String src) {
 		def (group, module, revision, type) = src.split(/:/)
 		def nuGetPackage = nuGetPackageFor(group, revision)
-		def assembly = nuGetPackage?.queryAssembly(module, NuGetAssembly.DefaultConfiguration)
+		def assembly = nuGetPackage?.queryAssembly(module)
 		assembly == null ?
 			nonExistentResource(src) :
 			resourceForAssembly(src, assembly, type)
