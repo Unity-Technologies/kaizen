@@ -1,6 +1,5 @@
-package kaizen.plugins
+package kaizen.plugins.repository
 
-import kaizen.plugins.repository.DirectoryIndexer
 import kaizen.testing.DirectoryBuilder
 import spock.lang.Specification
 
