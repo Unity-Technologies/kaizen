@@ -13,7 +13,7 @@ buildscript {
 }
 
 repositories {
-  ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
+	ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
 }
 
 version = '7.1.4532.2'
@@ -43,70 +43,70 @@ task extractLatest(type: Copy, dependsOn: downloadLatest) {
 }
 
 allprojects {
-  apply plugin: 'base'
-  group = rootProject.name
+	apply plugin: 'base'
+	group = rootProject.name
 }
 
 subprojects {
-  version = rootProject.version
+	version = rootProject.version
 
-  task zip(type: Zip) {
-    from ikvmDir
-    include "${project.name}.dll"
-    include "${project.name}.exe"
-  }
+	task zip(type: Zip) {
+		from ikvmDir
+		include "${project.name}.dll"
+		include "${project.name}.exe"
+	}
 
-  uploadDefault {
-    repositories {
-      ivy { url repositoryForPublishing }
-    }
-  }
+	uploadDefault {
+		repositories {
+			ivy { url repositoryForPublishing }
+		}
+	}
 
-  artifacts {
-    'default' zip
-  }
+	artifacts {
+		'default' zip
+	}
 }
 
 task publish {
-  dependsOn extractLatest
-  dependsOn allprojects*.tasks.uploadDefault
+	dependsOn extractLatest
+	dependsOn allprojects*.tasks.uploadDefault
 }
 
 configurations {
-  boo {
-    visible = false
-  }
+	boo {
+		visible = false
+	}
 }
 
 dependencies {
-  boo 'boo:boo:0.9.5.6'
+	boo 'boo:boo:0.9.5.6'
 }
 
 apply plugin: 'kaizen-lib-client' // provides update$config tasks
 
 def assemblyDependenciesFile = file('assemblyDependencies.gradle')
 task updateAssemblyDependencies {
-  dependsOn extractLatest
-  dependsOn updateBoo
-  inputs.source fileTree(dir: ikvmDir, include: 'IKVM*.dll')
-  inputs.source "$ikvmDir/ikvmc.exe"
-  inputs.source "$ikvmDir/ikvm.exe"
-  inputs.source "$ikvmDir/ikvmstub.exe"
-  outputs.file assemblyDependenciesFile
+	dependsOn extractLatest
+	dependsOn updateBoo
+	inputs.source fileTree(dir: ikvmDir, include: 'IKVM*.dll')
+	inputs.source "$ikvmDir/ikvmc.exe"
+	inputs.source "$ikvmDir/ikvm.exe"
+	inputs.source "$ikvmDir/ikvmstub.exe"
+	outputs.file assemblyDependenciesFile
 
-  doFirst {
-    assemblyDependenciesFile.withOutputStream { stdout ->
-      exec {
-        executable 'mono'
-        args '--debug'
-        args 'lib/Boo/booi.exe' 
-        args 'printAssemblyDependencies.boo'
-        args inputs.files
+	doFirst {
+		assemblyDependenciesFile.withOutputStream { stdout ->
+			exec {
+				executable 'mono'
+				args '--debug'
+				args 'lib/Boo/booi.exe' 
+				args 'printAssemblyDependencies.boo'
+				args inputs.files
 
-        standardOutput = stdout
-      }
-    }
-  }
+				standardOutput = stdout
+			}
+		}
+	}
 }
 
 apply from: assemblyDependenciesFile
@@ -114,8 +114,8 @@ apply from: assemblyDependenciesFile
 // additional runtime dependencies not captured
 // as assembly references
 project(':ikvmc') {
-  dependencies {
-    'default' project(':IKVM.Runtime')
-  }
+	dependencies {
+		'default' project(':IKVM.Runtime')
+	}
 }
 

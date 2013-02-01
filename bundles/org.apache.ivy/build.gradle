@@ -4,23 +4,23 @@ group = 'kaizen'
 apply from: '../common.gradle'
 
 buildscript {
-  dependencies {
-    classpath 'kaizen:kaizen:0.2.4'
-  }
-  repositories {
-    ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
-  }
+	dependencies {
+		classpath 'kaizen:kaizen:0.2.4'
+	}
+	repositories {
+		ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
+	}
 }
 
 repositories {
-  ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
+	ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
 }
 
 def ikvmVersion = '7.1.4532.2'
 dependencies {
-  ext {
-    ikvm = { name -> "IKVM.NET:$name:$ikvmVersion" }
-  }
+	ext {
+		ikvm = { name -> "IKVM.NET:$name:$ikvmVersion" }
+	}
 }
 
 apply plugin: 'base'
@@ -28,52 +28,52 @@ apply plugin: 'unity'
 apply plugin: 'kaizen-lib-client'
 
 configurations {
-  ivy
-  IKVM
+	ivy
+	IKVM
 }
 
 dependencies {
-  ivy "org.apache.ivy:ivy:$version"
-  IKVM "${ikvm('ikvmc')}"
-  ['IKVM.Runtime', 'IKVM.OpenJDK.XML.Parse'].each {
-    'default' "${ikvm(it)}"
-  }
+	ivy "org.apache.ivy:ivy:$version"
+	IKVM "${ikvm('ikvmc')}"
+	['IKVM.Runtime', 'IKVM.OpenJDK.XML.Parse'].each {
+		'default' "${ikvm(it)}"
+	}
 }
 
 repositories {
-  mavenCentral()
+	mavenCentral()
 }
 
 task downloadJars(type: Copy) {
-  from configurations.ivy
-  into project.buildDir
+	from configurations.ivy
+	into project.buildDir
 }
 
 def outputFileName = "${project.name}.dll"
 def outputFile = "${project.buildDir}/${outputFileName}"
 
 task convert(type: Exec, dependsOn: [updateIKVM, downloadJars]) {
-  inputs.source configurations.ivy
-  outputs.file outputFile
-  executable rootProject.unity.mono.cli
-  args "lib/IKVM/ikvmc.exe"
-  args "-out:$outputFile"
-  args "-assembly:${project.name}"
-  args "-version:$version"
-  args inputs.files
+	inputs.source configurations.ivy
+	outputs.file outputFile
+	executable rootProject.unity.mono.cli
+	args "lib/IKVM/ikvmc.exe"
+	args "-out:$outputFile"
+	args "-assembly:${project.name}"
+	args "-version:$version"
+	args inputs.files
 }
 
 task zip(type: Zip, dependsOn: convert) {
-  from project.buildDir
-  include outputFileName
+	from project.buildDir
+	include outputFileName
 }
 
 artifacts {
-  'default' zip
+	'default' zip
 }
 
 uploadDefault {
-  repositories {
-    ivy { url repositoryForPublishing }
-  }
+	repositories {
+		ivy { url repositoryForPublishing }
+	}
 }

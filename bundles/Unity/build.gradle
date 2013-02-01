@@ -13,14 +13,14 @@ import System.Linq;
 import System.IO;
 
 static function Probe() {
-  LogParenthesizedValue(Path.GetDirectoryName(typeof(UnityEngine.Object).Assembly.Location));
+	LogParenthesizedValue(Path.GetDirectoryName(typeof(UnityEngine.Object).Assembly.Location));
 
-  LogParenthesizedValue(Application.unityVersion);
+	LogParenthesizedValue(Application.unityVersion);
 
-  var editorReferences = typeof(UnityEditor.EditorApplication).Assembly.GetReferencedAssemblies();
-  //for (var editorRef in editorReferences) Log(editorRef);
-  var nrefactory = editorReferences.Single(function(assemblyName) { return assemblyName.Name == 'ICSharpCode.NRefactory'; });
-  LogParenthesizedValue(nrefactory.Version);
+	var editorReferences = typeof(UnityEditor.EditorApplication).Assembly.GetReferencedAssemblies();
+	//for (var editorRef in editorReferences) Log(editorRef);
+	var nrefactory = editorReferences.Single(function(assemblyName) { return assemblyName.Name == 'ICSharpCode.NRefactory'; });
+	LogParenthesizedValue(nrefactory.Version);
 }
 
 static function LogParenthesizedValue(o) {

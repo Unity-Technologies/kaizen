@@ -1,32 +1,32 @@
 buildscript {
-  dependencies {
-    classpath 'kaizen:kaizen:0.2.4'
-  }
-  repositories {
-    ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
-  }
+	dependencies {
+		classpath 'kaizen:kaizen:0.2.4'
+	}
+	repositories {
+		ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
+	}
 }
 
 apply plugin: 'unity'
 apply plugin: 'vs2010'
 
 allprojects {
-  repositories {
-    ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
-  }
+	repositories {
+		ivy { url 'http://unity-technologies.github.com/kaizen/repositories/unstable' }
+	}
 
-  def ikvmVersion = '7.1.4532.2'
-  dependencies {
-    ext {
-      ikvm = { name -> "IKVM.NET:$name:$ikvmVersion" }
-    }
-  }
+	def ikvmVersion = '7.1.4532.2'
+	dependencies {
+		ext {
+			ikvm = { name -> "IKVM.NET:$name:$ikvmVersion" }
+		}
+	}
 }
 
 vs {
-  solutions {
-    "$rootProject.name" {
-      project(':IvyResolve')
-    }
-  }
+	solutions {
+		"$rootProject.name" {
+			project(':IvyResolve')
+		}
+	}
 }
