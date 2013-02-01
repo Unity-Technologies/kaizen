@@ -82,9 +82,9 @@ nunit {
 }
 
 ext {
-    references = [
+		references = [
 			'nunitFramework': "nunit:nunit.framework:${nunit.version}",
 			'moq': 'Moq:Moq:4.0+',
-    ]
+		]
 }
 

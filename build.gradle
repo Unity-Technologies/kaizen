@@ -1,10 +1,49 @@
-apply plugin: 'groovy'
-apply plugin: 'idea'
-
-group = 'kaizen'
 version = '0.3.0'
 
-task publish(dependsOn: [test, uploadArchives])
+allprojects {
+	apply plugin: 'idea'
+	apply plugin: 'base'
+
+	group = 'kaizen'
+
+	uploadArchives {
+		repositories {
+			ivy { url rootProject.file('../repository') }
+		}
+	}
+
+	repositories {
+		mavenCentral()
+	}
+}
+
+subprojects {
+	apply plugin: 'groovy'
+
+	dependencies {
+		compile gradleApi()
+		groovy localGroovy()
+		def spockframework = 'org.spockframework:spock-core:0.7-groovy-1.8'
+		testCompile spockframework
+		if (project.name == 'testing') {
+			compile spockframework
+		} else {
+			testCompile project(':testing')
+		}
+	}
+
+	task publish(dependsOn: [test, uploadArchives])
+}
+
+dependencies {
+	subprojects.each {
+		if (it.name != 'testing') {
+			'default' project(path: it.path)
+		}
+	}
+}
+
+task publish(dependsOn: uploadArchives)
 
 task unityPackage <<{
 
@@ -30,18 +69,3 @@ task unityPackage <<{
 	println logFile.text
 }
 
-dependencies {
-	compile gradleApi()
-	groovy localGroovy()
-	testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
-}
-
-uploadArchives {
-	repositories {
-		ivy { url '../repository' }
-	}
-}
-
-repositories {
-	mavenCentral()
-}
