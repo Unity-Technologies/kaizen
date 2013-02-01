@@ -1,4 +1,4 @@
-package kaizen.plugins
+package kaizen.plugins.repository
 
 import org.gradle.api.Project
 import org.gradle.api.Plugin

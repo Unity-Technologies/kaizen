@@ -1,5 +1,7 @@
-package kaizen.plugins
+package kaizen.plugins.unity
 
+import kaizen.plugins.clr.FrameworkLocator
+import kaizen.plugins.clr.MonoFramework
 import org.gradle.api.Project
 
 import kaizen.foundation.SystemInformation

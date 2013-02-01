@@ -1,5 +1,6 @@
 package kaizen.plugins
 
+import kaizen.plugins.unity.UnityPlugin
 import spock.lang.*
 import org.gradle.testfixtures.ProjectBuilder
 import kaizen.foundation.SystemInformation

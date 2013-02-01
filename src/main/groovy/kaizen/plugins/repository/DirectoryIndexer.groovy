@@ -1,4 +1,4 @@
-package kaizen.plugins
+package kaizen.plugins.repository
 
 import groovy.xml.MarkupBuilder
 

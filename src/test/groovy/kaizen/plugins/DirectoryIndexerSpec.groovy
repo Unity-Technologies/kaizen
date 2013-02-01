@@ -1,5 +1,6 @@
 package kaizen.plugins
 
+import kaizen.plugins.repository.DirectoryIndexer
 import spock.lang.Specification
 
 class DirectoryIndexerSpec extends Specification {

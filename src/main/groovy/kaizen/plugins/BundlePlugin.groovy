@@ -1,5 +1,6 @@
 package kaizen.plugins
 
+import kaizen.plugins.unity.UnityPlugin
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 

@@ -1,4 +1,4 @@
-package kaizen.plugins
+package kaizen.plugins.clr
 
 import kaizen.foundation.Paths
 import kaizen.foundation.SystemInformation
