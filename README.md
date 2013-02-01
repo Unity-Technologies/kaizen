@@ -1,16 +1,12 @@
 # kaizen
 
-A dependency management and continuous delivery framework for Unity extensions.
+A dependency management and continuous delivery framework for the Unity platform.
 
 ## Rationale
 
-The underlying assumption is that by breaking system functionality into smaller units
-that can be evolved and deployed independently of each other integration becomes simpler
-because it can happen in small and localized steps.
-
-The strategy is to automate to the fullest extent possible the whole delivery process
-including the building and deployment of versioned binary components with explicitly
-managed dependencies amongst them.
+Breaking system functionality into smaller units
+that can be evolved and deployed independently of each other makes integration simpler
+because it can happen in small and localized steps. Divide and conquer.
 
 ## In The Abstract
 
