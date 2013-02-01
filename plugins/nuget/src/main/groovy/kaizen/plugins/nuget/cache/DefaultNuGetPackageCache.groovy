@@ -2,7 +2,7 @@ package kaizen.plugins.nuget.cache
 
 class DefaultNuGetPackageCache implements NuGetPackageCache {
 
-	final File cacheDir = new File(System.properties['user.home'], '.kaizen/kaizen.plugins.nuget/packages')
+	final File cacheDir = new File(System.properties['user.home'], '.kaizen/nuget/packages')
 
 	NuGetPackage queryPackage(String packageName, String revision) {
 		def packageCache = cacheDirectoryFor(packageName, revision)

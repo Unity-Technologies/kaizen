@@ -9,7 +9,7 @@ class NuGetDependencyResolverFactory {
 
 	static DependencyResolver newNuGetDependencyResolver(NuGetPackageCache packageCache = new DefaultNuGetPackageCache()) {
 		def repository = new NuGetRepository(packageCache)
-		def resolver = new RepositoryResolver(name: 'kaizen.plugins.nuget', repository: repository)
+		def resolver = new RepositoryResolver(name: 'nuget', repository: repository)
 		resolver.addIvyPattern("[organisation]:[module]:[revision]:[type]:[artifact]:[ext]")
 		resolver.addArtifactPattern("[organisation]:[module]:[revision]:[type]:[artifact]:[ext]")
 		resolver

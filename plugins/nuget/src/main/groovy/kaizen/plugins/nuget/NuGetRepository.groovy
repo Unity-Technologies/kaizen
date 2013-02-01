@@ -50,7 +50,7 @@ class NuGetRepository extends AbstractRepository {
 	}
 
 	NuGetPackage downloadNuGetPackageFor(String packageId, String revision) {
-		def packageUrl = new URL("https://kaizen.plugins.nuget.org/api/v2/package/$packageId/$revision")
+		def packageUrl = new URL("https://nuget.org/api/v2/package/$packageId/$revision")
 		def tmpPackageFile = File.createTempFile(packageId, "-revision.nupkg")
 		transferResource(new URLResource(packageUrl), packageUrl, tmpPackageFile)
 		cacheNuGetPackage(packageId, revision, tmpPackageFile)
