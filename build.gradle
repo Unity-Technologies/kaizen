@@ -24,22 +24,20 @@ subprojects {
 		compile gradleApi()
 		groovy localGroovy()
 		def spockframework = 'org.spockframework:spock-core:0.7-groovy-1.8'
-		testCompile spockframework
 		if (project.name == 'testing') {
 			compile spockframework
 		} else {
 			testCompile project(':testing')
 		}
+		testCompile spockframework
 	}
 
 	task publish(dependsOn: [test, uploadArchives])
 }
 
 dependencies {
-	subprojects.each {
-		if (it.name != 'testing') {
-			'default' project(path: it.path)
-		}
+	subprojects.findAll { it.name != 'testing' }.each {
+		'default' project(path: it.path)
 	}
 }
 

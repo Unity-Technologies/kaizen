@@ -1,0 +1,7 @@
+version = '0.1.0'
+
+dependencies {
+	[':clr', ':assembly', ':lib-consumer', ':conventions'].each {
+		compile project(it)
+	}
+}
