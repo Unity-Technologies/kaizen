@@ -1,4 +1,4 @@
-package kaizen.foundation
+package kaizen.commons
 
 class Paths {
 	static String combine(String parent, String... parts) {

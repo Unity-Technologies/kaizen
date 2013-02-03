@@ -1,11 +1,10 @@
 package kaizen.plugins.unity
 
+import kaizen.commons.Paths
 import kaizen.plugins.clr.FrameworkLocator
 import kaizen.plugins.clr.MonoFramework
+import org.apache.commons.lang3.SystemUtils
 import org.gradle.api.Project
-
-import kaizen.foundation.SystemInformation
-import kaizen.foundation.Paths
 
 class Unity implements FrameworkLocator {
 
@@ -29,24 +28,21 @@ class Unity implements FrameworkLocator {
 	}
 
 	String relativeExecutablePath() {
-		switch (SystemInformation.systemFamily) {
-			case SystemInformation.WINDOWS:
-				return 'Unity.exe'
-			case SystemInformation.MAC:
-				return 'Contents/MacOS/Unity'
-			default:
-				return 'Unity'
-		}
+		if (SystemUtils.IS_OS_WINDOWS)
+			return 'Unity.exe'
+		if (SystemUtils.IS_OS_MAC_OSX)
+			return 'Contents/MacOS/Unity'
+		return 'Unity'
 	}
 
 	@Override
 	String getFrameworkPath(String frameworkName) {
-		def frameworksPath = SystemInformation.isMac() ? 'Contents/Frameworks' : 'Data'
+		def frameworksPath = SystemUtils.IS_OS_MAC_OSX ? 'Contents/Frameworks' : 'Data'
 		Paths.combine absoluteUnityDir(), frameworksPath, frameworkName
 	}
 
 	def defaultUnityLocation() {
-		SystemInformation.isWindows() ?
+		SystemUtils.IS_OS_WINDOWS ?
 			'C:\\Program Files (x86)\\Unity\\Editor' :
 			'/Applications/Unity/Unity.app'
 	}

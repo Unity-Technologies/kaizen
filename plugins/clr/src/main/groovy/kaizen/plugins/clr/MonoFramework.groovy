@@ -1,7 +1,7 @@
 package kaizen.plugins.clr
 
-import kaizen.foundation.Paths
-import kaizen.foundation.SystemInformation
+import kaizen.commons.Paths
+import org.apache.commons.lang3.SystemUtils
 
 interface FrameworkLocator {
 	String getFrameworkPath(String frameworkName)
@@ -31,12 +31,9 @@ class MonoFramework {
 	}
 
 	String platformSpecificExecutable(String executable) {
-		isWindows() ? "${executable}.bat" : executable
+		SystemUtils.IS_OS_WINDOWS ? "${executable}.bat" : executable
 	}
 
-	private boolean isWindows() {
-		SystemInformation.isWindows()
-	}
 
 	String monoBinPath(String path) {
 		Paths.combine monoPath, "bin", path

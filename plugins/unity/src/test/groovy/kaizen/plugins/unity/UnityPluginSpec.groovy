@@ -1,10 +1,10 @@
 package kaizen.plugins.unity
 
+import kaizen.commons.Paths
 import kaizen.testing.DirectoryBuilder
-import spock.lang.*
+import org.apache.commons.lang3.SystemUtils
 import org.gradle.testfixtures.ProjectBuilder
-import kaizen.foundation.SystemInformation
-import kaizen.foundation.Paths
+import spock.lang.Specification
 
 class UnityPluginSpec extends Specification {
 
@@ -13,8 +13,8 @@ class UnityPluginSpec extends Specification {
 		given:
 		def projectDir = DirectoryBuilder.createTempDir()
 		def expectedCliExecutable = (
-			SystemInformation.isWindows() ? 'Data\\Mono\\bin\\cli.bat'
-		: SystemInformation.isMac() ? 'Contents/Frameworks/Mono/bin/cli'
+			SystemUtils.IS_OS_WINDOWS ? 'Data\\Mono\\bin\\cli.bat'
+		: SystemUtils.IS_OS_MAC_OSX ? 'Contents/Frameworks/Mono/bin/cli'
 		: /* linux */ 'Data/Mono/bin/cli')
 
 		def bundle = new ProjectBuilder().withProjectDir(projectDir).build()
