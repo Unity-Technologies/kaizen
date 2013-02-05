@@ -1,5 +1,6 @@
 package kaizen.plugins.vs
 
+import kaizen.plugins.assembly.AssemblyReference
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ProjectDependency
@@ -16,7 +17,7 @@ class VSProject {
 	}
 
 	File getFile() {
-		new File(project.projectDir, "${project.name}.csproj")
+		project.file("${project.name}.csproj")
 	}
 
 	String getOutputType() {
@@ -35,11 +36,15 @@ class VSProject {
 	}
 
 	Iterable<VSProjectReference> getProjectReferences() {
-		return projectDependencies.collect { projectReferenceFor(it) }
+		projectDependencies.collect { projectReferenceFor(it) }
 	}
 
 	Iterable<Dependency> getExternalDependencies() {
-		return dependencies().findAll { !isProjectDependency(it) }
+		dependencies().findAll { !isProjectDependency(it) }
+	}
+
+	Iterable<AssemblyReference> getAssemblyReferences() {
+		assembly.references
 	}
 
 	boolean getIsSupportedLanguage() {

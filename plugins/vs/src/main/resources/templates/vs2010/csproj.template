@@ -32,9 +32,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
+    <%
+    project.assemblyReferences.each {
+    %><Reference Include="$it.name" />
+    <% } %>
     <%
     	project.externalDependencies.each {
     %><Reference Include="$it.name">
