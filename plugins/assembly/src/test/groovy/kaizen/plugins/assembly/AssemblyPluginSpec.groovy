@@ -15,4 +15,20 @@ class AssemblyPluginSpec extends PluginSpecification {
 		expect:
 		project.assembly.fileName == "C.dll"
 	}
+
+	def 'framework assembly references'() {
+		when:
+		configure(project) {
+			assembly {
+				references {
+					frameworkAssembly 'System.Runtime.Remoting'
+					frameworkAssembly 'System.Xml.Linq'
+				}
+			}
+		}
+
+		then:
+		AssemblyExtension assembly = project.extensions.assembly
+		assembly.references*.name =~ ['System.Runtime.Remoting', 'System.Xml.Linq']
+	}
 }

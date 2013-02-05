@@ -44,7 +44,7 @@ class AssemblyCompileTask extends DefaultTask {
 	}
 
 	void setUp() {
-		def assemblyReferences = configuration.allDependencies.collect {
+		def assemblyDependencies = configuration.allDependencies.collect {
 			new File(resolvedOutputDir, assemblyFileNameFor(it))
 		}
 
@@ -53,14 +53,14 @@ class AssemblyCompileTask extends DefaultTask {
 		if (unity == null)
 			return
 
+		AssemblyExtension assembly = project.assembly
 		def mono = unity.mono
-		def assembly = project.assembly
 		def keyFile = assembly.keyFile
 		def isBoo = assembly.language == 'boo'
 		configure {
 			dependsOn configuration
 			outputs.file assemblyFile
-			inputs.files assemblyReferences
+			inputs.files assemblyDependencies
 			inputs.source assembly.sourceFiles
 			doFirst {
 				def args = []
@@ -80,7 +80,8 @@ class AssemblyCompileTask extends DefaultTask {
 				if (keyFile) {
 					args << "-keyfile:${project.file(keyFile)}"
 				}
-				assemblyReferences.each { args << "-r:$it" }
+				assemblyDependencies.each { args << "-r:$it" }
+				assembly.references.each { args << "-r:$it.name" }
 				defines.each { args << "-define:$it" }
 				args.addAll(customArgs)
 				project.exec {
