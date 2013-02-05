@@ -42,22 +42,19 @@ class VS2010ProjectReferencesSpec extends VSProjectSpecification {
 		bundle.allprojects.each {
 			it.evaluate()
 		}
-		bundle.subprojects.each {
-			it.tasks.vsProject.execute()
-		}
 	}
 
 	def 'project reference paths are relative'() {
 		expect:
-		def aProjectXml = parseProjectFileOf(a)
+		def aProjectXml = loadProjectFileOf(a)
 		aProjectXml.ItemGroup.ProjectReference == []
 
-		def bProjectXml = parseProjectFileOf(b)
+		def bProjectXml = loadProjectFileOf(b)
 		bProjectXml.ItemGroup.ProjectReference.collect { [it.Project.text(), it.@Include] } == [
 				[a.extensions.vs.project.guid, '..\\a\\a.csproj']
 		]
 
-		def cProjectXml = parseProjectFileOf(c)
+		def cProjectXml = loadProjectFileOf(c)
 		cProjectXml.ItemGroup.ProjectReference.collect { [it.Project.text(), it.@Include] } == [
 				[a.extensions.vs.project.guid, '..\\a\\a.csproj'],
 				[b.extensions.vs.project.guid, '..\\b\\b.csproj'],

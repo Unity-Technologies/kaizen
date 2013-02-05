@@ -1,7 +1,6 @@
 package kaizen.plugins.vs.tests
 
 import kaizen.testing.DirectoryBuilder
-import org.gradle.api.internal.TaskInternal
 
 class VS2010CSharpProjectSpec extends VSProjectSpecification {
 
@@ -15,16 +14,14 @@ class VS2010CSharpProjectSpec extends VSProjectSpecification {
 
 	@Override
 	def setup() {
-		project.apply plugin: 'assembly'
 		project.apply plugin: 'vs2010'
 	}
 
 	def 'csproj is generated for c# project'() {
 		when:
-		executeProjectTask()
+		def projectXml = loadProjectFileOf(project)
 
 		then:
-		def projectXml = parseProjectFileOf(project)
 		projectXml.PropertyGroup[0].RootNamespace.text() == project.name
 		projectXml.PropertyGroup[0].AssemblyName.text() == project.name
 		projectXml.ItemGroup.Compile.@Include == ['Core.cs', 'Properties\\AssemblyInfo.cs']
@@ -53,18 +50,12 @@ class VS2010CSharpProjectSpec extends VSProjectSpecification {
 
 	String projectOutputTypeFor(String assemblyTarget) {
 		project.extensions.assembly.target = assemblyTarget
-		executeProjectTask()
-		parseProjectFileOf(project).PropertyGroup[0].OutputType.text()
+		loadProjectFileOf(project).PropertyGroup[0].OutputType.text()
 	}
 
 	String targetFrameworkVersionFor(String targetVersion) {
 		project.extensions.vs.project.targetFrameworkVersion = targetVersion
-		executeProjectTask()
-		parseProjectFileOf(project).PropertyGroup[0].TargetFrameworkVersion.text()
-	}
-
-	def executeProjectTask() {
-		(project.tasks.vsProject as TaskInternal).execute()
+		loadProjectFileOf(project).PropertyGroup[0].TargetFrameworkVersion.text()
 	}
 }
 

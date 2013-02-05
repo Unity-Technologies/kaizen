@@ -1,12 +1,16 @@
 package kaizen.plugins.vs
 
+import kaizen.plugins.assembly.AssemblyPlugin
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 import groovy.text.SimpleTemplateEngine
 
 class VS2010Plugin implements Plugin<Project> {
+
 	@Override
 	void apply(Project project) {
+
+		project.plugins.apply AssemblyPlugin
 
 		def vs = new VSExtension(project)
 		project.extensions.add('vs', vs)

@@ -1,6 +1,5 @@
 package kaizen.plugins.vs.tests
 
-import kaizen.plugins.vs.VS2010Plugin
 import kaizen.testing.DirectoryBuilder
 
 class BooProjectReferenceSpec extends VSProjectSpecification {
@@ -34,10 +33,9 @@ class BooProjectReferenceSpec extends VSProjectSpecification {
 
 	def 'boo project reference is omitted and an assembly reference is used instead'() {
 		when:
-		csProject.tasks.vsProject.execute()
+		def projectXml = loadProjectFileOf(csProject)
 
 		then:
-		def projectXml = parseProjectFileOf(csProject)
 		projectXml.ItemGroup.ProjectReference == []
 
 		def booProjectRefs = projectXml.ItemGroup.Reference.findAll { it.@Include == 'booProject' }
