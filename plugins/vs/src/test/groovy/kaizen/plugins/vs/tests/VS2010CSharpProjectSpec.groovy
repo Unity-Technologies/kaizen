@@ -38,14 +38,14 @@ class VS2010CSharpProjectSpec extends VSProjectSpecification {
 		'library'| 'Library'
 	}
 
-	def 'TargetFrameworkVersion can be set'() {
+	def 'TargetFrameworkVersion honors assembly.targetFrameworkVersion'() {
 		expect:
-		targetFrameworkVersionFor(value) == expected
+		targetFrameworkVersionFor(assemblyTargetFrameworkVersion) == projectTargetFrameworkVersion
 
 		where:
-		value  | expected
-		'v3.5' | 'v3.5'
-		'v4.0' | 'v4.0'
+		assemblyTargetFrameworkVersion  | projectTargetFrameworkVersion
+		'v3.5' 													| 'v3.5'
+		'v4.0'													| 'v4.0'
 	}
 
 	String projectOutputTypeFor(String assemblyTarget) {
@@ -54,7 +54,7 @@ class VS2010CSharpProjectSpec extends VSProjectSpecification {
 	}
 
 	String targetFrameworkVersionFor(String targetVersion) {
-		project.extensions.vs.project.targetFrameworkVersion = targetVersion
+		project.extensions.assembly.targetFrameworkVersion = targetVersion
 		loadProjectFileOf(project).PropertyGroup[0].TargetFrameworkVersion.text()
 	}
 }

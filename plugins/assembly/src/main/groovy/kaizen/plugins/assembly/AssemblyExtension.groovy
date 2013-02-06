@@ -14,6 +14,8 @@ class AssemblyExtension {
 	def keyFile
 	String language
 	final DomainObjectSet<AssemblyReference> references
+	String targetFrameworkVersion = 'v3.5'
+
 
 	AssemblyExtension(Project project) {
 		this.project = project
