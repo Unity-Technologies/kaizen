@@ -2,5 +2,4 @@ version = '0.1.0'
 
 dependencies {
 	compile project(':commons')
-	compile 'org.apache.commons:commons-lang3:3.1'
 }

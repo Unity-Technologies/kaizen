@@ -1,6 +1,5 @@
 package kaizen.plugins.assembly
 
-
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.internal.DefaultDomainObjectSet

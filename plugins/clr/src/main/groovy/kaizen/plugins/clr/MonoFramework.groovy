@@ -1,7 +1,7 @@
 package kaizen.plugins.clr
 
 import kaizen.commons.Paths
-import org.apache.commons.lang3.SystemUtils
+import org.gradle.internal.os.OperatingSystem
 
 interface FrameworkLocator {
 	String getFrameworkPath(String frameworkName)
@@ -12,8 +12,10 @@ class MonoFramework {
 	String frameworkName
 	MonoTool gmcs = new MonoTool(this, 'gmcs')
 	MonoTool booc = new MonoTool(this, 'booc')
+	final OperatingSystem operatingSystem
 
-	MonoFramework(FrameworkLocator locator, String frameworkName) {
+	MonoFramework(OperatingSystem operatingSystem, FrameworkLocator locator, String frameworkName) {
+		this.operatingSystem = operatingSystem
 		this.locator = locator
 		this.frameworkName = frameworkName
 	}
@@ -31,9 +33,8 @@ class MonoFramework {
 	}
 
 	String platformSpecificExecutable(String executable) {
-		SystemUtils.IS_OS_WINDOWS ? "${executable}.bat" : executable
+		operatingSystem.getScriptName(executable)
 	}
-
 
 	String monoBinPath(String path) {
 		Paths.combine monoPath, "bin", path

@@ -2,7 +2,7 @@ package kaizen.plugins.unity
 
 import kaizen.commons.Paths
 import kaizen.testing.DirectoryBuilder
-import org.apache.commons.lang3.SystemUtils
+import org.gradle.internal.os.OperatingSystem
 import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 
@@ -13,9 +13,9 @@ class UnityPluginSpec extends Specification {
 		given:
 		def projectDir = DirectoryBuilder.createTempDir()
 		def expectedCliExecutable = (
-			SystemUtils.IS_OS_WINDOWS ? 'Data\\Mono\\bin\\cli.bat'
-		: SystemUtils.IS_OS_MAC_OSX ? 'Contents/Frameworks/Mono/bin/cli'
-		: /* linux */ 'Data/Mono/bin/cli')
+			OperatingSystem.current().windows ? 'Data\\Mono\\bin\\cli.bat'
+			: OperatingSystem.current().macOsX ? 'Contents/Frameworks/Mono/bin/cli'
+			: /* linux */ 'Data/Mono/bin/cli')
 
 		def bundle = new ProjectBuilder().withProjectDir(projectDir).build()
 		bundle.apply plugin: 'unity'
