@@ -1,5 +1,7 @@
 package kaizen.testing
 
+import org.gradle.api.Task
+import org.gradle.api.internal.TaskInternal
 import spock.lang.Specification
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
@@ -20,6 +22,11 @@ abstract class PluginSpecification extends Specification {
 		ProjectBuilder.builder().withProjectDir(dir)
 	}
 
+	Project projectWithDirectoryStructure(Closure<DirectoryBuilder> structure) {
+		def tempDir = DirectoryBuilder.tempDirWith(structure)
+		projectBuilderWithDir(tempDir).build()
+	}
+
 	Project subProjectWithDir(Project parent, File dir) {
 		projectBuilderWithDir(dir).withName(dir.name).withParent(parent).build()
 	}
@@ -30,5 +37,9 @@ abstract class PluginSpecification extends Specification {
 
 	def evaluateProject(Project p) {
 		(p as ProjectInternal).evaluate()
+	}
+
+	def executeTask(Task t) {
+		(t as TaskInternal).execute()
 	}
 }

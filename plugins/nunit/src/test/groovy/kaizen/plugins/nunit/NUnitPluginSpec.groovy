@@ -6,28 +6,22 @@ import org.gradle.api.internal.project.ProjectInternal
 
 class NUnitPluginSpec extends PluginSpecification {
 
-	def bundle = projectWithName('bundle')
-	def component = subProjectWithName('C')
-	def tests = subProjectWithName('C.Tests')
+	def project = projectWithName('p')
 
 	@Override
 	def setup() {
-		bundle.apply plugin: kaizen.plugins.nunit.NUnitPlugin
+		project.plugins.apply(NUnitPlugin)
 	}
 
 	def 'default nunit version is 2.6+'() {
 		expect:
-		bundle.nunit.version == '2.6+'
+		project.nunit.version == '2.6+'
 	}
 
 	def 'NUnit configuration depends upon nunit-console'() {
 		when:
-		(bundle as ProjectInternal).evaluate()
+		evaluateProject(project)
 		then:
-		bundle.configurations['NUnit'].dependencies.collect { "$it.group:$it.name:$it.version" } == ['nunit:nunit-console:2.6+']
-	}
-
-	Project subProjectWithName(String name) {
-		projectBuilderWithName(name).withParent(bundle).build()
+		project.configurations['NUnit'].dependencies.collect { "$it.group:$it.name:$it.version" } == ['nunit:nunit-console:2.6+']
 	}
 }

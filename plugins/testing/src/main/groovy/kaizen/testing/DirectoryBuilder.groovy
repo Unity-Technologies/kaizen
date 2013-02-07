@@ -4,13 +4,13 @@ import org.gradle.util.ConfigureUtil
 
 class DirectoryBuilder {
 
-	static File tempDirWith(Closure closure) {
-		configure(createTempDir(), closure)
+	static File tempDirWith(Closure<DirectoryBuilder> structure) {
+		configure(createTempDir(), structure)
 	}
 
-	private static File configure(File root, Closure closure) {
+	private static File configure(File root, Closure<DirectoryBuilder> structure) {
 		def builder = new DirectoryBuilder(root)
-		ConfigureUtil.configure(closure, builder)
+		ConfigureUtil.configure(structure, builder)
 		builder.root
 	}
 
