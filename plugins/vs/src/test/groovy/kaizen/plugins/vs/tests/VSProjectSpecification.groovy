@@ -2,6 +2,7 @@ package kaizen.plugins.vs.tests
 
 import kaizen.testing.PluginSpecification
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.internal.TaskInternal
 
 abstract class VSProjectSpecification extends PluginSpecification {
@@ -11,7 +12,7 @@ abstract class VSProjectSpecification extends PluginSpecification {
 	}
 
 	def executeVsProjectTaskOf(Project project) {
-		(project.tasks.vsProject as TaskInternal).execute()
+		executeTask(project.tasks.vsProject)
 	}
 
 	def parseProjectFileOf(Project project) {
