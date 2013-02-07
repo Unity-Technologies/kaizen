@@ -30,6 +30,7 @@ subprojects {
 			testCompile project(':testing')
 		}
 		testCompile spockframework
+		testRuntime "cglib:cglib-nodep:2.2"     // enables mocking of classes (in addition to interfaces)
 	}
 
 	task publish(dependsOn: [test, uploadArchives])
