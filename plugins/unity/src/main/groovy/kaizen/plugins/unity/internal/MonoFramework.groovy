@@ -1,4 +1,4 @@
-package kaizen.plugins.clr
+package kaizen.plugins.unity.internal
 
 import kaizen.commons.Paths
 import org.gradle.internal.os.OperatingSystem

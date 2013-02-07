@@ -1,9 +1,9 @@
 package kaizen.plugins.unity
 
 import kaizen.commons.Paths
-import kaizen.plugins.clr.FrameworkLocator
-import kaizen.plugins.clr.MonoFramework
 import org.gradle.api.Project
+import kaizen.plugins.unity.internal.FrameworkLocator
+import kaizen.plugins.unity.internal.MonoFramework
 import org.gradle.internal.os.OperatingSystem
 
 class Unity implements FrameworkLocator {
