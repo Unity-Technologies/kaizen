@@ -1,23 +1,21 @@
 package kaizen.plugins.unity.internal
 
 import kaizen.commons.Paths
+import kaizen.plugins.clr.Clr
+import kaizen.plugins.clr.ClrExecSpec
+import org.apache.commons.lang.NotImplementedException
 import org.gradle.internal.os.OperatingSystem
+import org.gradle.process.ExecResult
 
-interface FrameworkLocator {
-	String getFrameworkPath(String frameworkName)
-}
-
-class MonoFramework {
-	FrameworkLocator locator
-	String frameworkName
-	MonoTool gmcs = new MonoTool(this, 'gmcs')
-	MonoTool booc = new MonoTool(this, 'booc')
+class MonoFramework implements Clr {
+	String prefix
+	String frameworkVersion
 	final OperatingSystem operatingSystem
 
-	MonoFramework(OperatingSystem operatingSystem, FrameworkLocator locator, String frameworkName) {
+	MonoFramework(OperatingSystem operatingSystem, String prefix, String frameworkVersion) {
 		this.operatingSystem = operatingSystem
-		this.locator = locator
-		this.frameworkName = frameworkName
+		this.prefix = prefix
+		this.frameworkVersion = frameworkVersion
 	}
 
 	String getCli() {
@@ -29,7 +27,7 @@ class MonoFramework {
 	}
 
 	String monoLib(String relativePath) {
-		Paths.combine monoPath, 'lib', 'mono', '2.0', relativePath
+		Paths.combine prefix, 'lib', 'mono', '2.0', relativePath
 	}
 
 	String platformSpecificExecutable(String executable) {
@@ -37,25 +35,12 @@ class MonoFramework {
 	}
 
 	String monoBinPath(String path) {
-		Paths.combine monoPath, "bin", path
+		Paths.combine prefix, "bin", path
 	}
 
-	String getMonoPath() {
-		locator.getFrameworkPath(frameworkName)
-	}
-}
-
-class MonoTool {
-	final MonoFramework framework
-	final String name
-	def executable
-
-	MonoTool(MonoFramework framework, String name) {
-		this.framework = framework
-		this.name = name
-	}
-
-	String getExecutable() {
-		executable ?: framework.monoLib("${name}.exe")
+	@Override
+	ExecResult exec(Closure<ClrExecSpec> execSpecClosure) {
+		throw new NotImplementedException()
 	}
 }
+

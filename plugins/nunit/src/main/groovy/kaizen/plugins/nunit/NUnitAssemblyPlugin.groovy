@@ -4,7 +4,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.util.ConfigureUtil
 import kaizen.plugins.conventions.Configurations
-import kaizen.plugins.assembly.AssemblyCompileTask
+import kaizen.plugins.assembly.tasks.AssemblyCompile
 import org.gradle.api.Task
 
 class NUnitAssemblyPlugin implements Plugin<Project> {
@@ -28,7 +28,7 @@ class NUnitAssemblyPlugin implements Plugin<Project> {
 
 		project.configurations.each { config ->
 			def configLabel = Configurations.labelFor(config)
-			AssemblyCompileTask compileTask = project.tasks.findByName("compile${configLabel}")
+			AssemblyCompile compileTask = project.tasks.findByName("compile${configLabel}")
 			if (compileTask) {
 				project.dependencies.add(config.name, "nunit:nunit.framework:${nunitVersion}")
 				configure(project) {

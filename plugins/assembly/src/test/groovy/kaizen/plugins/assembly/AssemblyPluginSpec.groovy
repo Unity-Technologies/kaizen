@@ -1,5 +1,6 @@
 package kaizen.plugins.assembly
 
+import kaizen.plugins.assembly.model.Assembly
 import kaizen.testing.PluginSpecification
 
 class AssemblyPluginSpec extends PluginSpecification {
@@ -28,7 +29,7 @@ class AssemblyPluginSpec extends PluginSpecification {
 		}
 
 		then:
-		AssemblyExtension assembly = project.extensions.assembly
+		def assembly = Assembly.forProject(project)
 		assembly.references*.name =~ ['System.Runtime.Remoting', 'System.Xml.Linq']
 	}
 }

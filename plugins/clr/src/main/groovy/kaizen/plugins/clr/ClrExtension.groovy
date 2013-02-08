@@ -1,15 +1,25 @@
 package kaizen.plugins.clr
 
+import kaizen.plugins.clr.internal.DefaultClrCompilerContainer
+import kaizen.plugins.clr.internal.DefaultClrProviderContainer
+import org.gradle.api.Project
+
 class ClrExtension implements ClrProvider {
-	final List<ClrProvider> providers = []
+
+	static ClrExtension forProject(Project project) {
+		project.extensions.findByType(ClrExtension)
+	}
+
+	final ClrProviderContainer providers = new DefaultClrProviderContainer()
+
+	final ClrCompilerContainer compilers = new DefaultClrCompilerContainer()
 
 	@Override
 	Clr runtimeForFrameworkVersion(String frameworkVersion) {
-		for (def provider in providers) {
-			def clr = provider.runtimeForFrameworkVersion(frameworkVersion)
-			if (clr)
-				return clr
-		}
-		return null
+		providers.runtimeForFrameworkVersion(frameworkVersion)
+	}
+
+	ClrCompiler compilerForLanguage(String language) {
+		compilers.compilerForLanguage(language)
 	}
 }

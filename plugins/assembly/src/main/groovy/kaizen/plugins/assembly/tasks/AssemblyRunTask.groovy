@@ -1,4 +1,4 @@
-package kaizen.plugins.assembly
+package kaizen.plugins.assembly.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
@@ -11,7 +11,7 @@ class AssemblyRunTask extends DefaultTask {
 
 	def assembly
 
-	def runAssemblyBuiltBy(AssemblyCompileTask compileTask) {
+	def runAssemblyBuiltBy(AssemblyCompile compileTask) {
 		this.monoExecutable = { project.rootProject.extensions.unity.mono.cli }
 		this.workingDir = { compileTask.resolvedOutputDir }
 		this.assembly = { compileTask.assemblyFile }

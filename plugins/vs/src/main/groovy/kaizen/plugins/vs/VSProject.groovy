@@ -1,11 +1,11 @@
 package kaizen.plugins.vs
 
-import kaizen.plugins.assembly.AssemblyReference
+import kaizen.plugins.assembly.model.AssemblyReference
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ProjectDependency
 
-import kaizen.plugins.assembly.AssemblyExtension
+import kaizen.plugins.assembly.model.Assembly
 
 class VSProject {
 	final Project project
@@ -54,7 +54,7 @@ class VSProject {
 		assembly?.language == 'cs'
 	}
 
-	AssemblyExtension getAssembly() {
+	Assembly getAssembly() {
 		project.extensions.findByName('assembly')
 	}
 

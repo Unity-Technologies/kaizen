@@ -1,5 +1,8 @@
 package kaizen.plugins.assembly
 
+import kaizen.plugins.assembly.model.Assembly
+import kaizen.plugins.assembly.tasks.AssemblyCompile
+import kaizen.plugins.assembly.tasks.AssemblyRunTask
 import kaizen.plugins.conventions.Configurations
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -12,28 +15,29 @@ class AssemblyPlugin implements Plugin<Project> {
 	@Override
 	void apply(Project project) {
 
-		project.apply plugin: 'base'
-		project.extensions.add('assembly', new AssemblyExtension(project))
+		project.plugins.apply 'base'
+		def assembly = project.extensions.create('assembly', Assembly, project)
 
 		def configurations = project.configurations
-		configurations.each { configureCompilationOf(it, project) }
-		configurations.whenObjectAdded { configureCompilationOf(it, project) }
+		configurations.each { configureCompilationOf(it, assembly) }
+		configurations.whenObjectAdded { configureCompilationOf(it, assembly) }
 	}
 
-	private void configureCompilationOf(Configuration config, Project project) {
+	private void configureCompilationOf(Configuration config, Assembly assembly) {
 
 		if (config.name == 'archives')
 			return
 
+		def project = assembly.project
 		def configLabel = Configurations.labelFor(config)
+		def outputDir = project.file("${project.buildDir}/$configLabel")
 
 		def copyDependenciesTaskName = "copy${configLabel}Dependencies"
 
 		def compileTaskName = "compile${configLabel}"
-		def compileTask = project.tasks.add(compileTaskName, AssemblyCompileTask)
+		def compileTask = project.tasks.add(compileTaskName, AssemblyCompile)
 		compileTask.description = "Compiles all sources in the project directory."
 		compileTask.dependsOn copyDependenciesTaskName
-		compileTask.configuration = config
 
 		def runTask = project.tasks.add("run$configLabel", AssemblyRunTask)
 		runTask.runAssemblyBuiltBy(compileTask)
@@ -49,13 +53,13 @@ class AssemblyPlugin implements Plugin<Project> {
 
 			afterEvaluate {
 				configure(copyDependenciesTask) {
-					dependsOn compileTask.configuration
+					dependsOn config
 					doFirst {
 						config.incoming.files.each { file ->
-							logger.info "Unpacking ${file.name} to ${compileTask.resolvedOutputDir}"
+							logger.info "Unpacking ${file.name} to ${outputDir}"
 							project.copy {
 								from project.zipTree(file)
-								into compileTask.resolvedOutputDir
+								into outputDir
 								include '*.*'
 							}
 						}
@@ -68,26 +72,24 @@ class AssemblyPlugin implements Plugin<Project> {
 			}
 
 			afterEvaluate {
-				def assembly = compileTask.assembly
 				configure(assembleTask) {
 					baseName = assembly.name
 					appendix = config.name
-					from compileTask.resolvedOutputDir
+					from outputDir
 					include assembly.fileName
 					include assembly.xmlDocFileName
-					destinationDir new File(compileTask.resolvedOutputDir, 'distributions')
+					destinationDir new File(outputDir, 'distributions')
 				}
-
 				project.artifacts.add(config.name, assembleTask)
 			}
 
 			def outputDirTask = task(outputDirTaskName) {
 				doFirst {
-					compileTask.resolvedOutputDir.mkdirs()
+					outputDir.mkdirs()
 				}
 			}
 			outputDirTask.outputs.upToDateWhen {
-				compileTask.resolvedOutputDir.exists()
+				outputDir.exists()
 			}
 		}
 	}

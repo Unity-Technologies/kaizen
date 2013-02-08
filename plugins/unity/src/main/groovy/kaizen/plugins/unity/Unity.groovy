@@ -1,33 +1,31 @@
 package kaizen.plugins.unity
 
 import kaizen.commons.Paths
-import org.gradle.api.Project
-import kaizen.plugins.unity.internal.FrameworkLocator
+import kaizen.plugins.clr.Clr
+import kaizen.plugins.clr.ClrProvider
 import kaizen.plugins.unity.internal.MonoFramework
+import org.gradle.api.Project
 import org.gradle.internal.os.OperatingSystem
 
-class Unity implements FrameworkLocator {
+class Unity implements ClrProvider {
 
-	def unityDir
+	static Unity forProject(Project project) {
+		project.extensions.findByType(Unity)
+	}
 
-	final MonoFramework mono
+	def location
 
-	final MonoFramework monoBleedingEdge
-
-	final Project project
+	final UnityLocator locator
 
 	final OperatingSystem operatingSystem
 
-	Unity(Project project, OperatingSystem operatingSystem) {
-		this.project = project
+	Unity(UnityLocator locator, OperatingSystem operatingSystem) {
+		this.locator = locator
 		this.operatingSystem = operatingSystem
-		this.unityDir = defaultUnityLocation()
-		this.mono = new MonoFramework(operatingSystem, this, 'Mono')
-		this.monoBleedingEdge = new MonoFramework(operatingSystem, this, 'MonoBleedingEdge')
 	}
 
 	def getExecutable() {
-		Paths.combine absoluteUnityDir(), relativeExecutablePath()
+		Paths.combine getLocation(), relativeExecutablePath()
 	}
 
 	String relativeExecutablePath() {
@@ -38,23 +36,18 @@ class Unity implements FrameworkLocator {
 		return 'Unity'
 	}
 
+	String getLocation() {
+		location ?: locator.unityLocation
+	}
+
+	@Override
+	Clr runtimeForFrameworkVersion(String frameworkVersion) {
+		new MonoFramework(operatingSystem, getFrameworkPath('MonoBleedingEdge'), frameworkVersion)
+	}
+
 	@Override
 	String getFrameworkPath(String frameworkName) {
 		def frameworksPath = operatingSystem.macOsX ? 'Contents/Frameworks' : 'Data'
-		Paths.combine absoluteUnityDir(), frameworksPath, frameworkName
-	}
-
-	def defaultUnityLocation() {
-		operatingSystem.windows ?
-			'C:\\Program Files (x86)\\Unity\\Editor' :
-			'/Applications/Unity/Unity.app'
-	}
-
-	private absoluteUnityDir() {
-		project.file(configuredUnityDir).absolutePath
-	}
-
-	def getConfiguredUnityDir() {
-		project.hasProperty('unityDir') ? project.property('unityDir') : unityDir
+		Paths.combine getLocation(), frameworksPath, frameworkName
 	}
 }

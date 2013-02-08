@@ -1,6 +1,4 @@
-package kaizen.plugins.assembly
-
-import kaizen.plugins.assembly.AssemblyReference
+package kaizen.plugins.assembly.model
 
 class FrameworkAssemblyReference implements AssemblyReference {
 	final String name

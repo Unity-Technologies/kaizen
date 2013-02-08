@@ -7,6 +7,7 @@ class AssemblyBundleCompilationSpec extends BundleSpecification {
 	def depender = subProjectWithName('depender')
 	def dependee = subProjectWithName('dependee')
 
+	@Override
 	def setup() {
 		configure(depender) {
 			configurations {
