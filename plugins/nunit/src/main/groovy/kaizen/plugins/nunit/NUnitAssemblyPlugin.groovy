@@ -26,18 +26,20 @@ class NUnitAssemblyPlugin implements Plugin<Project> {
 		NUnitExtension nunit = rootProject.extensions.nunit
 		def nunitVersion = nunit.version
 
-		project.configurations.each { config ->
-			def configLabel = Configurations.labelFor(config)
-			AssemblyCompile compileTask = project.tasks.findByName("compile${configLabel}")
-			if (compileTask) {
-				project.dependencies.add(config.name, "nunit:nunit.framework:${nunitVersion}")
-				configure(project) {
-					def testConfigTask = task("test$configLabel", type: NUnitTask, dependsOn: compileTask) {
-						dependsOn rootProject.tasks.updateNUnit
-						inputs.file compileTask.assemblyFile
-						outputs.file new File(compileTask.resolvedOutputDir, 'TestResult.xml')
+		project.afterEvaluate {
+			project.configurations.each { config ->
+				def configLabel = Configurations.labelFor(config)
+				AssemblyCompile compileTask = project.tasks.findByName("compile${configLabel}")
+				if (compileTask) {
+					project.dependencies.add(config.name, "nunit:nunit.framework:${nunitVersion}")
+					configure(project) {
+						def outputAssembly = project.file(compileTask.outputAssembly)
+						def testConfigTask = task("test$configLabel", type: NUnitTask, dependsOn: [compileTask, rootProject.tasks.updateNUnit]) {
+							inputs.file outputAssembly
+							outputs.file new File(outputAssembly.parentFile, 'TestResult.xml')
+						}
+						masterTestTask.dependsOn(testConfigTask)
 					}
-					masterTestTask.dependsOn(testConfigTask)
 				}
 			}
 		}
