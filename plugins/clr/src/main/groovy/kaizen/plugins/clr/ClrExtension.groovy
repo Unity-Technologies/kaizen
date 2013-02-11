@@ -7,7 +7,13 @@ import org.gradle.api.Project
 class ClrExtension implements ClrProvider {
 
 	static ClrExtension forProject(Project project) {
-		project.extensions.findByType(ClrExtension)
+		while (project != null) {
+			def clr = project.extensions.findByType(ClrExtension)
+			if (clr != null)
+				return clr
+			project = project.parent
+		}
+		null
 	}
 
 	final ClrProviderContainer providers = new DefaultClrProviderContainer()

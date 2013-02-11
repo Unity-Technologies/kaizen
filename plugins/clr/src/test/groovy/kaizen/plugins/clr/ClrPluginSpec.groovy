@@ -1,6 +1,7 @@
 package kaizen.plugins.clr
 
 import kaizen.testing.PluginSpecification
+import org.gradle.testfixtures.ProjectBuilder
 
 class ClrPluginSpec extends PluginSpecification {
 
@@ -8,7 +9,7 @@ class ClrPluginSpec extends PluginSpecification {
 
 	@Override
 	def setup() {
-		project.plugins.apply(ClrPlugin)
+		project.plugins.apply ClrPlugin
 	}
 
 	def 'no providers by default'() {
@@ -21,8 +22,15 @@ class ClrPluginSpec extends PluginSpecification {
 		clr.compilers.empty
 	}
 
-	ClrExtension getClr() {
-		project.extensions.clr
+	def 'child project uses Clr from parent'() {
+		given:
+		def child = ProjectBuilder.builder().withParent(project).build()
+
+		expect:
+		ClrExtension.forProject(child) == clr
 	}
 
+	ClrExtension getClr() {
+		ClrExtension.forProject(project)
+	}
 }
