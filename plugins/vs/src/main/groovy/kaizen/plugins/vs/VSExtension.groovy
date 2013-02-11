@@ -4,8 +4,14 @@ import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 
 class VSExtension {
+
+	static VSExtension forProject(Project project) {
+		project.extensions.findByType(VSExtension)
+	}
+
 	final Project gradleProject
 	final VSProject project
+
 	final NamedDomainObjectContainer<VSSolution> solutionContainer
 
 	VSExtension(Project project) {

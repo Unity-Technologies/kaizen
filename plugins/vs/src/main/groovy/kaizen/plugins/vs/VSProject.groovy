@@ -62,13 +62,11 @@ class VSProject {
 		dependencies().findAll { isProjectDependency(it) }
 	}
 
-	private isProjectDependency(Dependency d) {
-		if (d instanceof ProjectDependency) {
-			def vs = d.dependencyProject.extensions.findByName('vs')
-			if (vs)
-				return vs.project.isSupportedLanguage
-		}
-		return false
+	private boolean isProjectDependency(Dependency d) {
+		if (d instanceof ProjectDependency)
+			VSExtension.forProject(d.dependencyProject)?.project.isSupportedLanguage
+		else
+			false
 	}
 
 	private dependencies() {

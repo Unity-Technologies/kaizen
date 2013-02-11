@@ -1,6 +1,7 @@
 package kaizen.plugins.assembly
 
 import kaizen.plugins.assembly.model.Assembly
+import kaizen.plugins.assembly.tasks.AssemblyCompile
 import kaizen.testing.PluginSpecification
 
 class AssemblyPluginSpec extends PluginSpecification {
@@ -9,12 +10,28 @@ class AssemblyPluginSpec extends PluginSpecification {
 
 	@Override
 	def setup() {
-		project.apply plugin: AssemblyPlugin
+		project.plugins.apply AssemblyPlugin
 	}
 
 	def 'assembly name is derived from project name'() {
 		expect:
-		project.assembly.fileName == "C.dll"
+		assembly.fileName == "C.dll"
+	}
+
+	def 'a compile task per configuration'() {
+		when:
+		configure(project) {
+			configurations {
+				// 'default' // contributed by base plugin
+				net40
+			}
+		}
+		evaluateProject(project)
+
+		then:
+		def compileTasks = project.tasks.withType(AssemblyCompile)
+		compileTasks*.name == ['compileDefault', 'compileNet40']
+		compileTasks*.outputAssembly == [file('build/Default/C.dll'), file('build/Net40/C.dll')]
 	}
 
 	def 'framework assembly references'() {
@@ -29,7 +46,14 @@ class AssemblyPluginSpec extends PluginSpecification {
 		}
 
 		then:
-		def assembly = Assembly.forProject(project)
 		assembly.references*.name =~ ['System.Runtime.Remoting', 'System.Xml.Linq']
+	}
+
+	def getAssembly() {
+		Assembly.forProject(project)
+	}
+
+	def file(String projectRelativePath) {
+		project.file(projectRelativePath)
 	}
 }

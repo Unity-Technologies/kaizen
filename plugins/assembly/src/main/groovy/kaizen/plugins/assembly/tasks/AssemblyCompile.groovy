@@ -8,6 +8,7 @@ import org.gradle.api.artifacts.Configuration
 import kaizen.plugins.conventions.Configurations
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ProjectDependency
+import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.tasks.TaskAction
 
 class AssemblyCompile extends DefaultTask {
@@ -20,6 +21,10 @@ class AssemblyCompile extends DefaultTask {
 	Collection<String> assemblyReferences = []
 	Collection<String> compilerOptions = []
 
+	AssemblyCompile() {
+		group = BasePlugin.BUILD_GROUP
+	}
+
 	def references(Object... assemblies) {
 		assemblyReferences.addAll(assemblies.collect { it.toString() })
 	}
@@ -27,10 +32,10 @@ class AssemblyCompile extends DefaultTask {
 	@TaskAction
 	def compile() {
 		def clr = ClrExtension.forProject(project)
-		assert clr, "clr plugin missing!"
+		assert clr, "clr plugin missing"
 
 		def compiler = clr.compilerForLanguage(language)
-		assert compiler, "No compiler for language $language was found!"
+		assert compiler, "No compiler for language $language was found"
 
 		compiler.exec { spec ->
 			spec.sourceFiles inputs.sourceFiles
