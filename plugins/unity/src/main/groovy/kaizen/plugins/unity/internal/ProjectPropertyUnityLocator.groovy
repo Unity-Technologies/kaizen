@@ -15,6 +15,8 @@ class ProjectPropertyUnityLocator implements UnityLocator {
 
 	@Override
 	String getUnityLocation() {
-		project.hasProperty('unityDir') ? project.file(project.property('unityDir')) : fallback.unityLocation
+		project.hasProperty('unityDir') ?
+			project.file(project.property('unityDir')) :
+			fallback.unityLocation
 	}
 }
