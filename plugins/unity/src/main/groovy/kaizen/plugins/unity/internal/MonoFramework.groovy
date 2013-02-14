@@ -3,44 +3,57 @@ package kaizen.plugins.unity.internal
 import kaizen.commons.Paths
 import kaizen.plugins.clr.Clr
 import kaizen.plugins.clr.ClrExecSpec
-import org.apache.commons.lang.NotImplementedException
+import kaizen.plugins.clr.internal.DefaultClrExecSpec
+import kaizen.plugins.unity.ExecHandler
+import kaizen.plugins.unity.Mono
 import org.gradle.internal.os.OperatingSystem
 import org.gradle.process.ExecResult
+import org.gradle.process.ExecSpec
+import org.gradle.util.ConfigureUtil
 
-class MonoFramework implements Clr {
+class MonoFramework implements Clr, Mono {
 	String prefix
-	String frameworkVersion
 	final OperatingSystem operatingSystem
+	final ExecHandler execHandler
 
-	MonoFramework(OperatingSystem operatingSystem, String prefix, String frameworkVersion) {
+	MonoFramework(OperatingSystem operatingSystem, String prefix, ExecHandler execHandler) {
 		this.operatingSystem = operatingSystem
 		this.prefix = prefix
-		this.frameworkVersion = frameworkVersion
+		this.execHandler = execHandler
 	}
 
 	String getCli() {
-		monoExecutable("cli")
+		script("cli")
 	}
 
-	String monoExecutable(String name) {
-		platformSpecificExecutable monoBinPath(name)
+	String script(String name) {
+		operatingSystem.getScriptName(bin(name))
 	}
 
-	String monoLib(String relativePath) {
-		Paths.combine prefix, 'lib', 'mono', '2.0', relativePath
+	String bin(String path) {
+		Paths.combine prefix, 'bin', path
 	}
 
-	String platformSpecificExecutable(String executable) {
-		operatingSystem.getScriptName(executable)
-	}
-
-	String monoBinPath(String path) {
-		Paths.combine prefix, "bin", path
+	@Override
+	String lib(String version, String fileName) {
+		Paths.combine prefix, 'lib', 'mono', version, fileName
 	}
 
 	@Override
 	ExecResult exec(Closure<ClrExecSpec> execSpecClosure) {
-		throw new NotImplementedException()
+		def clrExecSpec = new DefaultClrExecSpec()
+		ConfigureUtil.configure(execSpecClosure, clrExecSpec)
+
+		execHandler.exec { ExecSpec execSpec ->
+			execSpec.executable monoExe
+			execSpec.args '--debug'
+			execSpec.args clrExecSpec.executable
+			execSpec.args clrExecSpec.allArguments
+		}
+	}
+
+	String getMonoExe() {
+		operatingSystem.getExecutableName(bin('mono'))
 	}
 }
 

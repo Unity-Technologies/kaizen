@@ -2,18 +2,16 @@ package kaizen.plugins.unity
 
 import kaizen.commons.Paths
 import kaizen.plugins.unity.internal.MonoFramework
-import org.gradle.internal.os.OperatingSystem
-import org.gradle.testfixtures.ProjectBuilder
-import spock.lang.Specification
+import kaizen.testing.OperatingSystemSensitiveSpecification
 import spock.lang.Unroll
 
-class UnitySpec extends Specification {
+class UnitySpec extends OperatingSystemSensitiveSpecification {
 
 	@Unroll('executable for #operatingSystem is #executable')
 	def 'executable resolved against location when set'() {
 
 		given:
-		def unity = new Unity(null, operatingSystem)
+		def unity = new Unity(null, operatingSystem, null)
 
 		when:
 		unity.location = '../unity'
@@ -32,7 +30,7 @@ class UnitySpec extends Specification {
 		given:
 		def unityLocation = 'Unity.app'
 		def unityLocator = Mock(UnityLocator)
-		def unity = new Unity(unityLocator, operatingSystem)
+		def unity = new Unity(unityLocator, operatingSystem, null)
 
 		when:
 		def unityExecutable = unity.executable
@@ -48,22 +46,11 @@ class UnitySpec extends Specification {
 		linux()         | 'Unity'
 	}
 
-	def 'UnityPlugin installs unity as clr provider'() {
-		given:
-		def project = ProjectBuilder.newInstance().build()
-
-		when:
-		project.plugins.apply(UnityPlugin)
-
-		then:
-		project.extensions.clr.providers.contains(project.extensions.unity)
-	}
-
 	@Unroll("clr location on #operatingSystem is #cli")
 	def 'Unity clr is MonoBleedingEdge'() {
 		given:
 		def unityLocation = 'Unity.app'
-		def unity = new Unity({ unityLocation} as UnityLocator, operatingSystem)
+		def unity = new Unity({ unityLocation} as UnityLocator, operatingSystem, null)
 
 		when:
 		def clr = unity.runtimeForFrameworkVersion('v3.5')
@@ -77,28 +64,5 @@ class UnitySpec extends Specification {
 		osx()           | 'Contents/Frameworks/MonoBleedingEdge/bin/cli'
 		linux()         | 'Data/MonoBleedingEdge/bin/cli'
 	}
-
-	def windows() {
-		Mock(OperatingSystem) {
-			1 * isWindows() >> true
-			_ * getScriptName(_) >> { args -> "${args[0]}.bat" }
-			_ * toString() >> 'windows'
-		}
-	}
-
-	def osx() {
-		Mock(OperatingSystem) {
-			1 * isMacOsX() >> true
-			_ * getScriptName(_) >> { args -> args[0] }
-			_ * toString() >> 'osx'
-		}
-	}
-
-	def linux() {
-		Mock(OperatingSystem) {
-			1 * isLinux() >> true
-			_ * getScriptName(_) >> { args -> args[0] }
-			_ * toString() >> 'linux'
-		}
-	}
 }
+

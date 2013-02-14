@@ -1,11 +1,8 @@
 package kaizen.plugins.assembly.tasks
 
-import kaizen.plugins.assembly.model.Assembly
 import kaizen.plugins.clr.ClrExtension
 import kaizen.plugins.clr.ClrLanguageNames
 import org.gradle.api.DefaultTask
-import org.gradle.api.artifacts.Configuration
-import kaizen.plugins.conventions.Configurations
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.plugins.BasePlugin
@@ -57,23 +54,16 @@ class AssemblyCompile extends DefaultTask {
 			new File(resolvedOutputDir, assemblyFileNameFor(it))
 		}
 
-		def assembly = Assembly.forProject(project)
 		configure {
 			dependsOn configuration
 			outputs.file assemblyFile
 			inputs.files assemblyDependencies
-			inputs.source assembly.sourceFiles
+
 			doFirst {
 				def args = []
-					args << unity.mono.cli
-					args << mono.gmcs.executable
-					args << "-recurse:*.cs"
-					args << "-doc:${xmlDocFile}"
-					args << "-nowarn:1591"
-				args.addAll(customArgs)
-				project.exec {
-					commandLine(args)
-				}
+				args << "-recurse:*.cs"
+				args << "-doc:${xmlDocFile}"
+				args << "-nowarn:1591"
 			}
 		}
 	}

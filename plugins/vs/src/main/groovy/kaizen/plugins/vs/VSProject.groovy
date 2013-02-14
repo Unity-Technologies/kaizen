@@ -1,6 +1,7 @@
 package kaizen.plugins.vs
 
 import kaizen.plugins.assembly.model.AssemblyReference
+import kaizen.plugins.clr.ClrLanguageNames
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ProjectDependency
@@ -51,7 +52,7 @@ class VSProject {
 	}
 
 	boolean getIsSupportedLanguage() {
-		assembly?.language == 'cs'
+		assembly?.language == ClrLanguageNames.CSHARP
 	}
 
 	Assembly getAssembly() {

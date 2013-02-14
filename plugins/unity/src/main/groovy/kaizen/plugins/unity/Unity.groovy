@@ -7,7 +7,7 @@ import kaizen.plugins.unity.internal.MonoFramework
 import org.gradle.api.Project
 import org.gradle.internal.os.OperatingSystem
 
-class Unity implements ClrProvider {
+class Unity implements ClrProvider, MonoProvider {
 
 	static Unity forProject(Project project) {
 		project.extensions.findByType(Unity)
@@ -19,9 +19,12 @@ class Unity implements ClrProvider {
 
 	final OperatingSystem operatingSystem
 
-	Unity(UnityLocator locator, OperatingSystem operatingSystem) {
+	final ExecHandler execHandler
+
+	Unity(UnityLocator locator, OperatingSystem operatingSystem, ExecHandler execHandler) {
 		this.locator = locator
 		this.operatingSystem = operatingSystem
+		this.execHandler = execHandler
 	}
 
 	def getExecutable() {
@@ -42,10 +45,16 @@ class Unity implements ClrProvider {
 
 	@Override
 	Clr runtimeForFrameworkVersion(String frameworkVersion) {
-		new MonoFramework(operatingSystem, getFrameworkPath('MonoBleedingEdge'), frameworkVersion)
+		if (frameworkVersion == 'v3.5')
+			return mono
+		throw new IllegalArgumentException("$frameworkVersion not supported")
 	}
 
 	@Override
+	Mono getMono() {
+		new MonoFramework(operatingSystem, getFrameworkPath('MonoBleedingEdge'), execHandler)
+	}
+
 	String getFrameworkPath(String frameworkName) {
 		def frameworksPath = operatingSystem.macOsX ? 'Contents/Frameworks' : 'Data'
 		Paths.combine getLocation(), frameworksPath, frameworkName

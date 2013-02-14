@@ -30,14 +30,12 @@ class AssemblyPlugin implements Plugin<Project> {
 
 		def project = assembly.project
 		def configLabel = Configurations.labelFor(config)
-		def outputDir = project.file("${project.buildDir}/$configLabel")
+		def outputDir = { project.file("${project.buildDir}/$configLabel") }
 
 		def copyDependenciesTaskName = "copy${configLabel}Dependencies"
 
 		def compileTaskName = "compile${configLabel}"
 		def compileTask = project.tasks.add(compileTaskName, AssemblyCompile)
-		compileTask.description = "Compiles all sources in the project directory."
-		compileTask.dependsOn copyDependenciesTaskName
 
 		def runTask = project.tasks.add("run$configLabel", AssemblyRunTask)
 		runTask.runAssemblyBuiltBy(compileTask)
@@ -56,14 +54,24 @@ class AssemblyPlugin implements Plugin<Project> {
 					dependsOn config
 					doFirst {
 						config.incoming.files.each { file ->
-							logger.info "Unpacking ${file.name} to ${outputDir}"
+							logger.info "Unpacking ${file.name} to ${outputDir()}"
 							project.copy {
 								from project.zipTree(file)
-								into outputDir
+								into outputDir()
 								include '*.*'
 							}
 						}
 					}
+				}
+			}
+
+			afterEvaluate {
+				tasks."$compileTaskName" {
+					description "Compiles all sources in the project directory."
+					dependsOn copyDependenciesTask
+					language assembly.language
+					inputs.source assembly.sourceFiles
+					outputAssembly new File(outputDir(), assembly.fileName)
 				}
 			}
 
@@ -78,18 +86,18 @@ class AssemblyPlugin implements Plugin<Project> {
 					from outputDir
 					include assembly.fileName
 					include assembly.xmlDocFileName
-					destinationDir new File(outputDir, 'distributions')
+					destinationDir new File(outputDir(), 'distributions')
 				}
 				project.artifacts.add(config.name, assembleTask)
 			}
 
 			def outputDirTask = task(outputDirTaskName) {
 				doFirst {
-					outputDir.mkdirs()
+					outputDir().mkdirs()
 				}
 			}
 			outputDirTask.outputs.upToDateWhen {
-				outputDir.exists()
+				outputDir().exists()
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 package kaizen.plugins.assembly.model
 
+import kaizen.plugins.clr.ClrLanguageNames
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.internal.DefaultDomainObjectSet
@@ -31,11 +32,22 @@ class Assembly {
 	}
 
 	private detectLanguageOf(Project project) {
-		project.projectDir.listFiles({ dir, name -> name.endsWith('.boo') } as FilenameFilter).any() ? 'boo' : 'cs'
+		project.projectDir.listFiles({ dir, name -> name.endsWith('.boo') } as FilenameFilter).any() ? 'boo' : ClrLanguageNames.CSHARP
 	}
 
 	Iterable<File> getSourceFiles() {
-		project.fileTree(dir: project.projectDir, include: "**/*.$language")
+		project.fileTree(dir: project.projectDir, include: "**/*.$sourceFileExtension")
+	}
+
+	def getSourceFileExtension() {
+		switch (language) {
+			case ClrLanguageNames.CSHARP:
+				return 'cs'
+			case 'boo':
+				return 'boo'
+			default:
+				throw new IllegalStateException()
+		}
 	}
 
 	String getFileName() {
