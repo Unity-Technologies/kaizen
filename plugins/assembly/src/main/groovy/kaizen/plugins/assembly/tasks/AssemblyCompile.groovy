@@ -12,7 +12,7 @@ class AssemblyCompile extends DefaultTask {
 
 	String language = ClrLanguageNames.CSHARP
 	String targetFrameworkVersion = 'v3.5'
-	def outputAssembly
+	File outputAssemblyFile
 	def keyFile
 	Collection<String> defines = []
 	Collection<String> assemblyReferences = []
@@ -26,6 +26,15 @@ class AssemblyCompile extends DefaultTask {
 		assemblyReferences.addAll(assemblies.collect { it.toString() })
 	}
 
+	def outputAssembly(output) {
+		outputAssemblyFile = project.file(output)
+		outputs.file(outputAssemblyFile)
+	}
+
+	File getOutputAssembly() {
+		outputAssemblyFile
+	}
+
 	@TaskAction
 	def compile() {
 		def clr = ClrExtension.forProject(project)
@@ -37,7 +46,7 @@ class AssemblyCompile extends DefaultTask {
 		compiler.exec { spec ->
 			spec.sourceFiles inputs.sourceFiles
 			spec.targetFrameworkVersion targetFrameworkVersion
-			spec.outputAssembly file(outputAssembly)
+			spec.outputAssembly outputAssemblyFile
 			if (assemblyReferences) spec.references assemblyReferences
 			if (defines) spec.defines defines
 			if (keyFile) spec.keyFile file(keyFile)

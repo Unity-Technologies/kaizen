@@ -8,12 +8,13 @@ import kaizen.testing.PluginSpecification
 
 class AssemblyCompileSpec extends PluginSpecification {
 
+	def project = projectWithName('P')
+
 	def 'invokes compiler from registry with the right settings'() {
 		given:
-		def project = projectWithName('UI')
 		def compile = project.task('compile', type: AssemblyCompile) {
-			outputAssembly 'UI.dll'
-			inputs.source 'UI.cs'
+			outputAssembly 'P.dll'
+			inputs.source 'P.cs'
 			references 'Core.dll'
 		}
 		def compiler = Mock(ClrCompiler)
@@ -27,9 +28,20 @@ class AssemblyCompileSpec extends PluginSpecification {
 		then:
 		_ * compiler.language >> 'c#'
 		1 * compiler.exec({ it(compileSpec); true })
-		1 * compileSpec.outputAssembly(project.file('UI.dll'))
+		1 * compileSpec.outputAssembly(project.file('P.dll'))
 		1 * compileSpec.sourceFiles(compile.inputs.sourceFiles)
 		1 * compileSpec.targetFrameworkVersion('v3.5')
 		1 * compileSpec.references(['Core.dll'])
 	}
+
+	def 'outputAssembly is declared as task output'() {
+		given:
+		def compile = project.task('compile', type: AssemblyCompile) {
+			outputAssembly 'P.dll'
+		}
+
+		expect:
+		compile.outputs.files.singleFile == project.file('P.dll')
+	}
 }
+
