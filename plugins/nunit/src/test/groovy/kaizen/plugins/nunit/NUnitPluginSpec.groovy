@@ -17,6 +17,6 @@ class NUnitPluginSpec extends PluginSpecification {
 		when:
 		evaluateProject(project)
 		then:
-		project.configurations['NUnit'].dependencies.collect { "$it.group:$it.name:$it.version" } == ['nunit:nunit-console:2.6+']
+		project.configurations['NUnit'].dependencies.collect { "$it.group:$it.name:$it.version" } == ['nunit:nunit-console:2.6.1.12217']
 	}
 }
