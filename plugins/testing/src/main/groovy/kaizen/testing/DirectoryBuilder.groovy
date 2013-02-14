@@ -5,10 +5,10 @@ import org.gradle.util.ConfigureUtil
 class DirectoryBuilder {
 
 	static File tempDirWith(Closure<DirectoryBuilder> structure) {
-		configure(createTempDir(), structure)
+		build(createTempDir(), structure)
 	}
 
-	private static File configure(File root, Closure<DirectoryBuilder> structure) {
+	static File build(File root, Closure<DirectoryBuilder> structure) {
 		def builder = new DirectoryBuilder(root)
 		ConfigureUtil.configure(structure, builder)
 		builder.root
@@ -32,7 +32,7 @@ class DirectoryBuilder {
 		def dir = new File(root, name)
 		dir.mkdirs()
 		if (children)
-			configure(dir, children)
+			build(dir, children)
 		dir
 	}
 
