@@ -13,11 +13,6 @@ class NUnitPluginSpec extends PluginSpecification {
 		project.plugins.apply(NUnitPlugin)
 	}
 
-	def 'default nunit version is 2.6+'() {
-		expect:
-		project.nunit.version == '2.6+'
-	}
-
 	def 'NUnit configuration depends upon nunit-console'() {
 		when:
 		evaluateProject(project)
