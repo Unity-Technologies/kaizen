@@ -2,6 +2,7 @@ package kaizen.plugins.nunit
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.util.ConfigureUtil
 import kaizen.plugins.conventions.Configurations
 import kaizen.plugins.assembly.tasks.AssemblyCompile
@@ -23,16 +24,16 @@ class NUnitAssemblyPlugin implements Plugin<Project> {
 	void configureNUnitTasksOn(Project project, Task masterTestTask) {
 
 		def rootProject = project.rootProject
-		NUnitExtension nunit = rootProject.extensions.nunit
+		def nunit = NUnitExtension.forProject(rootProject)
 		def nunitVersion = nunit.version
 
-		project.afterEvaluate {
-			project.configurations.each { config ->
-				def configLabel = Configurations.labelFor(config)
-				AssemblyCompile compileTask = project.tasks.findByName("compile${configLabel}")
-				if (compileTask) {
-					project.dependencies.add(config.name, "nunit:nunit.framework:${nunitVersion}")
-					configure(project) {
+		def configureTaskForConfig = { Configuration config ->
+			def configLabel = Configurations.labelFor(config)
+			def compileTask = project.tasks.withType(AssemblyCompile).findByName("compile${configLabel}")
+			if (compileTask) {
+				project.dependencies.add(config.name, "nunit:nunit.framework:${nunitVersion}")
+				configure(project) {
+					afterEvaluate {
 						def outputAssembly = project.file(compileTask.outputAssembly)
 						def testConfigTask = task("test$configLabel", type: NUnitTask, dependsOn: [compileTask, rootProject.tasks.updateNUnit]) {
 							inputs.file outputAssembly
@@ -43,6 +44,8 @@ class NUnitAssemblyPlugin implements Plugin<Project> {
 				}
 			}
 		}
+		project.configurations.each configureTaskForConfig
+		project.configurations.whenObjectAdded configureTaskForConfig
 	}
 
 	def configure(Project project, Closure closure) {
