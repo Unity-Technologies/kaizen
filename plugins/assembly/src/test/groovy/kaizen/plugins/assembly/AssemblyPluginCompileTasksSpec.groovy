@@ -30,6 +30,18 @@ class AssemblyPluginCompileTasksSpec extends PluginSpecification {
 		configName << CompilableConfigurationNames
 	}
 
+	@Unroll('compile task for #configName configuration depends on copy #configName dependencies')
+	def 'compile task depends on copy dependencies task'() {
+		when:
+		evaluateProject project
+
+		then:
+		compileTaskForConfig(configName).dependsOn.contains(project.tasks.getByName("copy${labelFor(configName)}Dependencies"))
+
+		where:
+		configName << CompilableConfigurationNames
+	}
+
 	def 'configuration dependencies become assembly references on the corresponding tasks'() {
 		given:
 		def a = newAssemblySubProject('a')
