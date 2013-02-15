@@ -32,7 +32,7 @@ class McsSpec extends Specification {
 		}
 
 		then:
-		_ * monoProvider.mono >> mono
+		_ * monoProvider.runtimeForFrameworkVersion('v3.5') >> mono
 		1 * mono.lib('2.0', 'mcs.exe') >> mcsExe
 		1 * mono.exec { ConfigureUtil.configure(it, clrExecSpec) } >> clrExecResult
 		1 * clrExecSpec.executable(mcsExe)

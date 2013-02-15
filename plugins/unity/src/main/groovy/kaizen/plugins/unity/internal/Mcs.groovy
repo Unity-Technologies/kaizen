@@ -3,6 +3,7 @@ package kaizen.plugins.unity.internal
 import kaizen.plugins.clr.ClrCompiler
 import kaizen.plugins.clr.ClrExecSpec
 import kaizen.plugins.clr.ClrLanguageNames
+import kaizen.plugins.unity.Mono
 import kaizen.plugins.unity.MonoProvider
 import org.gradle.process.ExecResult
 import org.gradle.util.ConfigureUtil
@@ -10,6 +11,8 @@ import org.gradle.util.ConfigureUtil
 class Mcs implements ClrCompiler {
 
 	final MonoProvider monoProvider
+
+	@Lazy Mono mono = monoProvider.runtimeForFrameworkVersion('v3.5')
 
 	Mcs(MonoProvider monoProvider) {
 		this.monoProvider = monoProvider
@@ -26,10 +29,6 @@ class Mcs implements ClrCompiler {
 			execSpec.executable mcs
 			ConfigureUtil.configure(compileSpec, new McsCommandLineBuilder(execSpec))
 		}
-	}
-
-	def getMono() {
-		monoProvider.getMono()
 	}
 
 	def getMcs() {

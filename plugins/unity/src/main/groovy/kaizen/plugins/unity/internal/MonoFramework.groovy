@@ -35,8 +35,8 @@ class MonoFramework implements Clr, Mono {
 	}
 
 	@Override
-	String lib(String version, String fileName) {
-		Paths.combine prefix, 'lib', 'mono', version, fileName
+	String lib(String profile, String fileName) {
+		Paths.combine prefix, 'lib', 'mono', profile, fileName
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package kaizen.plugins.unity
 
-public interface MonoProvider {
-	Mono getMono()
+import kaizen.plugins.clr.ClrProvider
+
+public interface MonoProvider extends ClrProvider<Mono> {
 }

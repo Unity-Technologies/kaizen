@@ -7,7 +7,7 @@ import kaizen.plugins.unity.internal.MonoFramework
 import org.gradle.api.Project
 import org.gradle.internal.os.OperatingSystem
 
-class Unity implements ClrProvider, MonoProvider {
+class Unity implements MonoProvider {
 
 	static Unity forProject(Project project) {
 		project.extensions.findByType(Unity)
@@ -44,7 +44,7 @@ class Unity implements ClrProvider, MonoProvider {
 	}
 
 	@Override
-	Clr runtimeForFrameworkVersion(String frameworkVersion) {
+	Mono runtimeForFrameworkVersion(String frameworkVersion) {
 		if (frameworkVersion == 'v3.5')
 			return mono
 		throw new IllegalArgumentException("$frameworkVersion not supported")
