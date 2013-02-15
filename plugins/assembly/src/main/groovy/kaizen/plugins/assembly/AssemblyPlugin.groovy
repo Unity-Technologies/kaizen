@@ -74,7 +74,7 @@ class AssemblyPlugin implements Plugin<Project> {
 					language assembly.language
 					inputs.source assembly.sourceFiles
 					outputAssembly new File(outputDir(), assembly.fileName)
-					references assemblyReferencesFor(assembly, config, outputDir())
+					references assemblyReferencesFor(config, outputDir())
 				}
 			}
 
@@ -105,7 +105,7 @@ class AssemblyPlugin implements Plugin<Project> {
 		}
 	}
 
-	def assemblyReferencesFor(Assembly assembly, Configuration config, File outputDir) {
+	def assemblyReferencesFor(Configuration config, File outputDir) {
 		config.allDependencies.collect {
 			new File(outputDir, assemblyFileNameFor(it))
 		}

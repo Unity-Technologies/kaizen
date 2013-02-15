@@ -15,7 +15,7 @@ class AssemblyPluginCompileTasksSpec extends PluginSpecification {
 	@Override
 	def setup() {
 		project.plugins.apply AssemblyPlugin
-		project.configurations.create 'net4'
+		project.configurations.add 'net4'
 	}
 
 	@Unroll('output file for #configName goes to build/#configName')
@@ -36,7 +36,7 @@ class AssemblyPluginCompileTasksSpec extends PluginSpecification {
 		evaluateProject project
 
 		then:
-		compileTaskForConfig(configName).dependsOn.contains(project.tasks.getByName("copy${labelFor(configName)}Dependencies"))
+		compileTaskForConfig(configName).dependsOn.contains(copyDependenciesTaskForConfig(configName))
 
 		where:
 		configName << CompilableConfigurationNames
@@ -79,6 +79,10 @@ class AssemblyPluginCompileTasksSpec extends PluginSpecification {
 
 	def compileTaskForConfig(String name) {
 		compileTaskForProjectAndConfig(project, name)
+	}
+
+	def copyDependenciesTaskForConfig(String configName) {
+		project.tasks.getByName("copy${labelFor(configName)}Dependencies")
 	}
 
 	def compileTaskForProjectAndConfig(Project project, String name) {
