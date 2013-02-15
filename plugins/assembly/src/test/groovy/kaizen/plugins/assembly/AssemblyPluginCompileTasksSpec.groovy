@@ -18,8 +18,8 @@ class AssemblyPluginCompileTasksSpec extends PluginSpecification {
 		project.configurations.add 'net4'
 	}
 
-	@Unroll('output file for #configName goes to build/#configName')
-	def 'different output file for each configuration'() {
+	@Unroll
+	def 'output file for #configName goes to build/#configName'() {
 		when:
 		evaluateProject project
 
@@ -30,8 +30,8 @@ class AssemblyPluginCompileTasksSpec extends PluginSpecification {
 		configName << CompilableConfigurationNames
 	}
 
-	@Unroll('compile task for #configName configuration depends on copy #configName dependencies')
-	def 'compile task depends on copy dependencies task'() {
+	@Unroll
+	def 'compile task for #configName configuration depends on copy #configName dependencies'() {
 		when:
 		evaluateProject project
 

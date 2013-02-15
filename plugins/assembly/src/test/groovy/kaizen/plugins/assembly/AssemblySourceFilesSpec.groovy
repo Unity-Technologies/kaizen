@@ -7,7 +7,7 @@ import spock.lang.Unroll
 
 class AssemblySourceFilesSpec extends PluginSpecification {
 
-	@Unroll('project language is set to #language when source files end in #fileExtension')
+	@Unroll
 	def 'project language is set to #language when source files end in #fileExtension'() {
 		given:
 		def sourceFileName = "code.$fileExtension"

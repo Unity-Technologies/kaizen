@@ -10,8 +10,8 @@ import spock.lang.Unroll
 
 class McsSpec extends Specification {
 
-	@Unroll("executes mcs with the correct command line for #targetFramework")
-	def 'executes mcs with the correct command line options'() {
+	@Unroll
+	def 'executes mcs with the correct command line for #targetFramework'() {
 		given:
 		def monoProvider = Mock(MonoProvider)
 		def mono = Mock(Mono)

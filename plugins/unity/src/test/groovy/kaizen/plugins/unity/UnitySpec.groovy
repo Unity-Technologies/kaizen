@@ -7,8 +7,8 @@ import spock.lang.Unroll
 
 class UnitySpec extends OperatingSystemSensitiveSpecification {
 
-	@Unroll('executable for #operatingSystem is #executable')
-	def 'executable resolved against location when set'() {
+	@Unroll
+	def 'default executable for #operatingSystem is #executable'() {
 
 		given:
 		def unity = new Unity(null, operatingSystem, null)
@@ -46,8 +46,8 @@ class UnitySpec extends OperatingSystemSensitiveSpecification {
 		linux()         | 'Unity'
 	}
 
-	@Unroll("clr location on #operatingSystem is #cli")
-	def 'Unity clr is MonoBleedingEdge'() {
+	@Unroll
+	def 'clr location on #operatingSystem is #cli'() {
 		given:
 		def unityLocation = 'Unity.app'
 		def unity = new Unity({ unityLocation} as UnityLocator, operatingSystem, null)

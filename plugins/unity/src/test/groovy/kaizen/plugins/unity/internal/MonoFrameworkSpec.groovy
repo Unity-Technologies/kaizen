@@ -6,10 +6,12 @@ import kaizen.testing.OperatingSystemSensitiveSpecification
 import org.gradle.process.ExecResult
 import org.gradle.process.ExecSpec
 import org.gradle.util.ConfigureUtil
+import spock.lang.Unroll
 
 class MonoFrameworkSpec extends OperatingSystemSensitiveSpecification {
 
-	def 'exec runs in debug mode by default'() {
+	@Unroll
+	def 'exec runs #monoExecutable in debug mode by default on #operatingSystem'() {
 		given:
 		def execHandler = Mock(ExecHandler)
 		def mono = new MonoFramework(operatingSystem, 'Mono', execHandler)
