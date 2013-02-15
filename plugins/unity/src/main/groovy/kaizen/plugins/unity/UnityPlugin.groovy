@@ -2,6 +2,7 @@ package kaizen.plugins.unity
 
 import kaizen.plugins.clr.ClrExtension
 import kaizen.plugins.clr.ClrPlugin
+import kaizen.plugins.unity.internal.Booc
 import kaizen.plugins.unity.internal.DefaultUnityLocator
 import kaizen.plugins.unity.internal.ProjectExecHandler
 import kaizen.plugins.unity.internal.ProjectPropertyUnityLocator
@@ -23,5 +24,6 @@ class UnityPlugin implements Plugin<Project> {
 		def clr = ClrExtension.forProject(project)
 		clr.providers.add(unity)
 		clr.compilers.add(new Mcs(unity))
+		clr.compilers.add(new Booc(unity))
 	}
 }

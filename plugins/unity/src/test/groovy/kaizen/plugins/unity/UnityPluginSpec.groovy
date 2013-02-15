@@ -3,6 +3,7 @@ package kaizen.plugins.unity
 import kaizen.plugins.clr.ClrExtension
 import kaizen.testing.PluginSpecification
 import org.gradle.testfixtures.ProjectBuilder
+import spock.lang.Unroll
 
 class UnityPluginSpec extends PluginSpecification {
 
@@ -18,9 +19,13 @@ class UnityPluginSpec extends PluginSpecification {
 		clr.providers.contains(unity)
 	}
 
-	def 'installs c# compiler'() {
+	@Unroll
+	def 'installs #language compiler'() {
 		expect:
-		clr.compilerForLanguage('c#') != null
+		clr.compilerForLanguage(language) != null
+
+		where:
+		language << ['c#', 'boo']
 	}
 
 	def getClr() {

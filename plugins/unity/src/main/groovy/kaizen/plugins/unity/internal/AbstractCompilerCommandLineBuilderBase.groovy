@@ -3,24 +3,16 @@ package kaizen.plugins.unity.internal
 import kaizen.plugins.clr.ClrCompileSpec
 import org.gradle.process.ExecSpec
 
-/**
- * Created with IntelliJ IDEA.
- * User: bamboo
- * Date: 15/02/13
- * Time: 16:39
- * To change this template use File | Settings | File Templates.
- */
 abstract class AbstractCompilerCommandLineBuilderBase implements ClrCompileSpec  {
-	final ExecSpec execSpec
 
-	AbstractCompilerCommandLineBuilderBase(ExecSpec execSpec) {
-		this.execSpec = execSpec
-	}
+	abstract void args(Object... args)
+
+	abstract void args(Iterable args)
 
 	@Override
 	void outputAssembly(File outputAssembly) {
-		execSpec.args("-target:${targetFor(outputAssembly)}")
-		execSpec.args("-out:$outputAssembly.canonicalPath")
+		args("-target:${targetFor(outputAssembly)}")
+		args("-out:$outputAssembly.canonicalPath")
 	}
 
 	def targetFor(File file) {
@@ -29,7 +21,7 @@ abstract class AbstractCompilerCommandLineBuilderBase implements ClrCompileSpec 
 
 	@Override
 	void sourceFiles(Iterable<File> sourceFiles) {
-		execSpec.args(sourceFiles*.canonicalPath)
+		args(sourceFiles*.canonicalPath)
 	}
 
 	def sdkVersionForFrameworkVersion(String frameworkVersion) {
@@ -42,7 +34,7 @@ abstract class AbstractCompilerCommandLineBuilderBase implements ClrCompileSpec 
 
 	@Override
 	void references(Iterable<String> references) {
-		execSpec.args(references.collect { "-r:$it" })
+		args(references.collect { "-r:$it" })
 	}
 
 	@Override
