@@ -43,6 +43,7 @@ class MonoFramework implements Clr, Mono {
 	ExecResult exec(Closure execSpecClosure) {
 		def clrExecSpec = new DefaultClrExecSpec()
 		ConfigureUtil.configure(execSpecClosure, clrExecSpec)
+		assert clrExecSpec.executable
 
 		execHandler.exec { ExecSpec execSpec ->
 			execSpec.executable monoExe
