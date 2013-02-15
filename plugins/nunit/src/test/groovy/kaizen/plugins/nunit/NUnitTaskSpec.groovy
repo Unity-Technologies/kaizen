@@ -36,6 +36,7 @@ class NUnitTaskSpec extends PluginSpecification {
 		def expectedWorkDir = projectPath('build')
 		def expectedAssembly = projectPath('build/p.tests.dll')
 
-		clrExecSpec.args == [expectedExecutable, '-nologo', '-nodots', '-domain:none', "-work=$expectedWorkDir", expectedAssembly]
+		clrExecSpec.executable == expectedExecutable
+		clrExecSpec.args == ['-nologo', '-nodots', '-domain:none', "-work=$expectedWorkDir", expectedAssembly]
 	}
 }

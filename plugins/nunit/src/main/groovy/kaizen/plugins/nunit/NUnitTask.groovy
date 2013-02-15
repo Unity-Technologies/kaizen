@@ -1,6 +1,7 @@
 package kaizen.plugins.nunit
 
 import kaizen.plugins.clr.Clr
+import kaizen.plugins.clr.ClrExtension
 import kaizen.plugins.clr.ClrProvider
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
@@ -28,7 +29,7 @@ class NUnitTask extends DefaultTask {
 			//environment 'MONO_EXECUTABLE': cli
 			//commandLine cli
 			//args '--debug'
-			args executableFile
+			executable executableFile
 			args '-nologo', '-nodots', '-domain:none'
 			args "-work=${assembly.parentFile}"
 			args includedCategories.collect { "-include=$it" }
@@ -38,8 +39,8 @@ class NUnitTask extends DefaultTask {
 	}
 
 	Clr getClr() {
-		ClrProvider provider = project.extensions.clr
-		provider.runtimeForFrameworkVersion('v3.5')
+		def clr = ClrExtension.forProject(project)
+		clr.runtimeForFrameworkVersion('v3.5')
 	}
 
 	File getExecutableFile() {
