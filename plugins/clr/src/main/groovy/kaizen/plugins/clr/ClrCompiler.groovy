@@ -2,9 +2,9 @@ package kaizen.plugins.clr
 
 import org.gradle.process.ExecResult
 
-public interface ClrCompiler<TCompileSpec extends ClrCompileSpec> {
+public interface ClrCompiler {
 	String getLanguage()
-	ExecResult exec(Closure<TCompileSpec> compileSpec)
+	ExecResult exec(Closure compileSpec)
 }
 
 

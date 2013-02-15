@@ -22,7 +22,7 @@ abstract class PluginSpecification extends Specification {
 		ProjectBuilder.builder().withProjectDir(dir)
 	}
 
-	Project projectWithDirectoryStructure(Closure<DirectoryBuilder> structure) {
+	Project projectWithDirectoryStructure(Closure structure) {
 		def tempDir = DirectoryBuilder.tempDirWith(structure)
 		projectBuilderWithDir(tempDir).build()
 	}

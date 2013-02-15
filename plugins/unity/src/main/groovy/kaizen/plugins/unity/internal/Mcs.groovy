@@ -1,6 +1,5 @@
 package kaizen.plugins.unity.internal
 
-import kaizen.plugins.clr.ClrCompileSpec
 import kaizen.plugins.clr.ClrCompiler
 import kaizen.plugins.clr.ClrExecSpec
 import kaizen.plugins.clr.ClrLanguageNames
@@ -8,7 +7,7 @@ import kaizen.plugins.unity.MonoProvider
 import org.gradle.process.ExecResult
 import org.gradle.util.ConfigureUtil
 
-class Mcs implements ClrCompiler<ClrCompileSpec> {
+class Mcs implements ClrCompiler {
 
 	final MonoProvider monoProvider
 
@@ -22,7 +21,7 @@ class Mcs implements ClrCompiler<ClrCompileSpec> {
 	}
 
 	@Override
-	ExecResult exec(Closure<ClrCompileSpec> compileSpec) {
+	ExecResult exec(Closure compileSpec) {
 		mono.exec { ClrExecSpec execSpec ->
 			execSpec.executable mcs
 			ConfigureUtil.configure(compileSpec, new McsCommandLineBuilder(execSpec))

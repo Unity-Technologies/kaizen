@@ -27,7 +27,7 @@ class Assembly {
 		this.references = new DefaultDomainObjectSet<AssemblyReference>(AssemblyReference.class)
 	}
 
-	def references(Closure<AssemblyReferencesHandler> configuration) {
+	def references(Closure configuration) {
 		ConfigureUtil.configure(configuration, new AssemblyReferencesHandler(references))
 	}
 

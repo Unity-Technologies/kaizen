@@ -4,5 +4,5 @@ import org.gradle.process.ExecResult
 import org.gradle.process.ExecSpec
 
 public interface ExecHandler {
-	ExecResult exec(Closure<ExecSpec> execSpecConfig)
+	ExecResult exec(Closure execSpecConfig)
 }

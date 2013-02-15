@@ -14,7 +14,7 @@ class ProjectExecHandler implements ExecHandler {
 	}
 
 	@Override
-	ExecResult exec(Closure<ExecSpec> execSpecConfig) {
+	ExecResult exec(Closure execSpecConfig) {
 		project.exec execSpecConfig
 	}
 }
