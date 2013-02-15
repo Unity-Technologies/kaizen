@@ -28,6 +28,7 @@ class McsSpec extends Specification {
 			targetFrameworkVersion targetFramework
 			sourceFiles sources
 			outputAssembly output
+			references assemblyReferences
 		}
 
 		then:
@@ -39,11 +40,12 @@ class McsSpec extends Specification {
 		1 * clrExecSpec.args("-out:$output.canonicalPath")
 		1 * clrExecSpec.args(sources*.canonicalPath)
 		1 * clrExecSpec.args("-sdk:$expectedSdk")
+		1 * clrExecSpec.args(assemblyReferences.collect { "-r:$it" })
 		result == clrExecResult
 
 		where:
-		targetFramework | expectedSdk
-		'v3.5'					| 2
-		'v4.0'					| 4
+		targetFramework | expectedSdk | assemblyReferences
+		'v3.5'					| 2           | ['System.Xml']
+		'v4.0'					| 4           | []
 	}
 }

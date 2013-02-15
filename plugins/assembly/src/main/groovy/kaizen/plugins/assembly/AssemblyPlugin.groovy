@@ -7,6 +7,8 @@ import kaizen.plugins.conventions.Configurations
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.Dependency
+import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.util.ConfigureUtil
 
@@ -72,6 +74,7 @@ class AssemblyPlugin implements Plugin<Project> {
 					language assembly.language
 					inputs.source assembly.sourceFiles
 					outputAssembly new File(outputDir(), assembly.fileName)
+					references assemblyReferencesFor(assembly, config, outputDir())
 				}
 			}
 
@@ -100,6 +103,22 @@ class AssemblyPlugin implements Plugin<Project> {
 				outputDir().exists()
 			}
 		}
+	}
+
+	def assemblyReferencesFor(Assembly assembly, Configuration config, File outputDir) {
+		config.allDependencies.collect {
+			new File(outputDir, assemblyFileNameFor(it))
+		}
+	}
+
+	def assemblyFileNameFor(Dependency dependency) {
+		assemblyProjectFileNameFor(dependency) ?: "${dependency.name}.dll"
+	}
+
+	def assemblyProjectFileNameFor(Dependency dependency) {
+		dependency instanceof ProjectDependency ?
+			Assembly.forProject(dependency.dependencyProject)?.fileName :
+			null
 	}
 
 	def configure(Object object, Closure closure) {

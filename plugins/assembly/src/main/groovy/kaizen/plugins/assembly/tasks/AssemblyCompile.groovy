@@ -22,8 +22,12 @@ class AssemblyCompile extends DefaultTask {
 		group = BasePlugin.BUILD_GROUP
 	}
 
+	def references(Iterable<Object> assemblies) {
+		assemblyReferences.addAll(assemblies*.toString())
+	}
+
 	def references(Object... assemblies) {
-		assemblyReferences.addAll(assemblies.collect { it.toString() })
+		assemblyReferences.addAll(assemblies*.toString())
 	}
 
 	def outputAssembly(output) {
@@ -59,10 +63,6 @@ class AssemblyCompile extends DefaultTask {
 	}
 
 	void setUp() {
-		def assemblyDependencies = configuration.allDependencies.collect {
-			new File(resolvedOutputDir, assemblyFileNameFor(it))
-		}
-
 		configure {
 			dependsOn configuration
 			outputs.file assemblyFile
@@ -75,14 +75,5 @@ class AssemblyCompile extends DefaultTask {
 				args << "-nowarn:1591"
 			}
 		}
-	}
-
-	def assemblyFileNameFor(Dependency dependency) {
-		if (dependency instanceof ProjectDependency) {
-			def assembly = dependency.dependencyProject.extensions.findByName('assembly')
-			if (assembly)
-				return assembly.fileName
-		}
-		return "${dependency.name}.dll"
 	}
 }

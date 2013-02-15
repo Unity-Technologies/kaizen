@@ -10,6 +10,10 @@ import org.gradle.api.internal.project.ProjectInternal
 
 abstract class PluginSpecification extends Specification {
 
+	Project newProject() {
+		ProjectBuilder.builder().build()
+	}
+
 	Project projectWithName(String name) {
 		projectBuilderWithName(name).build()
 	}

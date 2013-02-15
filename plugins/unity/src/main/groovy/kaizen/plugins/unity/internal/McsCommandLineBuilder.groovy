@@ -42,7 +42,7 @@ class McsCommandLineBuilder implements ClrCompileSpec {
 
 	@Override
 	void references(Iterable<String> references) {
-		throw new IllegalStateException("kaizen.plugins.clr.ClrCompileSpec.references is not implemented")
+		execSpec.args(references.collect { "-r:$it" })
 	}
 
 	@Override
