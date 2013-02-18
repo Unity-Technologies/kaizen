@@ -42,6 +42,24 @@ class AssemblyPluginCompileTasksSpec extends PluginSpecification {
 		configName << CompilableConfigurationNames
 	}
 
+	@Unroll
+	def 'compileTask.targetFrameworkVersion is set to #targetFramework to match assembly.targetFrameworkVersion'() {
+		when:
+		configure(project) {
+			assembly {
+				targetFrameworkVersion = targetFramework
+			}
+		}
+		evaluateProject project
+
+		then:
+		compileTaskForConfig(configName).targetFrameworkVersion == targetFramework
+
+		where:
+		configName << CompilableConfigurationNames
+		targetFramework << ['v3.5', 'v4.0']
+	}
+
 	def 'configuration dependencies become assembly references on the corresponding tasks'() {
 		given:
 		def a = newAssemblySubProject('a')

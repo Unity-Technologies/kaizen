@@ -75,6 +75,7 @@ class AssemblyPlugin implements Plugin<Project> {
 					inputs.source assembly.sourceFiles
 					outputAssembly new File(outputDir(), assembly.fileName)
 					references assemblyReferencesFor(config, outputDir())
+					targetFrameworkVersion assembly.targetFrameworkVersion
 				}
 			}
 
