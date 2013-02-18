@@ -2,7 +2,6 @@ package kaizen.plugins.unity.internal
 
 import kaizen.commons.Paths
 import kaizen.plugins.clr.Clr
-import kaizen.plugins.clr.ClrExecSpec
 import kaizen.plugins.clr.internal.DefaultClrExecSpec
 import kaizen.plugins.unity.ExecHandler
 import kaizen.plugins.unity.Mono
@@ -15,15 +14,17 @@ class MonoFramework implements Clr, Mono {
 	String prefix
 	final OperatingSystem operatingSystem
 	final ExecHandler execHandler
+	private String cli
 
-	MonoFramework(OperatingSystem operatingSystem, String prefix, ExecHandler execHandler) {
+	MonoFramework(OperatingSystem operatingSystem, String prefix, ExecHandler execHandler, String cli = 'cli') {
+		this.cli = cli
 		this.operatingSystem = operatingSystem
 		this.prefix = prefix
 		this.execHandler = execHandler
 	}
 
 	String getCli() {
-		script("cli")
+		script(cli)
 	}
 
 	String script(String name) {
@@ -45,16 +46,18 @@ class MonoFramework implements Clr, Mono {
 		ConfigureUtil.configure(execSpecClosure, clrExecSpec)
 		assert clrExecSpec.executable
 
+		def executable = canonicalFileFor(clrExecSpec.executable)
 		execHandler.exec { ExecSpec execSpec ->
-			execSpec.executable monoExe
+			execSpec.workingDir executable.parentFile
+			execSpec.executable cli
 			execSpec.args '--debug'
-			execSpec.args clrExecSpec.executable
+			execSpec.args executable
 			execSpec.args clrExecSpec.allArguments
 		}
 	}
 
-	String getMonoExe() {
-		operatingSystem.getExecutableName(bin('mono'))
+	def canonicalFileFor(String file) {
+		new File(file).canonicalFile
 	}
 }
 

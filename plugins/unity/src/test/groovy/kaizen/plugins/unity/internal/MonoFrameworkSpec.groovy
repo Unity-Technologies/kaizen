@@ -19,7 +19,8 @@ class MonoFrameworkSpec extends OperatingSystemSensitiveSpecification {
 		def execSpec = Mock(ExecSpec)
 		def execResult = Mock(ExecResult)
 
-		def expectedMonoExePath = Paths.combine 'Mono', 'bin', monoExecutable
+		def expectedMono = Paths.combine 'Mono', 'bin', monoExecutable
+		def expectedExecutable = new File('foo.exe').canonicalFile
 
 		when:
 		def result = mono.exec {
@@ -29,16 +30,17 @@ class MonoFrameworkSpec extends OperatingSystemSensitiveSpecification {
 
 		then:
 		1 * execHandler.exec({ ConfigureUtil.configure(it, execSpec) }) >> execResult
-		1 * execSpec.executable(expectedMonoExePath)
+		1 * execSpec.workingDir(expectedExecutable.parentFile)
+		1 * execSpec.executable(expectedMono)
 		1 * execSpec.args('--debug')
-		1 * execSpec.args('foo.exe')
+		1 * execSpec.args(expectedExecutable)
 		1 * execSpec.args(['a', 'b', 'c'])
 		result == execResult
 		0 * _
 
 		where:
 		operatingSystem | monoExecutable
-		windows()       | 'mono.exe'
-		osx()           | 'mono'
+		windows()       | 'cli.bat'
+		osx()           | 'cli'
 	}
 }
