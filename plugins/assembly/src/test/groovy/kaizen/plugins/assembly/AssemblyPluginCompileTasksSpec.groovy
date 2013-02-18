@@ -89,6 +89,24 @@ class AssemblyPluginCompileTasksSpec extends PluginSpecification {
 		compileNet4.assemblyReferences == [c.file("build/${labelFor('net4')}/${b.name}.dll").canonicalPath]
 	}
 
+	def 'framework assembly references'() {
+		when:
+		configure(project) {
+			assembly {
+				references {
+					frameworkAssembly 'System.Xml'
+				}
+			}
+		}
+		evaluateProject project
+
+		then:
+		compileTaskForConfig(configName).assemblyReferences == ['System.Xml']
+
+		where:
+		configName << CompilableConfigurationNames
+	}
+
 	def newAssemblySubProject(String name) {
 		def subProject = projectBuilderWithName(name).withParent(project).build()
 		subProject.plugins.apply AssemblyPlugin
