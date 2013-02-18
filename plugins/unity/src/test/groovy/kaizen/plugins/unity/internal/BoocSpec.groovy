@@ -15,6 +15,7 @@ class BoocSpec extends Specification {
 		given:
 		def monoProvider = Mock(MonoProvider)
 		def mono = Mock(Mono)
+		def legacyMono = Mock(Mono)
 		def clrExecSpec = Mock(ClrExecSpec)
 		def clrExecResult = Mock(ExecResult)
 
@@ -39,10 +40,12 @@ class BoocSpec extends Specification {
 
 		then:
 		_ * monoProvider.runtimeForFrameworkVersion(targetFramework) >> mono
-		1 * mono.lib(expectedProfile, 'booc.exe') >> boocExe
+		_ * monoProvider.runtimeForFrameworkVersion('unity') >> legacyMono
+		1 * (expectedProfile == 'unity' ? legacyMono : mono).lib(expectedProfile, 'booc.exe') >> boocExe
 		1 * mono.exec { ConfigureUtil.configure(it, clrExecSpec) } >> clrExecResult
 		1 * clrExecSpec.executable(boocExe)
 		1 * clrExecSpec.args(expectedArgs)
+		0 * _
 		result == clrExecResult
 
 		where:

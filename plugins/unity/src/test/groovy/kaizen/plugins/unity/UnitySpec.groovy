@@ -47,22 +47,25 @@ class UnitySpec extends OperatingSystemSensitiveSpecification {
 	}
 
 	@Unroll
-	def 'clr location on #operatingSystem is #cli'() {
+	def 'clr location for target framework #targetFramework on #operatingSystem is #cli'() {
 		given:
 		def unityLocation = 'Unity.app'
 		def unity = new Unity({ unityLocation} as UnityLocator, operatingSystem, null)
 
 		when:
-		def clr = unity.runtimeForFrameworkVersion('v3.5')
+		def clr = unity.runtimeForFrameworkVersion(targetFramework)
 
 		then:
 		(clr as MonoFramework).cli == Paths.combine(unityLocation, cli)
 
 		where:
-		operatingSystem | cli
-		windows()       | 'Data/MonoBleedingEdge/bin/cli.bat'
-		osx()           | 'Contents/Frameworks/MonoBleedingEdge/bin/cli'
-		linux()         | 'Data/MonoBleedingEdge/bin/cli'
+		operatingSystem | targetFramework | cli
+		windows()       |  'v3.5'         | 'Data/MonoBleedingEdge/bin/cli.bat'
+		osx()           |  'v3.5'         | 'Contents/Frameworks/MonoBleedingEdge/bin/cli'
+		linux()         |  'v3.5'         | 'Data/MonoBleedingEdge/bin/cli'
+		windows()       |  'unity'         | 'Data/Mono/bin/cli_unity.bat'
+		osx()           |  'unity'         | 'Contents/Frameworks/Mono/bin/cli_unity'
+		linux()         |  'unity'         | 'Data/Mono/bin/cli_unity'
 	}
 }
 

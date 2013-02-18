@@ -1,8 +1,6 @@
 package kaizen.plugins.unity
 
 import kaizen.commons.Paths
-import kaizen.plugins.clr.Clr
-import kaizen.plugins.clr.ClrProvider
 import kaizen.plugins.unity.internal.MonoFramework
 import org.gradle.api.Project
 import org.gradle.internal.os.OperatingSystem
@@ -43,16 +41,26 @@ class Unity implements MonoProvider {
 		location ?: locator.unityLocation
 	}
 
+	/**
+	 *
+	 * @param frameworkVersion one of 'v3.5', 'v4.0', 'unity'
+	 * @return
+	 */
 	@Override
 	Mono runtimeForFrameworkVersion(String frameworkVersion) {
 		if (frameworkVersion == 'v3.5')
-			return mono
+			return mono35
+		if (frameworkVersion == 'unity')
+			return monoUnity
 		throw new IllegalArgumentException("$frameworkVersion not supported")
 	}
 
-	@Override
-	Mono getMono() {
+	Mono getMono35() {
 		new MonoFramework(operatingSystem, getFrameworkPath('MonoBleedingEdge'), execHandler)
+	}
+
+	Mono getMonoUnity() {
+		new MonoFramework(operatingSystem, getFrameworkPath('Mono'), execHandler, 'cli_unity')
 	}
 
 	String getFrameworkPath(String frameworkName) {
