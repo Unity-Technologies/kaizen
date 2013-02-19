@@ -10,29 +10,16 @@ import org.gradle.process.ExecResult
 import org.gradle.process.ExecSpec
 import org.gradle.util.ConfigureUtil
 
-class MonoFramework implements Clr, Mono {
+abstract class MonoFramework implements Clr, Mono {
+
 	String prefix
 	final OperatingSystem operatingSystem
 	final ExecHandler execHandler
-	private String cli
 
-	MonoFramework(OperatingSystem operatingSystem, String prefix, ExecHandler execHandler, String cli = 'cli') {
-		this.cli = cli
+	MonoFramework(OperatingSystem operatingSystem, String prefix, ExecHandler execHandler) {
 		this.operatingSystem = operatingSystem
 		this.prefix = prefix
 		this.execHandler = execHandler
-	}
-
-	String getCli() {
-		script(cli)
-	}
-
-	String script(String name) {
-		operatingSystem.getScriptName(bin(name))
-	}
-
-	String bin(String path) {
-		Paths.combine prefix, 'bin', path
 	}
 
 	@Override
@@ -47,17 +34,27 @@ class MonoFramework implements Clr, Mono {
 		assert clrExecSpec.executable
 
 		def executable = canonicalFileFor(clrExecSpec.executable)
+		def arguments = clrExecSpec.allArguments
 		execHandler.exec { ExecSpec execSpec ->
-			execSpec.workingDir executable.parentFile
 			execSpec.executable cli
+			setUpCliArguments execSpec
 			execSpec.args '--debug'
 			execSpec.args executable
-			execSpec.args clrExecSpec.allArguments
+			execSpec.args arguments
 		}
+	}
+
+	void setUpCliArguments(ExecSpec execSpec) {
+	}
+
+	abstract String getCli()
+
+	String bin(String path) {
+		Paths.combine prefix, 'bin', path
 	}
 
 	def canonicalFileFor(String file) {
 		new File(file).canonicalFile
 	}
-}
 
+}

@@ -1,7 +1,8 @@
 package kaizen.plugins.unity
 
 import kaizen.commons.Paths
-import kaizen.plugins.unity.internal.MonoFramework
+import kaizen.plugins.unity.internal.LegacyMonoFramework
+import kaizen.plugins.unity.internal.BleedingEdgeMonoFramework
 import org.gradle.api.Project
 import org.gradle.internal.os.OperatingSystem
 
@@ -50,17 +51,23 @@ class Unity implements MonoProvider {
 	Mono runtimeForFrameworkVersion(String frameworkVersion) {
 		if (frameworkVersion == 'v3.5')
 			return mono35
+		if (frameworkVersion == 'v4.0')
+			return mono4
 		if (frameworkVersion == 'unity')
 			return monoUnity
 		throw new IllegalArgumentException("$frameworkVersion not supported")
 	}
 
 	Mono getMono35() {
-		new MonoFramework(operatingSystem, getFrameworkPath('MonoBleedingEdge'), execHandler)
+		new BleedingEdgeMonoFramework(operatingSystem, getFrameworkPath('MonoBleedingEdge'), execHandler, 'v2.0.50727')
+	}
+
+	Mono getMono4() {
+		new BleedingEdgeMonoFramework(operatingSystem, getFrameworkPath('MonoBleedingEdge'), execHandler, 'v4.0')
 	}
 
 	Mono getMonoUnity() {
-		new MonoFramework(operatingSystem, getFrameworkPath('Mono'), execHandler, 'cli_unity')
+		new LegacyMonoFramework(operatingSystem, getFrameworkPath('Mono'), execHandler)
 	}
 
 	String getFrameworkPath(String frameworkName) {

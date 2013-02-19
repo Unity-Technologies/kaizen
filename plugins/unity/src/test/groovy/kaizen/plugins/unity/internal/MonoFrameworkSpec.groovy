@@ -14,7 +14,7 @@ class MonoFrameworkSpec extends OperatingSystemSensitiveSpecification {
 	def 'exec runs #monoExecutable in debug mode by default on #operatingSystem'() {
 		given:
 		def execHandler = Mock(ExecHandler)
-		def mono = new MonoFramework(operatingSystem, 'Mono', execHandler)
+		def mono = new BleedingEdgeMonoFramework(operatingSystem, 'Mono', execHandler, 'v4.0')
 
 		def execSpec = Mock(ExecSpec)
 		def execResult = Mock(ExecResult)
@@ -30,8 +30,8 @@ class MonoFrameworkSpec extends OperatingSystemSensitiveSpecification {
 
 		then:
 		1 * execHandler.exec({ ConfigureUtil.configure(it, execSpec) }) >> execResult
-		1 * execSpec.workingDir(expectedExecutable.parentFile)
 		1 * execSpec.executable(expectedMono)
+		1 * execSpec.args('--runtime=v4.0')
 		1 * execSpec.args('--debug')
 		1 * execSpec.args(expectedExecutable)
 		1 * execSpec.args(['a', 'b', 'c'])
@@ -40,7 +40,7 @@ class MonoFrameworkSpec extends OperatingSystemSensitiveSpecification {
 
 		where:
 		operatingSystem | monoExecutable
-		windows()       | 'cli.bat'
-		osx()           | 'cli'
+		windows()       | 'mono.exe'
+		osx()           | 'mono'
 	}
 }

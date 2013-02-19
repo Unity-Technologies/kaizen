@@ -1,28 +1,25 @@
 package kaizen.plugins.unity.internal
 
-import org.gradle.process.ExecSpec
-
 class McsCommandLineBuilder extends AbstractCompilerCommandLineBuilderBase {
 
-	private ExecSpec execSpec
+	final List<Object> arguments = []
 
-	McsCommandLineBuilder(ExecSpec execSpec) {
-		this.execSpec = execSpec
+	String targetFramework
+
+	@Override
+	void args(Object... args) {
+		arguments.addAll(args)
+	}
+
+	@Override
+	void args(Iterable args) {
+		arguments.addAll(args)
 	}
 
 	@Override
 	void targetFrameworkVersion(String frameworkVersion) {
 		def sdkVersion = sdkVersionForFrameworkVersion(frameworkVersion)
 		args("-sdk:$sdkVersion")
-	}
-
-	@Override
-	void args(Object... args) {
-		execSpec.args(args)
-	}
-
-	@Override
-	void args(Iterable args) {
-		execSpec.args(args)
+		this.targetFramework = frameworkVersion
 	}
 }

@@ -23,6 +23,13 @@ class McsSpec extends Specification {
 		def output = new File('/tmp/file.dll')
 		def mcsExe = 'lib/mono/2.0/mcs.exe'
 
+		def expectedArgs = []
+		expectedArgs.add "-sdk:$expectedSdk"
+		expectedArgs.addAll sources*.canonicalPath
+		expectedArgs.add '-target:library'
+		expectedArgs.add "-out:$output.canonicalPath"
+		expectedArgs.addAll assemblyReferences.collect { "-r:$it" }
+
 		when:
 		def result = compiler.exec {
 			targetFrameworkVersion targetFramework
@@ -34,13 +41,11 @@ class McsSpec extends Specification {
 		then:
 		_ * monoProvider.runtimeForFrameworkVersion('v3.5') >> mono
 		1 * mono.lib('2.0', 'mcs.exe') >> mcsExe
+		_ * monoProvider.runtimeForFrameworkVersion(targetFramework) >> mono
 		1 * mono.exec { ConfigureUtil.configure(it, clrExecSpec) } >> clrExecResult
 		1 * clrExecSpec.executable(mcsExe)
-		1 * clrExecSpec.args('-target:library')
-		1 * clrExecSpec.args("-out:$output.canonicalPath")
-		1 * clrExecSpec.args(sources*.canonicalPath)
-		1 * clrExecSpec.args("-sdk:$expectedSdk")
-		1 * clrExecSpec.args(assemblyReferences.collect { "-r:$it" })
+		1 * clrExecSpec.args(expectedArgs)
+		0 * _
 		result == clrExecResult
 
 		where:

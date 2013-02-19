@@ -60,9 +60,12 @@ class UnitySpec extends OperatingSystemSensitiveSpecification {
 
 		where:
 		operatingSystem | targetFramework | cli
-		windows()       |  'v3.5'         | 'Data/MonoBleedingEdge/bin/cli.bat'
-		osx()           |  'v3.5'         | 'Contents/Frameworks/MonoBleedingEdge/bin/cli'
-		linux()         |  'v3.5'         | 'Data/MonoBleedingEdge/bin/cli'
+		windows()       |  'v3.5'         | 'Data/MonoBleedingEdge/bin/mono.exe'
+		osx()           |  'v3.5'         | 'Contents/Frameworks/MonoBleedingEdge/bin/mono'
+		linux()         |  'v3.5'         | 'Data/MonoBleedingEdge/bin/mono'
+		windows()       |  'v4.0'         | 'Data/MonoBleedingEdge/bin/mono.exe'
+		osx()           |  'v4.0'         | 'Contents/Frameworks/MonoBleedingEdge/bin/mono'
+		linux()         |  'v4.0'         | 'Data/MonoBleedingEdge/bin/mono'
 		windows()       |  'unity'        | 'Data/Mono/bin/cli_unity.bat'
 		osx()           |  'unity'        | 'Contents/Frameworks/Mono/bin/cli_unity'
 		linux()         |  'unity'        | 'Data/Mono/bin/cli_unity'

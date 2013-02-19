@@ -12,7 +12,7 @@ class Mcs implements ClrCompiler {
 
 	final MonoProvider monoProvider
 
-	@Lazy Mono mono = monoProvider.runtimeForFrameworkVersion('v3.5')
+	@Lazy String mcs = runtimeForFrameworkVersion('v3.5').lib('2.0', 'mcs.exe')
 
 	Mcs(MonoProvider monoProvider) {
 		this.monoProvider = monoProvider
@@ -25,13 +25,17 @@ class Mcs implements ClrCompiler {
 
 	@Override
 	ExecResult exec(Closure compileSpec) {
-		mono.exec { ClrExecSpec execSpec ->
+		def builder = new McsCommandLineBuilder()
+		ConfigureUtil.configure(compileSpec, builder)
+		def runtime = runtimeForFrameworkVersion(builder.targetFramework)
+		def mcs = this.mcs
+		runtime.exec { ClrExecSpec execSpec ->
 			execSpec.executable mcs
-			ConfigureUtil.configure(compileSpec, new McsCommandLineBuilder(execSpec))
+			execSpec.args builder.arguments
 		}
 	}
 
-	def getMcs() {
-		mono.lib('2.0', 'mcs.exe')
+	private runtimeForFrameworkVersion(String framework) {
+		monoProvider.runtimeForFrameworkVersion(framework)
 	}
 }
