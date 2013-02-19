@@ -1,10 +1,9 @@
 package kaizen.plugins.assembly.tasks
 
+import kaizen.plugins.clr.ClrCompileSpec
 import kaizen.plugins.clr.ClrExtension
 import kaizen.plugins.clr.ClrLanguageNames
 import org.gradle.api.DefaultTask
-import org.gradle.api.artifacts.Dependency
-import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.tasks.TaskAction
 
@@ -13,6 +12,7 @@ class AssemblyCompile extends DefaultTask {
 	String language = ClrLanguageNames.CSHARP
 	String targetFrameworkVersion = 'v3.5'
 	File outputAssemblyFile
+	File outputXmlDocFile
 	def keyFile
 	Collection<String> defines = []
 	Collection<String> assemblyReferences = []
@@ -31,8 +31,12 @@ class AssemblyCompile extends DefaultTask {
 	}
 
 	def outputAssembly(output) {
-		outputAssemblyFile = project.file(output)
+		outputAssemblyFile = file(output)
 		outputs.file(outputAssemblyFile)
+	}
+
+	def outputXmlDoc(output) {
+		outputXmlDocFile = outputs.file(output)
 	}
 
 	File getOutputAssembly() {
@@ -47,10 +51,11 @@ class AssemblyCompile extends DefaultTask {
 		def compiler = clr.compilerForLanguage(language)
 		assert compiler, "No compiler for language $language was found"
 
-		compiler.exec { spec ->
+		compiler.exec { ClrCompileSpec spec ->
 			spec.sourceFiles inputs.sourceFiles
 			spec.targetFrameworkVersion targetFrameworkVersion
 			spec.outputAssembly outputAssemblyFile
+			if (outputXmlDocFile) spec.outputXmlDoc outputXmlDocFile
 			if (assemblyReferences) spec.references assemblyReferences
 			if (defines) spec.defines defines
 			if (keyFile) spec.keyFile file(keyFile)
@@ -60,20 +65,5 @@ class AssemblyCompile extends DefaultTask {
 
 	File file(file) {
 		project.file(file)
-	}
-
-	void setUp() {
-		configure {
-			dependsOn configuration
-			outputs.file assemblyFile
-			inputs.files assemblyDependencies
-
-			doFirst {
-				def args = []
-				args << "-recurse:*.cs"
-				args << "-doc:${xmlDocFile}"
-				args << "-nowarn:1591"
-			}
-		}
 	}
 }

@@ -5,9 +5,14 @@ import org.gradle.process.ExecSpec
 
 abstract class AbstractCompilerCommandLineBuilderBase implements ClrCompileSpec  {
 
-	abstract void args(Object... args)
+	final List<Object> arguments = []
 
-	abstract void args(Iterable args)
+	String targetFramework
+
+	@Override
+	void targetFrameworkVersion(String targetFramework) {
+		this.targetFramework = targetFramework
+	}
 
 	@Override
 	void outputAssembly(File outputAssembly) {
@@ -50,5 +55,13 @@ abstract class AbstractCompilerCommandLineBuilderBase implements ClrCompileSpec 
 	@Override
 	void compilerOptions(Iterable<String> compilerOptions) {
 		throw new IllegalStateException("kaizen.plugins.clr.ClrCompileSpec.compilerOptions is not implemented")
+	}
+
+	void args(Object... args) {
+		arguments.addAll(args)
+	}
+
+	void args(Iterable args) {
+		arguments.addAll(args)
 	}
 }

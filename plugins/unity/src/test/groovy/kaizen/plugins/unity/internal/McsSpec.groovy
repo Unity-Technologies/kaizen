@@ -1,5 +1,6 @@
 package kaizen.plugins.unity.internal
 
+import kaizen.plugins.clr.ClrCompileSpec
 import kaizen.plugins.clr.ClrExecSpec
 import kaizen.plugins.unity.Mono
 import kaizen.plugins.unity.MonoProvider
@@ -21,6 +22,7 @@ class McsSpec extends Specification {
 		def compiler = new Mcs(monoProvider)
 		def sources = [new File('/tmp/a.cs'), new File('/tmp/b.cs')]
 		def output = new File('/tmp/file.dll')
+		def xmldoc = new File('/tmp/file.xml')
 		def mcsExe = 'lib/mono/2.0/mcs.exe'
 
 		def expectedArgs = []
@@ -28,14 +30,17 @@ class McsSpec extends Specification {
 		expectedArgs.addAll sources*.canonicalPath
 		expectedArgs.add '-target:library'
 		expectedArgs.add "-out:$output.canonicalPath"
+		expectedArgs.add "-doc:$xmldoc.canonicalPath"
+		//args << "-nowarn:1591"
 		expectedArgs.addAll assemblyReferences.collect { "-r:$it" }
 
 		when:
-		def result = compiler.exec {
-			targetFrameworkVersion targetFramework
-			sourceFiles sources
-			outputAssembly output
-			references assemblyReferences
+		def result = compiler.exec { ClrCompileSpec spec ->
+			spec.targetFrameworkVersion targetFramework
+			spec.sourceFiles sources
+			spec.outputAssembly output
+			spec.outputXmlDoc xmldoc
+			spec.references assemblyReferences
 		}
 
 		then:
