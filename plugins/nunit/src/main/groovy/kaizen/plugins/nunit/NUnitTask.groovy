@@ -2,7 +2,6 @@ package kaizen.plugins.nunit
 
 import kaizen.plugins.clr.Clr
 import kaizen.plugins.clr.ClrExtension
-import kaizen.plugins.clr.ClrProvider
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
@@ -13,6 +12,8 @@ class NUnitTask extends DefaultTask {
 
 	def executable = 'lib/NUnit/nunit-console.exe'
 
+	String targetFrameworkVersion = 'v3.5'
+
 	def include(String... categories) {
 		includedCategories.addAll(categories)
 	}
@@ -21,14 +22,15 @@ class NUnitTask extends DefaultTask {
 		excludedCategories.addAll(categories)
 	}
 
+	def targetFrameworkVersion(String version) {
+		targetFrameworkVersion = version
+	}
+
 	@TaskAction
 	def runTests() {
 		def assembly = inputs.files.getSingleFile()
-		//def cli = project.unity.mono.cli
 		def result = clr.exec {
 			//environment 'MONO_EXECUTABLE': cli
-			//commandLine cli
-			//args '--debug'
 			executable executableFile
 			args '-nologo', '-nodots', '-domain:none'
 			args "-work=${assembly.parentFile}"
@@ -40,7 +42,7 @@ class NUnitTask extends DefaultTask {
 
 	Clr getClr() {
 		def clr = ClrExtension.forProject(project)
-		clr.runtimeForFrameworkVersion('v3.5')
+		clr.runtimeForFrameworkVersion(targetFrameworkVersion)
 	}
 
 	File getExecutableFile() {
