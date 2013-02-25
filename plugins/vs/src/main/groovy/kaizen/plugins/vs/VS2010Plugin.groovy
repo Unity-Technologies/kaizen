@@ -10,8 +10,6 @@ class VS2010Plugin implements Plugin<Project> {
 	@Override
 	void apply(Project project) {
 
-		project.plugins.apply AssemblyPlugin
-
 		def vs = new VSExtension(project)
 		project.extensions.add('vs', vs)
 

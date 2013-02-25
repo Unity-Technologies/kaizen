@@ -1,5 +1,6 @@
 package kaizen.plugins.vs.tests
 
+import kaizen.plugins.assembly.AssemblyPlugin
 import kaizen.plugins.vs.VS2010Plugin
 
 class AssemblyReferencesSpec extends VSProjectSpecification {
@@ -8,7 +9,8 @@ class AssemblyReferencesSpec extends VSProjectSpecification {
 
 	@Override
 	def setup() {
-		project.plugins.apply(VS2010Plugin)
+		project.plugins.apply AssemblyPlugin
+		project.plugins.apply VS2010Plugin
 	}
 
 	def 'System and System.Core are referenced by default'() {

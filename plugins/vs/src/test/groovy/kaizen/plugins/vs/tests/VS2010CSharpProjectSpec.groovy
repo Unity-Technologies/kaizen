@@ -1,5 +1,7 @@
 package kaizen.plugins.vs.tests
 
+import kaizen.plugins.assembly.AssemblyPlugin
+import kaizen.plugins.vs.VS2010Plugin
 import kaizen.testing.DirectoryBuilder
 
 class VS2010CSharpProjectSpec extends VSProjectSpecification {
@@ -14,7 +16,8 @@ class VS2010CSharpProjectSpec extends VSProjectSpecification {
 
 	@Override
 	def setup() {
-		project.apply plugin: 'vs2010'
+		project.plugins.apply AssemblyPlugin
+		project.plugins.apply VS2010Plugin
 	}
 
 	def 'csproj is generated for c# project'() {
