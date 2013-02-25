@@ -71,6 +71,7 @@ class AssemblyPlugin implements Plugin<Project> {
 				tasks."$compileTaskName" {
 					description "Compiles all sources in the project directory."
 					dependsOn copyDependenciesTask
+					inputs.files config
 					language assembly.language
 					inputs.source assembly.sourceFiles
 					outputAssembly new File(outputDir(), assembly.fileName)
