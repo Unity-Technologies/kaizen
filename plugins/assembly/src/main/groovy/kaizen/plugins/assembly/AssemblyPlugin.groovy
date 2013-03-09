@@ -6,6 +6,7 @@ import kaizen.plugins.assembly.tasks.AssemblyRunTask
 import kaizen.plugins.conventions.Configurations
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ProjectDependency
@@ -47,20 +48,26 @@ class AssemblyPlugin implements Plugin<Project> {
 
 		configure(project) {
 
-			def copyDependenciesTask = task(copyDependenciesTaskName, dependsOn: outputDirTaskName) {
+			Task copyDependenciesTask = task(copyDependenciesTaskName, dependsOn: outputDirTaskName) {
 				description "Copies all incoming dependencies into the build directory."
 			}
 
 			afterEvaluate {
 				configure(copyDependenciesTask) {
-					dependsOn config
+					inputs.source config
+					outputs.file new File(outputDir(), "${config.name}.receipt")
 					doFirst {
-						config.incoming.files.each { file ->
+						inputs.sourceFiles.each { file ->
 							logger.info "Unpacking ${file.name} to ${outputDir()}"
 							project.copy {
 								from project.zipTree(file)
 								into outputDir()
 								include '*.*'
+							}
+						}
+						copyDependenciesTask.outputs.files.singleFile.withPrintWriter { writer ->
+							copyDependenciesTask.inputs.sourceFiles.each { f ->
+								writer.println(f.name)
 							}
 						}
 					}
