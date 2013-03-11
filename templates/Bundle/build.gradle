@@ -10,7 +10,7 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'kaizen:kaizen:0.2.2'
+		classpath 'kaizen:kaizen:0.3.0'
 	}
 }
 
@@ -51,7 +51,7 @@ configurations {
 	}
 }
 
-apply plugin: 'kaizen-bundle'
+apply plugin: 'assembly-bundle'
 apply plugin: 'nunit'
 
 def bundleDependencies = project.dependencies
