@@ -30,11 +30,11 @@ class VSProject {
 	}
 
 	String getAssemblyName() {
-		project.extensions.assembly.name
+		assembly.name
 	}
 
 	Iterable<String> getSourceFiles() {
-		project.fileTree(dir: project.projectDir, include: '**/*.cs').files.collect {
+		assembly.sourceFiles.collect {
 			project.relativePath(it).replace('/', '\\') // always use \ on vs project files
 		}
 	}
