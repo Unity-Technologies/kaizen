@@ -6,7 +6,7 @@ class VSSolution extends VSSolutionItem {
 	def destinationFile
 
 	VSSolution(String name, Project gradleProject) {
-		super(name, gradleProject)
+		super(null, name, gradleProject)
 	}
 
 	String relativePathOf(Project p) {

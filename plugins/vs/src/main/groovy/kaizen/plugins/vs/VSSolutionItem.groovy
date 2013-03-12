@@ -11,13 +11,28 @@ class VSSolutionItem {
 	final String name
 	final NamedDomainObjectSet<Project> projects
 	final NamedDomainObjectContainer<VSSolutionFolder> folders
+	final VSSolutionItem parent
 
-	protected VSSolutionItem(String name, Project gradleProject) {
+	protected VSSolutionItem(VSSolutionItem parent, String name, Project gradleProject) {
+		this.parent = parent
 		this.name = name
 		this.gradleProject = gradleProject
 		this.projects = gradleProject.container(Project)
 		this.folders = gradleProject.container(VSSolutionFolder) {
 			newSolutionFolder(it)
+		}
+	}
+
+	def eachFolderRecurse(Closure closure) {
+		folders.each {
+			it.eachFolderRecurse(closure)
+			closure(it)
+		}
+	}
+
+	void eachChildGuid(Closure closure) {
+		projects.each {
+			closure(VSExtension.forProject(it).project.guid)
 		}
 	}
 
@@ -38,6 +53,6 @@ class VSSolutionItem {
 	}
 
 	private newSolutionFolder(String name) {
-		new VSSolutionFolder(name, gradleProject)
+		new VSSolutionFolder(this, name, gradleProject)
 	}
 }

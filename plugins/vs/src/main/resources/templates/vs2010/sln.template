@@ -11,7 +11,7 @@ EndProject
 	}
 %>
 <%
-	solution.folders.each {
+	solution.eachFolderRecurse {
 %>
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "$it.name", "$it.name", "$it.guid"
 EndProject
@@ -41,10 +41,10 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	<%
-  	solution.folders.each { folder ->
-  		folder.projects.each { project ->
+  	solution.eachFolderRecurse { folder ->
+  		folder.eachChildGuid { child ->
   %>
-		${project.vs.project.guid} = ${folder.guid}
+		${child} = ${folder.guid}
 	<%
 			}
 		}

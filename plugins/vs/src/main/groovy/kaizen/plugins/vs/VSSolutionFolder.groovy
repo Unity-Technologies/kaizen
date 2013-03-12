@@ -6,7 +6,15 @@ class VSSolutionFolder extends VSSolutionItem {
 
 	@Lazy String guid = GuidString.from(name)
 
-	VSSolutionFolder(String name, Project gradleProject) {
-		super(name, gradleProject)
+	VSSolutionFolder(VSSolutionItem parent, String name, Project gradleProject) {
+		super(parent, name, gradleProject)
+	}
+
+	@Override
+	void eachChildGuid(Closure closure) {
+		super.eachChildGuid(closure)
+		folders.each {
+			closure(it.guid)
+		}
 	}
 }
