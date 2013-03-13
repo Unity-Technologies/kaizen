@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="unityscript"
+		module="UnityScript.Lang"
+		revision="0.1.3"
+		status="integration"
+		publication="20130313071743"
+	/>
+	<configurations>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+		<conf name="windowsPhone8" visibility="public"/>
+	</configurations>
+	<publications>
+		<artifact name="UnityScript.Lang-default" type="zip" ext="zip" conf="archives,default"/>
+		<artifact name="UnityScript.Lang-windowsPhone8" type="zip" ext="zip" conf="archives,windowsPhone8"/>
+	</publications>
+	<dependencies>
+		<dependency org="boo" name="Boo.Lang" rev="0.9.6" conf="default->default"/>
+	</dependencies>
+</ivy-module>
