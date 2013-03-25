@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="boo"
+		module="Boo.Lang"
+		revision="0.9.7"
+		status="integration"
+		publication="20130325162133"
+	/>
+	<configurations>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+		<conf name="iOS" visibility="public"/>
+		<conf name="windowsPhone8" visibility="public"/>
+	</configurations>
+	<publications>
+		<artifact name="Boo.Lang-default" type="zip" ext="zip" conf="archives,default"/>
+		<artifact name="Boo.Lang-windowsPhone8" type="zip" ext="zip" conf="archives,windowsPhone8"/>
+		<artifact name="Boo.Lang-iOS" type="zip" ext="zip" conf="archives,iOS"/>
+	</publications>
+</ivy-module>

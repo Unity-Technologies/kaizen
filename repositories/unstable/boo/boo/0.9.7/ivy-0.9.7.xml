@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="boo"
+		module="boo"
+		revision="0.9.7"
+		status="integration"
+		publication="20130325162120"
+	/>
+	<configurations>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+	</configurations>
+	<publications>
+	</publications>
+	<dependencies>
+		<dependency org="boo" name="Boo.Lang" rev="0.9.7" conf="default->default"/>
+		<dependency org="boo" name="Boo.Lang.CodeDom" rev="0.9.7" conf="default->default"/>
+		<dependency org="boo" name="Boo.Lang.Compiler" rev="0.9.7" conf="default->default"/>
+		<dependency org="boo" name="Boo.Lang.Extensions" rev="0.9.7" conf="default->default"/>
+		<dependency org="boo" name="Boo.Lang.Interpreter" rev="0.9.7" conf="default->default"/>
+		<dependency org="boo" name="Boo.Lang.Parser" rev="0.9.7" conf="default->default"/>
+		<dependency org="boo" name="Boo.Lang.PatternMatching" rev="0.9.7" conf="default->default"/>
+		<dependency org="boo" name="Boo.Lang.Useful" rev="0.9.7" conf="default->default"/>
+		<dependency org="boo" name="booc" rev="0.9.7" conf="default->default"/>
+		<dependency org="boo" name="booi" rev="0.9.7" conf="default->default"/>
+		<dependency org="boo" name="booish" rev="0.9.7" conf="default->default"/>
+	</dependencies>
+</ivy-module>
