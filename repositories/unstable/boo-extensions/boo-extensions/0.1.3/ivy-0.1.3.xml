@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="boo-extensions"
+		module="boo-extensions"
+		revision="0.1.3"
+		status="integration"
+		publication="20130326142901"
+	/>
+	<configurations>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="boo" visibility="public"/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+	</configurations>
+	<publications>
+	</publications>
+	<dependencies>
+		<dependency org="boo" name="boo" rev="0.9.7" conf="boo->default"/>
+	</dependencies>
+</ivy-module>
