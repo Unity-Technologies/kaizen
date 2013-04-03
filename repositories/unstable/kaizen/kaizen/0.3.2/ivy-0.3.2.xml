@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="kaizen"
+		module="kaizen"
+		revision="0.3.2"
+		status="integration"
+		publication="20130403105646"
+	/>
+	<configurations>
+		<conf name="archives" visibility="public" description="Configuration for archive artifacts."/>
+		<conf name="default" visibility="public" description="Configuration for default artifacts."/>
+	</configurations>
+	<publications>
+	</publications>
+	<dependencies>
+		<dependency org="kaizen" name="assembly" rev="0.1.1" conf="default->default"/>
+		<dependency org="kaizen" name="assembly-bundle" rev="0.1.0" conf="default->default"/>
+		<dependency org="kaizen" name="clr" rev="0.1.1" conf="default->default"/>
+		<dependency org="kaizen" name="commons" rev="0.1.0" conf="default->default"/>
+		<dependency org="kaizen" name="conventions" rev="0.1.0" conf="default->default"/>
+		<dependency org="kaizen" name="lib-consumer" rev="0.1.0" conf="default->default"/>
+		<dependency org="kaizen" name="local-repository" rev="0.1.0" conf="default->default"/>
+		<dependency org="kaizen" name="nuget" rev="0.1.0" conf="default->default"/>
+		<dependency org="kaizen" name="nunit" rev="0.1.0" conf="default->default"/>
+		<dependency org="kaizen" name="project-refactorings" rev="0.1.0" conf="default->default"/>
+		<dependency org="kaizen" name="repository" rev="0.1.0" conf="default->default"/>
+		<dependency org="kaizen" name="unity" rev="0.1.1" conf="default->default"/>
+		<dependency org="kaizen" name="vs" rev="0.1.1" conf="default->default"/>
+	</dependencies>
+</ivy-module>
