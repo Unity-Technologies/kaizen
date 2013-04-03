@@ -13,4 +13,11 @@ class McsCommandLineBuilder extends AbstractCompilerCommandLineBuilderBase {
 	void outputXmlDoc(File file) {
 		args("-doc:$file.canonicalPath")
 	}
+
+	@Override
+	void embeddedResources(Map<String, File> embeddedResources) {
+		embeddedResources.each {
+			args("-resource:$it.value,$it.key")
+		}
+	}
 }

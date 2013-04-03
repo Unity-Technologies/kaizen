@@ -17,6 +17,7 @@ class AssemblyCompile extends DefaultTask {
 	Collection<String> defines = []
 	Collection<String> assemblyReferences = []
 	Collection<String> compilerOptions = []
+	Map<String, File> embeddedResources = [:]
 
 	AssemblyCompile() {
 		group = BasePlugin.BUILD_GROUP
@@ -28,6 +29,10 @@ class AssemblyCompile extends DefaultTask {
 
 	def references(Object... assemblies) {
 		assemblyReferences.addAll(assemblies*.toString())
+	}
+
+	def embeddedResources(Map<String, File> resources) {
+		embeddedResources.putAll(resources)
 	}
 
 	def outputAssembly(output) {
@@ -60,6 +65,7 @@ class AssemblyCompile extends DefaultTask {
 			if (defines) spec.defines defines
 			if (keyFile) spec.keyFile file(keyFile)
 			if (compilerOptions) spec.compilerOptions compilerOptions
+			if (embeddedResources) spec.embeddedResources embeddedResources
 		}
 	}
 

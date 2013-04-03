@@ -4,6 +4,11 @@ class BoocCommandLineBuilder extends AbstractCompilerCommandLineBuilderBase {
 
 	@Override
 	void outputXmlDoc(File file) {
-		throw new IllegalStateException()
+		throw new IllegalStateException("booc doesn't support outputting xmldoc files")
+	}
+
+	@Override
+	void embeddedResources(Map<String, File> embeddedResources) {
+		throw new IllegalStateException("booc doesn't support embedded resources")
 	}
 }

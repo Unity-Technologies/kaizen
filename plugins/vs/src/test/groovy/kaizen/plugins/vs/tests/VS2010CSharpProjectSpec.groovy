@@ -11,6 +11,10 @@ class VS2010CSharpProjectSpec extends VSProjectSpecification {
 			file('AssemblyInfo.cs')
 		}
 		file('Core.cs')
+		dir('resources') {
+			file('plugin.png')
+			file('license.txt')
+		}
 	}
 	def project = projectBuilderWithName('Bundle.Core').withProjectDir(projectDir).build()
 
@@ -49,6 +53,11 @@ class VS2010CSharpProjectSpec extends VSProjectSpecification {
 		assemblyTargetFrameworkVersion  | projectTargetFrameworkVersion
 		'v3.5' 													| 'v3.5'
 		'v4.0'													| 'v4.0'
+	}
+
+	def 'EmbeddedResource tag for files under resources/ directory'() {
+		expect:
+		loadProjectFileOf(project).ItemGroup.EmbeddedResource.@Include.toSet() == ['resources\\plugin.png', 'resources\\license.txt'].toSet()
 	}
 
 	String projectOutputTypeFor(String assemblyTarget) {

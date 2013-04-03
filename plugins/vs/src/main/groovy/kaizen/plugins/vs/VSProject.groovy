@@ -35,7 +35,18 @@ class VSProject {
 
 	Iterable<String> getSourceFiles() {
 		assembly.sourceFiles.collect {
-			project.relativePath(it).replace('/', '\\') // always use \ on vs project files
+			vsPathFor(it)
+		}
+	}
+
+	// always use \ on vs project files
+	def vsPathFor(File file) {
+		project.relativePath(file).replace('/', '\\')
+	}
+
+	Iterable<String> getEmbeddedResources() {
+		assembly.embeddedResources.collect {
+			vsPathFor(it)
 		}
 	}
 

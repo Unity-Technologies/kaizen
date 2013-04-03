@@ -52,6 +52,12 @@
   	<% } %>
   </ItemGroup>
   <ItemGroup>
+		<%
+			project.embeddedResources.each {
+		%><EmbeddedResource Include="$it" />
+		<% } %>
+	</ItemGroup>
+  <ItemGroup>
   	<%
   		project.projectReferences.each {
   	%><ProjectReference Include="$it.relativePath">

@@ -9,4 +9,5 @@ public interface ClrCompileSpec {
 	void keyFile(File keyFile)
 	void compilerOptions(Iterable<String> compilerOptions)
 	void references(Iterable<String> references)
+	void embeddedResources(Map<String, File> embeddedResources)
 }

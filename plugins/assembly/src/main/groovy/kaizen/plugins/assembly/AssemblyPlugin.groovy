@@ -81,10 +81,12 @@ class AssemblyPlugin implements Plugin<Project> {
 					inputs.files config
 					language assembly.language
 					inputs.source assembly.sourceFiles
+					inputs.files assembly.embeddedResources
 					outputAssembly new File(outputDir(), assembly.fileName)
 					references assemblyReferencesFor(config, outputDir())
 					references assembly.references*.name
 					targetFrameworkVersion assembly.targetFrameworkVersion
+					embeddedResources embeddedResourcesFor(assembly)
 				}
 			}
 
@@ -113,6 +115,19 @@ class AssemblyPlugin implements Plugin<Project> {
 				outputDir().exists()
 			}
 		}
+	}
+
+	def embeddedResourcesFor(Assembly assembly) {
+		def resources = [:]
+		assembly.embeddedResources.each {
+			resources.put(resourceIdFor(it, assembly), it)
+		}
+		resources
+	}
+
+	def resourceIdFor(File file, Assembly assembly) {
+		def relativeResourceId = assembly.project.relativePath(file).replace('\\', '/').replace('/', '.')
+		"${assembly.name}.$relativeResourceId"
 	}
 
 	def assemblyReferencesFor(Configuration config, File outputDir) {

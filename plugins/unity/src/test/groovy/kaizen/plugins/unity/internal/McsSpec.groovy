@@ -21,6 +21,7 @@ class McsSpec extends Specification {
 
 		def compiler = new Mcs(monoProvider)
 		def sources = [new File('/tmp/a.cs'), new File('/tmp/b.cs')]
+		def embeddedResources = ['resourceA': new File('/tmp/resources/a.txt'), 'resourceB': new File('/tmp/resources/b.png')]
 		def output = new File('/tmp/file.dll')
 		def xmldoc = new File('/tmp/file.xml')
 		def mcsExe = 'lib/mono/2.0/mcs.exe'
@@ -33,6 +34,7 @@ class McsSpec extends Specification {
 		expectedArgs.add "-doc:$xmldoc.canonicalPath"
 		//args << "-nowarn:1591"
 		expectedArgs.addAll assemblyReferences.collect { "-r:$it" }
+		expectedArgs.addAll embeddedResources.collect { "-resource:$it.value,$it.key" }
 
 		when:
 		def result = compiler.exec { ClrCompileSpec spec ->
@@ -41,6 +43,7 @@ class McsSpec extends Specification {
 			spec.outputAssembly output
 			spec.outputXmlDoc xmldoc
 			spec.references assemblyReferences
+			spec.embeddedResources embeddedResources
 		}
 
 		then:

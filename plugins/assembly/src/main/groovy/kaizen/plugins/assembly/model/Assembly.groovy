@@ -39,6 +39,10 @@ class Assembly {
 		project.fileTree(dir: project.projectDir, include: "**/*.$sourceFileExtension")
 	}
 
+	Iterable<File> getEmbeddedResources() {
+		project.fileTree(dir: project.file('resources'), include: "**/*")
+	}
+
 	def getSourceFileExtension() {
 		switch (language) {
 			case ClrLanguageNames.CSHARP:
