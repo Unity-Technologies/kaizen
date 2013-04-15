@@ -44,7 +44,7 @@ abstract class AbstractCompilerCommandLineBuilderBase implements ClrCompileSpec 
 
 	@Override
 	void defines(Iterable<String> defines) {
-		throw new IllegalStateException("kaizen.plugins.clr.ClrCompileSpec.defines is not implemented")
+		args(defines.collect { "-define:$it" })
 	}
 
 	@Override

@@ -35,6 +35,7 @@ class McsSpec extends Specification {
 		//args << "-nowarn:1591"
 		expectedArgs.addAll assemblyReferences.collect { "-r:$it" }
 		expectedArgs.addAll embeddedResources.collect { "-resource:$it.value,$it.key" }
+		expectedArgs.addAll defines.collect { "-define:$it" }
 
 		when:
 		def result = compiler.exec { ClrCompileSpec spec ->
@@ -44,6 +45,7 @@ class McsSpec extends Specification {
 			spec.outputXmlDoc xmldoc
 			spec.references assemblyReferences
 			spec.embeddedResources embeddedResources
+			spec.defines defines
 		}
 
 		then:
@@ -57,8 +59,8 @@ class McsSpec extends Specification {
 		result == clrExecResult
 
 		where:
-		targetFramework | expectedSdk | assemblyReferences
-		'v3.5'					| 2           | ['System.Xml']
-		'v4.0'					| 4           | []
+		targetFramework | expectedSdk | assemblyReferences | defines
+		'v3.5'					| 2           | ['System.Xml']     | ['TRACE', 'DEBUG']
+		'v4.0'					| 4           | []                 | []
 	}
 }
