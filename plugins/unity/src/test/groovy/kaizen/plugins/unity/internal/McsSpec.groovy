@@ -36,6 +36,7 @@ class McsSpec extends Specification {
 		expectedArgs.addAll assemblyReferences.collect { "-r:$it" }
 		expectedArgs.addAll embeddedResources.collect { "-resource:$it.value,$it.key" }
 		expectedArgs.addAll defines.collect { "-define:$it" }
+		expectedArgs.addAll compilerOptions.collect { "/nostdlib" }
 
 		when:
 		def result = compiler.exec { ClrCompileSpec spec ->
@@ -46,6 +47,7 @@ class McsSpec extends Specification {
 			spec.references assemblyReferences
 			spec.embeddedResources embeddedResources
 			spec.defines defines
+			spec.compilerOptions compilerOptions
 		}
 
 		then:
@@ -59,8 +61,8 @@ class McsSpec extends Specification {
 		result == clrExecResult
 
 		where:
-		targetFramework | expectedSdk | assemblyReferences | defines
-		'v3.5'					| 2           | ['System.Xml']     | ['TRACE', 'DEBUG']
-		'v4.0'					| 4           | []                 | []
+		targetFramework | expectedSdk | assemblyReferences | defines | compilerOptions
+		'v3.5'					| 2           | ['System.Xml']     | ['TRACE', 'DEBUG'] | ['/nostdlib']
+		'v4.0'					| 4           | []                 | [] | []
 	}
 }
