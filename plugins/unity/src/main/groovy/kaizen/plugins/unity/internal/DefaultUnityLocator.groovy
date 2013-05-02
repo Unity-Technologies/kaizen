@@ -13,8 +13,10 @@ class DefaultUnityLocator implements UnityLocator {
 
 	@Override
 	String getUnityLocation() {
-		operatingSystem.windows ?
-			'C:\\Program Files (x86)\\Unity\\Editor' :
-			'/Applications/Unity/Unity.app'
+		if (operatingSystem.windows)
+			return 'C:\\Program Files (x86)\\Unity\\Editor'
+		if (operatingSystem.macOsX)
+			return '/Applications/Unity/Unity.app'
+		return '/usr/lib/unity3d/Editor'
 	}
 }
